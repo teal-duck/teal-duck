@@ -1,0 +1,123 @@
+https://en.wikipedia.org/wiki/Entity_component_system
+https://www.reddit.com/r/gamedev/comments/1f83c5/3_articles_about_component_entity_systems
+
+http://t-machine.org/index.php/2010/05/09/entity-system-1-javaandroid/
+
+
+http://entity-systems.wikidot.com/rdbms-with-code-in-systems
+
+    (integer) Entity
+    (enum) ComponentType
+    (interface OR empty base-class) Component
+    (interface OR empty base-class) System
+    (class with implementation) EntityManager
+
+
+Each subclass of Component
+
+Internally, the class has the following functions:
+
+    (ComponentType) getComponentType();
+
+System
+
+Just one method, that gives you a common interface to trigger each of the systems:
+
+    processOneGameTick( long previousFrameTime );
+
+EntityManager
+
+This contains:
+
+    The master collections (arrays, hashmaps, whatever) that contain all the data for all the entities
+    Logic for creating, modifying, fetching, and deleting entities
+    Logic for fetching and modifying components-from-entities
+
+Internally, the class has the following variables:
+
+    LIST: all entities in existence (so it never duplicates entity-IDs!)
+    MAP: from "Entity + ComponentType" to "concrete Component subclass"
+
+Internally, the class has the following functions:
+
+    (Component) getComponent( Entity, ComponentType );
+    (List) getAllComponentsOfType( ComponentType );
+    (List) getAllEntitiesPossessingComponent( ComponentType );
+    (void) addComponent( Entity, Component );
+    (int) createEntity;
+    (void) killEntity( Entity );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+http://entity-systems.wikidot.com/rdbms-beta
+
+
+    The MetaEntity class is added
+    The Component and ComponentType are re-factored into a single class, and we use runtime Class information (available in most languages) - reduces some error-prone code, and makes other code more readable and concise
+    The EntityManager gets a bunch of "essential" methods that any "real" Entity System would need:
+        "removeComponent" (obvious)
+        "getAllComponentsOnEntity" (enables you to quickly debug entities by looking at their components and checking they have the ones you expected)
+        "freeze"/"unFreeze" (while frozen, an EntityManager ignores all calls to create, modify, or delete entities)
+
+    … (integer) Entity
+    NEW: (class with implementation) MetaEntity
+    REMOVED: (enum) ComponentType
+    ALTERED: (interface OR empty base-class) Component
+    … (interface OR empty base-class) System
+    ALTERED: (class with implementation) EntityManager
+
+
+
+    MetaEntity
+
+This contains only two pieces of data:
+
+    the actual Entity (remember: that's an Integer - nothing more or less)
+    the EntityManager which is managing that Entity
+
+This enables you to seamlessly have multiple independent EntityManagers, without ever accidentally writing code that operates on an Entity in the "wrong" EntityManager. Because Entities are merely Integers, that's an easy mistake to make when using multiple EntityManagers…
+
+It also contains a LARGE number of convenience methods, that make your code more concise and easier to maintain.
+
+NOTE: in performance-critical code, you may need to write your code using raw Entity's, and ignoring the MetaEntity, since the MetaEntity is adding the overhead of at least one extra reference per Entity, and in some languages it's adding CONSIDERABLE overhead just for being an OOP Object (Java, for instance, has a substantial per-object overhead).
+Entity (unchanged from RDBMS with Code in Systems)
+Component
+
+This exists purely to make method-signatures type-safe. We need to know that certain objects are valid instances of a "component" (so we use this superclass to indicate that)
+System (unchanged from RDBMS with Code in Systems)
+EntitySystem Implementation Classes
+Each subclass of Component
+
+ALTERED: No methods needed any more.
+System (unchanged from RDBMS with Code in Systems)
+EntityManager
+
+Internally, the class has the following variables:
+
+    LIST: all entities in existence (so it never duplicates entity-IDs!)
+    MAP: from "Entity + ComponentType" to "concrete Component subclass"
+
+Internally, the class has the following functions:
+
+    … (Component) getComponent( Entity, Component subclass );
+    … (List) getAllComponentsOfType( Component subclass );
+    … (List) getAllEntitiesPossessingComponent( Component subclass );
+    ADDED: (List) getAllComponentsOnEntity( Entity );
+    ADDED: (void) removeComponent( Entity, Component instance );
+    ADDED: (boolean) hasComponent( Entity, Component subclass)
+    … (void) addComponent( Entity, Component instance );
+    … (int) createEntity;
+    … (void) killEntity( Entity );
+    ADDED: (void) freeze();
+    ADDED: (void) unFreeze();

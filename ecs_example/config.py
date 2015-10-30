@@ -1,0 +1,6 @@
+WIDTH = 400;
+HEIGHT = 300;
+TITLE = "Teal Duck";
+RESIZABLE = False;
+
+FPS = 60;
