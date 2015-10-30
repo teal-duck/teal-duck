@@ -84,6 +84,15 @@ class EntityManager(object):
 
 
 
+	def removeComponent(self, entity, componentType):
+		"""(Int, Component) -> Void"""
+		store = self.componentStore.get(componentType, None);
+		if (store):
+			if (entity in store):
+				del store[entity];
+
+
+
 	def createEntity(self):
 		"""Void -> Int"""
 		newId = self.lowestUnassignedEntityId;
@@ -93,14 +102,14 @@ class EntityManager(object):
 
 
 
-	def killEntity(self, entityId):
+	def killEntity(self, entity):
 		"""Int -> Void"""
-		if (entityId in self.entities):
-			self.entities.remove(entityId);
+		if (entity in self.entities):
+			self.entities.remove(entity);
 
 			for store in self.componentStore.values():
-				if (entityId in store):
-					del store[entityId];
+				if (entity in store):
+					del store[entity];
 
 
 
