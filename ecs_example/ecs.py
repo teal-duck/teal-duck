@@ -116,8 +116,8 @@ class EntityManager(object):
 
 
 
+from components import *;
 def main():
-	from components import *;
 
 	print("Instantiating EntityManager");
 	entityManager = EntityManager();
