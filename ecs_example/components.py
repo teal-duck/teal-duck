@@ -1,16 +1,12 @@
-# from collections import namedtuple;
-# PositionComponent = namedtuple("PositionComponent", ["position"]);
-# VelocityComponent = namedtuple("VelocityComponent", ["velocity"]);
-# SizeComponent = namedtuple("SizeComponent", ["size"]);
-
+from pygame.locals import *;
 
 from ecs import Component;
-from pygame.locals import *;
+from vector2 import Vector2;
 
 
 
 class PositionComponent(Component):
-	def __init__(self, position):
+	def __init__(self, position = Vector2(0, 0)):
 		self.position = position;
 
 	def __str__(self):
@@ -20,11 +16,41 @@ class PositionComponent(Component):
 
 
 class VelocityComponent(Component):
-	def __init__(self, velocity):
+	def __init__(self, velocity = Vector2(0, 0)):
 		self.velocity = velocity;
 
 	def __str__(self):
 		return "VelocityComponent(velocity=" + str(self.velocity) + ")";
+	__repr__ = __str__;
+
+
+
+class AccelerationComponent(Component):
+	def __init__(self, acceleration = Vector2(0, 0)):
+		self.acceleration = acceleration;
+
+	def __str__(self):
+		return "AccelerationComponent(acceleration=" + str(self.acceleration) + ")";
+	__repr__ = __str__;
+
+
+
+class ForceComponent(Component):
+	def __init__(self, force = Vector2(0, 0)):
+		self.force = force;
+
+	def __str__(self):
+		return "ForceComponent(force=" + str(self.force) + ")";
+	__repr__ = __str__;
+
+
+
+class MassComponent(Component):
+	def __init__(self, mass = 1):
+		self.mass = mass;
+
+	def __str__(self):
+		return "MassComponent(mass=" + str(self.mass) + ")";
 	__repr__ = __str__;
 
 
@@ -40,41 +66,13 @@ class HealthComponent(Component):
 
 
 
-class AABBComponent(Component):
-	def __init__(self, size):
-		self.size = size;
-
-	@property
-	def width(self):
-		return self.size.x;
-
-	@property
-	def height(self):
-		return self.size.y;
+class CollisionComponent(Component):
+	def __init__(self, collisionShape):
+		self.shape = collisionShape;
 
 	def __str__(self):
-		return "AABBComponent(size=" + str(self.size) + ")";
+		return "CollisionComponent(collisionShape=" + str(self.shape) + ")";
 	__repr__ = __str__;
-
-
-
-class CircleCollisionComponent(Component):
-	def __init__(self, radius):
-		self.radius = radius;
-
-	def __str__(self):
-		return "CircleCollisionComponent(radius=" + str(self.radius) + ")";
-	__repr__ = __str__;
-
-
-
-def entityIsCollidable(entityManager, entity):
-	return entityManager.entityHasComponent(entity, AABBComponent) or entityManager.entityHasComponent(entity, CircleCollisionComponent);
-
-
-
-def getCollidableEntities(entityManager):
-	return entityManager.getAllEntitiesPossessingComponents(AABBComponent, CircleCollisionComponent);
 
 
 
@@ -112,3 +110,43 @@ class AIControlledComponent(Component):
 	def __str__(self):
 		return "AIControlledComponent()";
 	__repr__ = __str__;
+
+
+
+
+
+# class AABBComponent(Component):
+# 	def __init__(self, size):
+# 		self.size = size;
+
+# 	@property
+# 	def width(self):
+# 		return self.size.x;
+
+# 	@property
+# 	def height(self):
+# 		return self.size.y;
+
+# 	def __str__(self):
+# 		return "AABBComponent(size=" + str(self.size) + ")";
+# 	__repr__ = __str__;
+
+
+
+# class CircleCollisionComponent(Component):
+# 	def __init__(self, radius):
+# 		self.radius = radius;
+
+# 	def __str__(self):
+# 		return "CircleCollisionComponent(radius=" + str(self.radius) + ")";
+# 	__repr__ = __str__;
+
+
+
+# def entityIsCollidable(entityManager, entity):
+# 	return entityManager.entityHasComponent(entity, AABBComponent) or entityManager.entityHasComponent(entity, CircleCollisionComponent);
+
+
+
+# def getCollidableEntities(entityManager):
+# 	return entityManager.getAllEntitiesPossessingComponents(AABBComponent, CircleCollisionComponent);

@@ -10,6 +10,7 @@ from vector2 import Vector2;
 from ecs import EntityManager;
 from components import *;
 from systems import * ;
+from collision import *;
 
 
 
@@ -34,17 +35,29 @@ def processEvents():
 
 
 def setupPlayer(entityManager, screenSize):
+	startingPosition = Vector2(20, 20);
+	size = Vector2(30, 30);
+
 	player = entityManager.createEntity();
-	position = PositionComponent(Vector2(20, 20));
-	velocity = VelocityComponent(Vector2(0, 0));
-	aabb = AABBComponent(Vector2(30, 30));
-	display = DisplayComponent((255, 0, 0), "Rect", aabb.size);
+	position = PositionComponent(startingPosition);
+	velocity = VelocityComponent();
+	force = ForceComponent();
+	acceleration = AccelerationComponent();
+	mass = MassComponent(1000);
+
+	shape = AABBShape(size);
+	collision = CollisionComponent(shape);
+
+	display = DisplayComponent((255, 0, 0), "Rect", size);
 	controller = PlayerControlledComponent();
 	health = HealthComponent(100);
 
 	entityManager.addComponent(player, position);
 	entityManager.addComponent(player, velocity);
-	entityManager.addComponent(player, aabb);
+	entityManager.addComponent(player, force);
+	entityManager.addComponent(player, acceleration);
+	entityManager.addComponent(player, mass);
+	entityManager.addComponent(player, collision);
 	entityManager.addComponent(player, display);
 	entityManager.addComponent(player, controller);
 	entityManager.addComponent(player, health);
@@ -61,12 +74,14 @@ def setupStaticEnemy(entityManager, screenSize):
 
 	enemy = entityManager.createEntity();
 	position = PositionComponent(Vector2(x, y));
-	circle = CircleCollisionComponent(radius);
 
-	display = DisplayComponent((0, 255, 0), "Circle", circle.radius);
+	shape = CircleShape(radius);
+	collision = CollisionComponent(shape);
+
+	display = DisplayComponent((0, 255, 0), "Circle", radius);
 
 	entityManager.addComponent(enemy, position);
-	entityManager.addComponent(enemy, circle);
+	entityManager.addComponent(enemy, collision);
 	entityManager.addComponent(enemy, display);
 
 	return enemy;
@@ -81,15 +96,23 @@ def setupDynamicEnemy(entityManager, screenSize):
 
 	enemy = entityManager.createEntity();
 	position = PositionComponent(Vector2(x, y));
-	velocity = VelocityComponent(Vector2(0, 0));
+	velocity = VelocityComponent();
+	force = ForceComponent();
+	acceleration = AccelerationComponent();
+	mass = MassComponent();
 
-	circle = CircleCollisionComponent(radius);
-	display = DisplayComponent((0, 0, 255), "Circle", circle.radius);
+	shape = CircleShape(radius);
+	collision = CollisionComponent(shape);
+
+	display = DisplayComponent((0, 0, 255), "Circle", radius);
 	controller = AIControlledComponent();
 
 	entityManager.addComponent(enemy, position);
 	entityManager.addComponent(enemy, velocity);
-	entityManager.addComponent(enemy, circle);
+	entityManager.addComponent(enemy, force);
+	entityManager.addComponent(enemy, acceleration);
+	entityManager.addComponent(enemy, mass);
+	entityManager.addComponent(enemy, collision);
 	entityManager.addComponent(enemy, display);
 	entityManager.addComponent(enemy, controller);
 
@@ -109,12 +132,12 @@ def run(displaySurface, entityManager, screenSize, fps):
 	setupDynamicEnemy(entityManager, screenSize);
 
 	logicSystem = LogicSystem(entityManager);
+	collisionSystem = CollisionSystem(entityManager);
+	forcesSystem = ForcesSystem(entityManager);
 	movementSystem = MovementSystem(entityManager);
 	renderSystem = RenderSystem(entityManager, displaySurface);
 
-	systems = [logicSystem, movementSystem, renderSystem];
-
-	print(entityManager);
+	systems = [logicSystem, forcesSystem, collisionSystem, movementSystem, renderSystem];
 
 	while (gameRunning):
 		gameRunning = processEvents();
