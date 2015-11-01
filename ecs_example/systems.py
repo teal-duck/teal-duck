@@ -45,8 +45,7 @@ class LogicSystem(System):
 
 
 
-
-def collides(ent1, ent2):
+def collides(entityManager, ent1, ent2):
 	pass;
 
 
@@ -60,9 +59,6 @@ class MovementSystem(System):
 			velocityComponent = self.getComponent(entity, VelocityComponent);
 
 			newPosition = positionComponent.position + velocityComponent.velocity * deltaTime;
-
-			if (self.entityManager.entityHasComponent(entity, SizeComponent)):
-				sizeComponent = self.getComponent(entity, SizeComponent);
 
 			positionComponent.position = newPosition;
 
@@ -84,16 +80,15 @@ class RenderSystem(System):
 	def update(self, _):
 		self.displaySurface.fill((0, 0, 0));
 
-		renderableEntities = self.getAllEntitiesPossessingComponents(PositionComponent, SizeComponent, DisplayComponent);
+		renderableEntities = self.getAllEntitiesPossessingComponents(PositionComponent, DisplayComponent);
 
 		for entity in renderableEntities:
 			positionComponent = self.getComponent(entity, PositionComponent);
-			sizeComponent = self.getComponent(entity, SizeComponent);
 			displayComponent = self.getComponent(entity, DisplayComponent);
 
 			if (displayComponent.shape == "Rect"):
-				rect = buildRectFromVectors(positionComponent.position, sizeComponent.size);
+				rect = buildRectFromVectors(positionComponent.position, displayComponent.size);
 				pygame.draw.rect(self.displaySurface, displayComponent.colour, rect);
 
 			elif (displayComponent.shape == "Circle"):
-				pygame.draw.circle(self.displaySurface, displayComponent.colour, (int(positionComponent.position.x + 0.5), int(positionComponent.position.y + 0.5)), sizeComponent.size.x);
+				pygame.draw.circle(self.displaySurface, displayComponent.colour, (int(positionComponent.position.x + 0.5), int(positionComponent.position.y + 0.5)), displayComponent.size);

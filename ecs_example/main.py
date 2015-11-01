@@ -37,13 +37,15 @@ def setupPlayer(entityManager):
 	player = entityManager.createEntity();
 	position = PositionComponent(Vector2(0, 0));
 	velocity = VelocityComponent(Vector2(0, 0));
-	size = SizeComponent(Vector2(30, 30));
-	display = DisplayComponent((255, 0, 0), "Rect");
+	# size = SizeComponent(Vector2(30, 30));
+	aabb = AABBComponent(Vector2(30, 30));
+	display = DisplayComponent((255, 0, 0), "Rect", aabb.size);
 	controller = PlayerControlledComponent();
 
 	entityManager.addComponent(player, position);
 	entityManager.addComponent(player, velocity);
-	entityManager.addComponent(player, size);
+	# entityManager.addComponent(player, size);
+	entityManager.addComponent(player, aabb);
 	entityManager.addComponent(player, display);
 	entityManager.addComponent(player, controller);
 
@@ -54,27 +56,32 @@ def setupPlayer(entityManager):
 def setupStaticEnemy(entityManager):
 	enemy = entityManager.createEntity();
 	position = PositionComponent(Vector2(random.randint(50, 350), random.randint(50, 250)));
-	size = SizeComponent(Vector2(20, 20));
-	display = DisplayComponent((0, 255, 0), "Circle");
+	# size = SizeComponent(Vector2(20, 20));
+	circle = CircleCollisionComponent(20);
+	display = DisplayComponent((0, 255, 0), "Circle", circle.radius);
 
 	entityManager.addComponent(enemy, position);
-	entityManager.addComponent(enemy, size);
+	# entityManager.addComponent(enemy, size);
+	entityManager.addComponent(enemy, circle);
 	entityManager.addComponent(enemy, display);
 
 	return enemy;
+
 
 
 def setupDynamicEnemy(entityManager):
 	enemy = entityManager.createEntity();
 	position = PositionComponent(Vector2(350, 250));
 	velocity = VelocityComponent(Vector2(0, 0));
-	size = SizeComponent(Vector2(20, 20));
-	display = DisplayComponent((0, 0, 255), "Circle");
+	# size = SizeComponent(Vector2(20, 20));
+	circle = CircleCollisionComponent(20);
+	display = DisplayComponent((0, 0, 255), "Circle", circle.radius);
 	controller = AIControlledComponent();
 
 	entityManager.addComponent(enemy, position);
 	entityManager.addComponent(enemy, velocity);
-	entityManager.addComponent(enemy, size);
+	# entityManager.addComponent(enemy, size);
+	entityManager.addComponent(enemy, circle);
 	entityManager.addComponent(enemy, display);
 	entityManager.addComponent(enemy, controller);
 

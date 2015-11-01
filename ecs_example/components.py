@@ -27,10 +27,41 @@ class SizeComponent(Component):
 
 
 
+class AABBComponent(Component):
+	def __init__(self, size):
+		self.size = size;
+
+	@property
+	def width(self):
+		return self.size.x;
+
+	@property
+	def height(self):
+		return self.size.y;
+
+
+
+class CircleCollisionComponent(Component):
+	def __init__(self, radius):
+		self.radius = radius;
+
+
+
+def entityIsCollidable(entityManager, entity):
+	return entityManager.entityHasComponent(entity, AABBComponent) or entityManager.entityHasComponent(entity, CircleCollisionComponent);
+
+
+
+def getCollidableEntities(entityManager):
+	return entityManager.getAllEntitiesPossessingComponents(AABBComponent, CircleCollisionComponent);
+
+
+
 class DisplayComponent(Component):
-	def __init__(self, colour, shape):
+	def __init__(self, colour, shape, size):
 		self.colour = colour;
 		self.shape = shape;
+		self.size = size;
 
 
 
