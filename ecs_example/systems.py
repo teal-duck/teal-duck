@@ -41,6 +41,7 @@ class LogicSystem(System):
 			players = self.getAllEntitiesPossessingComponents(PlayerControlledComponent, PositionComponent);
 			if (len(players) > 0):
 				# Ugly hack
+				# Would be fixed with a tag system
 				player = players.pop();
 
 				playerPositionComponent = self.getComponent(player, PositionComponent);
