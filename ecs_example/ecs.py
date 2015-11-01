@@ -15,8 +15,12 @@ class System(object):
 	def __init__(self, entityManager):
 		self.entityManager = entityManager;
 
-	def getAllEntitiesPossessingComponents(self, components):
-		return self.entityManager.getAllEntitiesPossessingComponents(components);
+	def getAllEntitiesPossessingComponent(self, componentType):
+		return self.entityManager.getAllEntitiesPossessingComponent(componentType);
+
+
+	def getAllEntitiesPossessingComponents(self, *componentTypes):
+		return self.entityManager.getAllEntitiesPossessingComponents(*componentTypes);
 
 	def getComponent(self, entity, component):
 		return self.entityManager.getComponent(entity, component);
@@ -64,8 +68,9 @@ class EntityManager(object):
 
 
 
-	def getAllEntitiesPossessingComponents(self, componentTypes):
-		"""[Class] -> set(Int)"""
+	def getAllEntitiesPossessingComponents(self, *componentTypes):
+		"""[Class] -> set(Int)
+		Can take a single class"""
 		return reduce(lambda a, b: a.intersection(b), \
 			map(self.getAllEntitiesPossessingComponent, componentTypes));
 

@@ -5,6 +5,7 @@
 
 
 from ecs import Component;
+from pygame.locals import *;
 
 
 
@@ -30,3 +31,14 @@ class DisplayComponent(Component):
 	def __init__(self, colour, shape):
 		self.colour = colour;
 		self.shape = shape;
+
+
+
+class PlayerControlledComponent(Component):
+	def __init__(self):
+		self.controls = {
+			"up": K_w,
+			"down": K_s,
+			"left": K_a,
+			"right": K_d
+		};

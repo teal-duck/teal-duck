@@ -5,9 +5,35 @@ from vector2 import Vector2;
 
 
 
+class LogicSystem(System):
+	def update(self, deltaTime):
+		for entity in self.getAllEntitiesPossessingComponents(PlayerControlledComponent, VelocityComponent):
+			controller = self.getComponent(entity, PlayerControlledComponent);
+			velocityComponent = self.getComponent(entity, VelocityComponent);
+			controls = controller.controls;
+
+			# print(controller.controls);
+			keys = pygame.key.get_pressed();
+			dx = 0;
+			dy = 0;
+			if (keys[controls["up"]]):
+				dy -= 1;
+			if (keys[controls["down"]]):
+				dy += 1;
+			if (keys[controls["left"]]):
+				dx -= 1;
+			if (keys[controls["right"]]):
+				dx += 1;
+
+			speed = 200;
+			velocityComponent.velocity = Vector2(dx, dy).setMagnitudeTo(speed);
+
+
+
+
 class MovementSystem(System):
 	def update(self, deltaTime):
-		movingEntities = self.getAllEntitiesPossessingComponents([PositionComponent, VelocityComponent]);
+		movingEntities = self.getAllEntitiesPossessingComponents(PositionComponent, VelocityComponent);
 		
 		for entity in movingEntities:
 			positionComponent = self.getComponent(entity, PositionComponent);
@@ -15,10 +41,14 @@ class MovementSystem(System):
 
 			newPosition = positionComponent.position + velocityComponent.velocity * deltaTime;
 
-			if (newPosition.x > 300):
-				newPosition = Vector2(300, newPosition.y);
+			# if (newPosition.x > 300):
+			# 	newPosition = Vector2(300, newPosition.y);
 
 			positionComponent.position = newPosition;
+
+			
+
+
 
 
 
@@ -38,7 +68,7 @@ class RenderSystem(System):
 	def update(self, _):
 		self.displaySurface.fill((0, 0, 0));
 
-		renderableEntities = self.getAllEntitiesPossessingComponents([PositionComponent, SizeComponent, DisplayComponent]);
+		renderableEntities = self.getAllEntitiesPossessingComponents(PositionComponent, SizeComponent, DisplayComponent);
 
 		for entity in renderableEntities:
 			positionComponent = self.getComponent(entity, PositionComponent);

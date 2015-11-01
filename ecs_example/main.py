@@ -36,14 +36,16 @@ def processEvents():
 def setupPlayer(entityManager):
 	player = entityManager.createEntity();
 	position = PositionComponent(Vector2(0, 0));
-	velocity = VelocityComponent(Vector2(200, 0));
+	velocity = VelocityComponent(Vector2(0, 0));
 	size = SizeComponent(Vector2(30, 30));
 	display = DisplayComponent((255, 0, 0), "Rect");
+	controller = PlayerControlledComponent();
 
 	entityManager.addComponent(player, position);
 	entityManager.addComponent(player, velocity);
 	entityManager.addComponent(player, size);
 	entityManager.addComponent(player, display);
+	entityManager.addComponent(player, controller);
 
 	return player;
 
@@ -63,7 +65,6 @@ def setupStaticEnemy(entityManager):
 
 
 
-
 def run(displaySurface, entityManager, fps):
 	gameRunning = True;
 	fpsClock = pygame.time.Clock();
@@ -73,10 +74,11 @@ def run(displaySurface, entityManager, fps):
 	for _ in range(5):
 		enemy = setupStaticEnemy(entityManager);
 
+	logicSystem = LogicSystem(entityManager);
 	movementSystem = MovementSystem(entityManager);
 	renderSystem = RenderSystem(entityManager, displaySurface);
 
-	systems = [movementSystem, renderSystem];
+	systems = [logicSystem, movementSystem, renderSystem];
 
 	while (gameRunning):
 		gameRunning = processEvents();
