@@ -42,3 +42,9 @@ class PlayerControlledComponent(Component):
 			"left": K_a,
 			"right": K_d
 		};
+
+
+
+class AIControlledComponent(Component):
+	def __init__(self):
+		pass;

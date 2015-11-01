@@ -22,6 +22,11 @@ class Vector2(namedtuple("Vector2", ["x", "y"])):
 		return Vector2(self.x + other.x, self.y + other.y);
 	__radd__ = __add__;
 
+	def __sub__(self, other):
+		return Vector2(self.x - other.x, self.y - other.y);
+
+	__rsub__ = __sub__;
+
 	def __mul__(self, scalar):
 		return Vector2(scalar * self.x, scalar * self.y);
 	__rmul__ = __mul__;

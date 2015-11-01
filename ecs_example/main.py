@@ -64,6 +64,24 @@ def setupStaticEnemy(entityManager):
 	return enemy;
 
 
+def setupDynamicEnemy(entityManager):
+	enemy = entityManager.createEntity();
+	position = PositionComponent(Vector2(350, 250));
+	velocity = VelocityComponent(Vector2(0, 0));
+	size = SizeComponent(Vector2(20, 20));
+	display = DisplayComponent((0, 0, 255), "Circle");
+	controller = AIControlledComponent();
+
+	entityManager.addComponent(enemy, position);
+	entityManager.addComponent(enemy, velocity);
+	entityManager.addComponent(enemy, size);
+	entityManager.addComponent(enemy, display);
+	entityManager.addComponent(enemy, controller);
+
+	return enemy;
+
+
+
 
 def run(displaySurface, entityManager, fps):
 	gameRunning = True;
@@ -73,6 +91,8 @@ def run(displaySurface, entityManager, fps):
 
 	for _ in range(5):
 		enemy = setupStaticEnemy(entityManager);
+
+	setupDynamicEnemy(entityManager);
 
 	logicSystem = LogicSystem(entityManager);
 	movementSystem = MovementSystem(entityManager);

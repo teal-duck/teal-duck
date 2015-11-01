@@ -2,6 +2,7 @@ import pygame;
 from ecs import System;
 from components import *;
 from vector2 import Vector2;
+import math;
 
 
 
@@ -12,7 +13,6 @@ class LogicSystem(System):
 			velocityComponent = self.getComponent(entity, VelocityComponent);
 			controls = controller.controls;
 
-			# print(controller.controls);
 			keys = pygame.key.get_pressed();
 			dx = 0;
 			dy = 0;
@@ -28,6 +28,26 @@ class LogicSystem(System):
 			speed = 200;
 			velocityComponent.velocity = Vector2(dx, dy).setMagnitudeTo(speed);
 
+		for entity in self.getAllEntitiesPossessingComponents(AIControlledComponent, PositionComponent, VelocityComponent):
+			controller = self.getComponent(entity, AIControlledComponent);
+			positionComponent = self.getComponent(entity, PositionComponent);
+			velocityComponent = self.getComponent(entity, VelocityComponent);
+
+			players = self.getAllEntitiesPossessingComponents(PlayerControlledComponent, PositionComponent);
+			player = players.pop();
+
+			playerPositionComponent = self.getComponent(player, PositionComponent);
+
+			direction = playerPositionComponent.position - positionComponent.position;
+			speed = 100;
+			vecToMove = direction.setMagnitudeTo(speed);
+			velocityComponent.velocity = vecToMove;
+
+
+
+
+def collides(ent1, ent2):
+	pass;
 
 
 
@@ -41,16 +61,12 @@ class MovementSystem(System):
 
 			newPosition = positionComponent.position + velocityComponent.velocity * deltaTime;
 
-			# if (newPosition.x > 300):
-			# 	newPosition = Vector2(300, newPosition.y);
+			if (self.entityManager.entityHasComponent(entity, SizeComponent)):
+				sizeComponent = self.getComponent(entity, SizeComponent);
 
 			positionComponent.position = newPosition;
 
 			
-
-
-
-
 
 def buildRectFromVectors(position, size):
 	rect = pygame.Rect(position.x, position.y, size.x, size.y);
@@ -80,4 +96,4 @@ class RenderSystem(System):
 				pygame.draw.rect(self.displaySurface, displayComponent.colour, rect);
 
 			elif (displayComponent.shape == "Circle"):
-				pygame.draw.circle(self.displaySurface, displayComponent.colour, positionComponent.position, sizeComponent.size.x);
+				pygame.draw.circle(self.displaySurface, displayComponent.colour, (int(positionComponent.position.x + 0.5), int(positionComponent.position.y + 0.5)), sizeComponent.size.x);
