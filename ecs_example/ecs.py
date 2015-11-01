@@ -12,18 +12,32 @@ class Component(object):
 class System(object):
 	__metaclass__ = abc.ABCMeta;
 
+
+
 	def __init__(self, entityManager):
 		self.entityManager = entityManager;
+
+
+
+	def entityHasComponent(self, entity, componentType):
+		return self.entityManager.entityHasComponent(entity, componentType);
+
+
 
 	def getAllEntitiesPossessingComponent(self, componentType):
 		return self.entityManager.getAllEntitiesPossessingComponent(componentType);
 
 
+
 	def getAllEntitiesPossessingComponents(self, *componentTypes):
 		return self.entityManager.getAllEntitiesPossessingComponents(*componentTypes);
 
+
+
 	def getComponent(self, entity, component):
 		return self.entityManager.getComponent(entity, component);
+
+
 
 	@abc.abstractmethod
 	def update(deltaTime):
@@ -198,7 +212,7 @@ def main():
 
 	print("");
 	print("Get all entities with Position and Velocity");
-	print(entityManager.getAllEntitiesPossessingComponents([PositionComponent, VelocityComponent]));
+	print(entityManager.getAllEntitiesPossessingComponents(PositionComponent, VelocityComponent));
 
 	print("");
 	print("Has component: Position");

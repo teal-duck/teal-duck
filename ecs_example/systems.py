@@ -34,14 +34,28 @@ class LogicSystem(System):
 			velocityComponent = self.getComponent(entity, VelocityComponent);
 
 			players = self.getAllEntitiesPossessingComponents(PlayerControlledComponent, PositionComponent);
-			player = players.pop();
+			if (len(players) > 0):
+				player = players.pop();
 
-			playerPositionComponent = self.getComponent(player, PositionComponent);
+				playerPositionComponent = self.getComponent(player, PositionComponent);
 
-			direction = playerPositionComponent.position - positionComponent.position;
-			speed = 100;
-			vecToMove = direction.setMagnitudeTo(speed);
-			velocityComponent.velocity = vecToMove;
+				direction = playerPositionComponent.position - positionComponent.position;
+				speed = 100;
+				vecToMove = direction.setMagnitudeTo(speed);
+				velocityComponent.velocity = vecToMove;
+			else:
+				velocityComponent.velocity = Vector2(0, 0);
+
+
+		for entity in self.getAllEntitiesPossessingComponents(HealthComponent):
+			healthComponent = self.getComponent(entity, HealthComponent);
+			healthComponent.health = healthComponent.health - 10 * deltaTime;
+
+			if (healthComponent.health <= 0):
+				healthComponent.health = 0;
+				self.entityManager.removeComponent(entity, PlayerControlledComponent);
+				self.entityManager.removeComponent(entity, VelocityComponent);
+				self.entityManager.getComponent(entity, DisplayComponent).colour = (128, 128, 128);
 
 
 
@@ -59,6 +73,9 @@ class MovementSystem(System):
 			velocityComponent = self.getComponent(entity, VelocityComponent);
 
 			newPosition = positionComponent.position + velocityComponent.velocity * deltaTime;
+
+			if (entityIsCollidable(self.entityManager, entity)):
+				pass;
 
 			positionComponent.position = newPosition;
 
@@ -86,9 +103,34 @@ class RenderSystem(System):
 			positionComponent = self.getComponent(entity, PositionComponent);
 			displayComponent = self.getComponent(entity, DisplayComponent);
 
+			position = positionComponent.position;
+
 			if (displayComponent.shape == "Rect"):
-				rect = buildRectFromVectors(positionComponent.position, displayComponent.size);
+				rect = buildRectFromVectors(position, displayComponent.size);
 				pygame.draw.rect(self.displaySurface, displayComponent.colour, rect);
 
 			elif (displayComponent.shape == "Circle"):
-				pygame.draw.circle(self.displaySurface, displayComponent.colour, (int(positionComponent.position.x + 0.5), int(positionComponent.position.y + 0.5)), displayComponent.size);
+				radius = displayComponent.size;
+
+				centre = Vector2(int(position.x + radius), int(position.y + radius));
+
+				pygame.draw.circle(self.displaySurface, displayComponent.colour, centre, radius);
+
+			if (self.entityHasComponent(entity, HealthComponent)):
+				healthComponent = self.getComponent(entity, HealthComponent);
+				maxHealth = healthComponent.maxHealth;
+				health = healthComponent.health;
+
+				healthPercent = health / maxHealth;
+
+				healthBarHeight = 5;
+				healthBarWidth = 30;
+
+				healthBarHeadGap = 5;
+				healthBarTopLeft = (position.x, position.y - (healthBarHeadGap + healthBarHeight));
+				
+				healthBarSize = (int(healthBarWidth * healthPercent), healthBarHeight);
+
+				pygame.draw.rect(self.displaySurface, (255, 0, 0), (healthBarTopLeft, (healthBarWidth, healthBarHeight)));
+				if (healthPercent > 0):
+					pygame.draw.rect(self.displaySurface, (0, 255, 0), (healthBarTopLeft, healthBarSize));

@@ -1,5 +1,5 @@
-WIDTH = 400;
-HEIGHT = 300;
+WIDTH = 600;
+HEIGHT = 400;
 TITLE = "Teal Duck";
 RESIZABLE = False;
 
