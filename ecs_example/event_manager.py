@@ -1,13 +1,13 @@
 class EventManager(object):
-	def __init__(self):
+	def __init__(self, entityManager):
 		"""
-		events :: dict<EntityID, dict<String, (Int, Int, Data) -> None>>
+		events :: dict<EntityID, dict<String, (EntityManager, Int, Int) -> None>>
 		Each entity has a dictionary of events
 		Events are named by a string
 		The function takes 3 parameters:
+			entityManager: EntityManager
 			myId : EntityId,
 			senderId : EntityId,
-			otherData : SomeDataStructure
 
 		E.g:
 		events = {
@@ -20,18 +20,19 @@ class EventManager(object):
 		}
 		"""
 		self.events = { };
+		self.entityManager = entityManager;
 
 
 
 	def addEvent(self, entityId, eventName, eventFunction):
-		"""(Int, String, (Int, Int, Data) -> None) -> None"""
+		"""(Int, String, (EntityManager, Int, Int) -> None) -> None"""
 		entityEvents = self.events.get(entityId, { });
 		entityEvents[eventName] = eventFunction;
 
 
 	
-	def triggerEvent(self, senderId, receiverId, eventName, *args, **kwargs):
-		"""(Int, Int, String, Data) -> None"""
+	def triggerEvent(self, senderId, receiverId, eventName):
+		"""(Int, Int, String) -> None"""
 		if (receiverId not in self.events):
 			# The receiver can't receive any events
 			return;
@@ -41,7 +42,7 @@ class EventManager(object):
 			# The receiver can't receive this event
 			return;
 
-		receiverEvents[eventName](receiverId, senderId, *args, **kwargs);
+		receiverEvents[eventName](entityManager, receiverId, senderId);
 
 
 

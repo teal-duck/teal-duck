@@ -32,3 +32,9 @@ class SystemManager(object):
 	def clear(self):
 		"""None -> None"""
 		pass;
+
+
+
+"""
+Also need a way to manage systems that only run every X frames or every Y seconds etc
+"""
