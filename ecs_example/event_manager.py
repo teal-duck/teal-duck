@@ -1,7 +1,7 @@
 class EventManager(object):
 	def __init__(self):
 		"""
-		events :: dict(EntityID, dict(String, (Int, Int, Data) -> None))
+		events :: dict<EntityID, dict<String, (Int, Int, Data) -> None>>
 		Each entity has a dictionary of events
 		Events are named by a string
 		The function takes 3 parameters:
