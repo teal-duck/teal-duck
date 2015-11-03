@@ -164,8 +164,8 @@ def buildRectFromVectors(position, size):
 
 
 class RenderSystem(System):
-	def __init__(self, entityManager, displaySurface):
-		super(RenderSystem, self).__init__(entityManager);
+	def __init__(self, entityManager, eventManager, displaySurface):
+		super(RenderSystem, self).__init__(entityManager, eventManager);
 		self.displaySurface = displaySurface;
 
 

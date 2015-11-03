@@ -8,6 +8,7 @@ import config;
 from vector2 import Vector2;
 
 from ecs import EntityManager;
+from event_manager import *;
 from components import *;
 from systems import * ;
 from collision import *;
@@ -182,9 +183,12 @@ def setupDynamicEnemy(entityManager, screenSize):
 
 
 
-def run(displaySurface, entityManager, screenSize, fps):
+def run(displaySurface, screenSize, fps):
 	gameRunning = True;
 	fpsClock = pygame.time.Clock();
+
+	entityManager = EntityManager();
+	eventManager = EventManager(entityManager);
 
 	playerEntity = setupPlayer(entityManager, screenSize);
 
@@ -193,11 +197,11 @@ def run(displaySurface, entityManager, screenSize, fps):
 
 	setupDynamicEnemy(entityManager, screenSize);
 
-	logicSystem = LogicSystem(entityManager);
-	collisionSystem = CollisionSystem(entityManager);
-	forcesSystem = ForcesSystem(entityManager);
-	movementSystem = MovementSystem(entityManager);
-	renderSystem = RenderSystem(entityManager, displaySurface);
+	logicSystem = LogicSystem(entityManager, eventManager);
+	collisionSystem = CollisionSystem(entityManager, eventManager);
+	forcesSystem = ForcesSystem(entityManager, eventManager);
+	movementSystem = MovementSystem(entityManager, eventManager);
+	renderSystem = RenderSystem(entityManager, eventManager, displaySurface);
 
 	systems = [logicSystem, forcesSystem, collisionSystem, movementSystem, renderSystem];
 
@@ -226,8 +230,7 @@ def main():
 	screenSize = (width, height)
 
 	displaySurface = setupWindow(width, height, config.TITLE, config.RESIZABLE);
-	entityManager = EntityManager();
-	run(displaySurface, entityManager, screenSize, config.FPS);
+	run(displaySurface, screenSize, config.FPS);
 	shutdown();
 
 

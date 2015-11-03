@@ -14,8 +14,9 @@ class System(object):
 
 
 
-	def __init__(self, entityManager):
+	def __init__(self, entityManager, eventManager):
 		self.entityManager = entityManager;
+		self.eventManager = eventManager;
 
 
 
