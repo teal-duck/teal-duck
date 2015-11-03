@@ -52,9 +52,11 @@ class EntityManager(object):
 		self.entities = set();
 		# components is dictionary with keys being type(some component), values being another dictionary
 		# sub-dictionary has key entityId and value is a specific instance of a component
+    # HashMap<Class<?>, HashMap<Integer, ? extends Component>>
 		self.componentStore = dict();
 
 
+    
 
 	def getComponent(self, entity, componentType):
 		"""(Int, Class) -> Component"""
@@ -104,7 +106,7 @@ class EntityManager(object):
 
 
 	def removeComponent(self, entity, componentType):
-		"""(Int, Component) -> Void"""
+		"""(Int, Class) -> Void"""
 		store = self.componentStore.get(componentType, None);
 		if (store):
 			if (entity in store):

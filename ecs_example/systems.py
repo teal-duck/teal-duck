@@ -57,6 +57,8 @@ class LogicSystem(System):
 		for entity in self.getAllEntitiesPossessingComponents(HealthComponent):
 			healthComponent = self.getComponent(entity, HealthComponent);
 
+			healthComponent.health -= 5 * deltaTime;
+
 			if (healthComponent.health <= 0):
 				healthComponent.health = 0;
 				self.entityManager.removeComponent(entity, PlayerControlledComponent);
