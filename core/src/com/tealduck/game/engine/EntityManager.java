@@ -3,7 +3,10 @@ package com.tealduck.game.engine;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 
@@ -68,8 +71,17 @@ public class EntityManager {
 	 * @param componentType
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public <T extends Component> T removeComponent(int entity, Class<T> componentType) {
-		// TODO: removeComponent
+		HashMap<Integer, ? extends Component> map = componentsMap.get(componentType);
+
+		if (map != null) {
+			Component component = map.remove(entity);
+			if (component != null) {
+				return (T) component;
+			}
+		}
+
 		return null;
 	}
 
@@ -129,13 +141,30 @@ public class EntityManager {
 	 * @param entity
 	 * @return
 	 */
-	public <T extends Component> HashMap<Class<T>, T> getAllComponentsForEntitiy(int entity) {
+	public HashMap<Class<? extends Component>, ? extends Component> getAllComponentsForEntity(int entity) {
 		// TODO: getAllComponentsForEntity
 		// TODO: fix type of getAllComponentsForEntity in the submitted
 		// diagram
-		return null;
+
+		HashMap<Class<? extends Component>, Component> components = new HashMap<Class<? extends Component>, Component>();
+
+		Iterator<Entry<Class<? extends Component>, HashMap<Integer, ? extends Component>>> it = componentsMap
+				.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<Class<? extends Component>, HashMap<Integer, ? extends Component>> pair = (Map.Entry<Class<? extends Component>, HashMap<Integer, ? extends Component>>) it.next();
+
+			Class<? extends Component> key = pair.getKey();
+			HashMap<Integer, ? extends Component> value = pair.getValue();
+			
+			if (value.containsKey(entity)) {
+				components.put(key, value.get(entity));
+			}
+		}
+		
+		return components;
 	}
 
+	
 
 	/**
 	 * @param componentType

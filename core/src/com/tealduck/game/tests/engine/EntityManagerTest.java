@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
+import com.tealduck.game.components.MovementComponent;
 import com.tealduck.game.components.PositionComponent;
 import com.tealduck.game.engine.EntityManager;
 
@@ -59,5 +60,28 @@ public class EntityManagerTest {
 
 		Assert.assertTrue(entityManager.entityHasComponent(entity, PositionComponent.class));
 		Assert.assertEquals(entityManager.getComponent(entity, PositionComponent.class), positionComponent);
+	}
+
+
+	@Test
+	public void testRemoveComponent() {
+		// TODO: testRemoveComponent
+	}
+	
+	
+	@Test
+	public void testGetAllComponentsForEntity() {
+		// TODO: add asserts to testGetAllComponentsForEntity
+		int entity = entityManager.createEntity();
+		PositionComponent positionComponent = new PositionComponent(new Vector2(0, 0));
+		MovementComponent movementComponent = new MovementComponent(new Vector2(0, 0));
+		
+
+		System.out.println(entityManager.getAllComponentsForEntity(entity));
+		entityManager.addComponent(entity, positionComponent);
+		System.out.println(entityManager.getAllComponentsForEntity(entity));
+		entityManager.addComponent(entity, movementComponent);
+		System.out.println(entityManager.getAllComponentsForEntity(entity));
+		
 	}
 }
