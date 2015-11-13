@@ -2,10 +2,13 @@ package com.tealduck.game.engine;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 
 public class EntityManager {
+	// TODO: fix type of getAllComponentsForEntity in the submitted diagram
+
 	private Set<Integer> entities;
 
 	private HashMap<Class<? extends Component>, HashMap<Integer, ? extends Component>> componentStore;
@@ -24,7 +27,7 @@ public class EntityManager {
 	}
 
 
-	public <T extends Component> T[] getAllComponentsOfType(Class<T> componentType) {
+	public <T extends Component> List<T> getAllComponentsOfType(Class<T> componentType) {
 		// TODO: getAllComponentsOfType
 		return null;
 	}
@@ -67,8 +70,9 @@ public class EntityManager {
 
 
 	public int createEntity() {
-		// TODO: createEntity
-		return 0;
+		int id = lowestUnassignedEntityId;
+		lowestUnassignedEntityId += 1;
+		return id;
 	}
 
 
