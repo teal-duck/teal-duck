@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.badlogic.gdx.math.Vector2;
+import com.tealduck.game.components.PositionComponent;
 import com.tealduck.game.engine.EntityManager;
 
 
@@ -21,8 +23,9 @@ public class EntityManagerTest {
 	@Test
 	public void testAddEntity() {
 		int entity1 = entityManager.createEntity();
-		Assert.assertEquals(entity1, 0);
 		int entity2 = entityManager.createEntity();
+
+		Assert.assertEquals(entity1, 0);
 		Assert.assertEquals(entity2, 1);
 		Assert.assertEquals(entityManager.getEntityCount(), 2);
 	}
@@ -33,6 +36,7 @@ public class EntityManagerTest {
 		int entity1 = entityManager.createEntity();
 		int entity2 = entityManager.createEntity();
 		int removedEntity = entityManager.removeEntity(entity1);
+
 		Assert.assertEquals(entity1, removedEntity);
 		Assert.assertEquals(entityManager.getEntityCount(), 1);
 		Assert.assertFalse(entityManager.getEntities().contains(entity1));
@@ -42,6 +46,18 @@ public class EntityManagerTest {
 
 	@Test
 	public void testRemoveEntityWithComponents() {
-		// TODO: later
+		// TODO: testRemoveEntityWithComponents
+	}
+
+
+	@Test
+	public void testAddComponent() {
+		int entity = entityManager.createEntity();
+		Vector2 position = new Vector2(10, 20);
+		PositionComponent positionComponent = new PositionComponent(position);
+		entityManager.addComponent(entity, positionComponent);
+
+		Assert.assertTrue(entityManager.entityHasComponent(entity, PositionComponent.class));
+		Assert.assertEquals(entityManager.getComponent(entity, PositionComponent.class), positionComponent);
 	}
 }

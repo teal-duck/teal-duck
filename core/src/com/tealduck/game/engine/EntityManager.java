@@ -4,19 +4,18 @@ package com.tealduck.game.engine;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 
 public class EntityManager {
 	private Set<Integer> entities;
-	private Map<Class<? extends Component>, HashMap<Integer, ? extends Component>> componentMap;
+	private HashMap<Class<? extends Component>, HashMap<Integer, ? extends Component>> componentsMap;
 	private int nextEntityId = 0;
 
 
 	public EntityManager() {
 		entities = new HashSet<Integer>();
-		componentMap = new HashMap<Class<? extends Component>, HashMap<Integer, ? extends Component>>();
+		componentsMap = new HashMap<Class<? extends Component>, HashMap<Integer, ? extends Component>>();
 		nextEntityId = 0;
 
 		clear();
@@ -50,9 +49,17 @@ public class EntityManager {
 	 * @param entity
 	 * @param component
 	 */
+	@SuppressWarnings("unchecked")
 	public <T extends Component> void addComponent(int entity, T component) {
-		// TODO: addComponent
-		return;
+		Class<? extends Component> componentType = component.getClass();
+
+		if (componentsMap.containsKey(componentType)) {
+			((HashMap<Integer, T>) componentsMap.get(componentType)).put(entity, component);
+		} else {
+			HashMap<Integer, T> map = new HashMap<Integer, T>();
+			map.put(entity, component);
+			componentsMap.put(componentType, map);
+		}
 	}
 
 
@@ -89,8 +96,7 @@ public class EntityManager {
 	 * @return
 	 */
 	public <T extends Component> boolean entityHasComponent(int entity, Class<T> componentType) {
-		// TODO: entityHasComponent
-		return false;
+		return componentsMap.containsKey(componentType) && componentsMap.get(componentType).containsKey(entity);
 	}
 
 
@@ -99,9 +105,23 @@ public class EntityManager {
 	 * @param componentType
 	 * @return
 	 */
-	public <T extends Component> T getComponent(int entity, Class<T> componentType) {
-		// TODO: getComponent
-		return null;
+	@SuppressWarnings("unchecked")
+	public <T extends Component> T getComponent(int entity, Class<T> componentType)
+			throws IllegalArgumentException {
+		HashMap<Integer, ? extends Component> map = componentsMap.get(componentType);
+
+		if (map == null) {
+			throw new IllegalArgumentException(
+					"No components of type " + componentType.toString() + " exist");
+		}
+
+		Component component = map.get(entity);
+		if (component == null) {
+			throw new IllegalArgumentException("Entity " + entity + " doesn't have component of type "
+					+ componentType.toString());
+		}
+
+		return (T) component;
 	}
 
 
@@ -152,7 +172,7 @@ public class EntityManager {
 	 */
 	public void clear() {
 		entities.clear();
-		componentMap.clear();
+		componentsMap.clear();
 		nextEntityId = 0;
 		return;
 	}
