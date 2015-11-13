@@ -1,8 +1,7 @@
 package com.tealduck.game.tests.engine;
 
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,9 +20,28 @@ public class EntityManagerTest {
 
 	@Test
 	public void testAddEntity() {
-		int id = entityManager.createEntity();
-		assertEquals(id, 0);
-		int id2 = entityManager.createEntity();
-		assertEquals(id2, 1);
+		int entity1 = entityManager.createEntity();
+		Assert.assertEquals(entity1, 0);
+		int entity2 = entityManager.createEntity();
+		Assert.assertEquals(entity2, 1);
+		Assert.assertEquals(entityManager.getEntityCount(), 2);
+	}
+
+
+	@Test
+	public void testRemoveEntity() {
+		int entity1 = entityManager.createEntity();
+		int entity2 = entityManager.createEntity();
+		int removedEntity = entityManager.removeEntity(entity1);
+		Assert.assertEquals(entity1, removedEntity);
+		Assert.assertEquals(entityManager.getEntityCount(), 1);
+		Assert.assertFalse(entityManager.getEntities().contains(entity1));
+		Assert.assertTrue(entityManager.getEntities().contains(entity2));
+	}
+
+
+	@Test
+	public void testRemoveEntityWithComponents() {
+		// TODO: later
 	}
 }
