@@ -31,9 +31,12 @@ public class EntityManagerTest {
 		int entity1 = entityManager.createEntity();
 		int entity2 = entityManager.createEntity();
 
-		Assert.assertEquals(entity1, 0);
-		Assert.assertEquals(entity2, 1);
-		Assert.assertEquals(entityManager.getEntityCount(), 2);
+		// Entity IDs start at 0, assigned sequentially
+		Assert.assertEquals(0, entity1);
+		Assert.assertEquals(1, entity2);
+
+		// Test added to set of entities
+		Assert.assertEquals(2, entityManager.getEntityCount());
 	}
 
 
@@ -43,8 +46,10 @@ public class EntityManagerTest {
 		int entity2 = entityManager.createEntity();
 		int removedEntity = entityManager.removeEntity(entity1);
 
-		Assert.assertEquals(entity1, removedEntity);
-		Assert.assertEquals(entityManager.getEntityCount(), 1);
+		// Removing entity should return the ID of the entity it removed
+		Assert.assertEquals(removedEntity, entity1);
+		// Test removed from set
+		Assert.assertEquals(1, entityManager.getEntityCount());
 		Assert.assertFalse(entityManager.getEntities().contains(entity1));
 		Assert.assertTrue(entityManager.getEntities().contains(entity2));
 	}
@@ -63,26 +68,28 @@ public class EntityManagerTest {
 		entityManager.addComponent(entity1, movementComponent);
 		entityManager.addComponent(entity2, positionComponent2);
 
-		HashMap<Class<? extends Component>, ? extends Component> components = entityManager
-				.getAllComponentsForEntity(entity1);
-		Assert.assertEquals(components.size(), 2);
-
 		entityManager.removeEntity(entity1);
 
-		components = entityManager.getAllComponentsForEntity(entity1);
-		Assert.assertEquals(components.size(), 0);
+		Collection<? extends Component> positionComponents = entityManager
+				.getAllComponentsOfType(PositionComponent.class);
+		Collection<? extends Component> movementComponents = entityManager
+				.getAllComponentsOfType(MovementComponent.class);
+
+		Assert.assertEquals(1, positionComponents.size());
+		Assert.assertEquals(0, movementComponents.size());
+
 	}
 
 
 	@Test
 	public void testAddComponent() {
 		int entity = entityManager.createEntity();
-		Vector2 position = new Vector2(10, 20);
-		PositionComponent positionComponent = new PositionComponent(position);
+		PositionComponent positionComponent = new PositionComponent(new Vector2(10, 20));
 		entityManager.addComponent(entity, positionComponent);
 
+		Assert.assertEquals(1, entityManager.getAllComponentsOfType(PositionComponent.class).size());
 		Assert.assertTrue(entityManager.entityHasComponent(entity, PositionComponent.class));
-		Assert.assertEquals(entityManager.getComponent(entity, PositionComponent.class), positionComponent);
+		Assert.assertEquals(positionComponent, entityManager.getComponent(entity, PositionComponent.class));
 	}
 
 
@@ -117,18 +124,18 @@ public class EntityManagerTest {
 
 		HashMap<Class<? extends Component>, ? extends Component> components = entityManager
 				.getAllComponentsForEntity(entity);
-		Assert.assertEquals(components.size(), 0);
+		Assert.assertEquals(0, components.size());
 
 		entityManager.addComponent(entity, positionComponent);
 
 		components = entityManager.getAllComponentsForEntity(entity);
-		Assert.assertEquals(components.size(), 1);
+		Assert.assertEquals(1, components.size());
 		Assert.assertTrue(components.containsKey(PositionComponent.class));
 
 		entityManager.addComponent(entity, movementComponent);
 
 		components = entityManager.getAllComponentsForEntity(entity);
-		Assert.assertEquals(components.size(), 2);
+		Assert.assertEquals(2, components.size());
 		Assert.assertTrue(components.containsKey(PositionComponent.class));
 		Assert.assertTrue(components.containsKey(MovementComponent.class));
 	}
@@ -140,18 +147,20 @@ public class EntityManagerTest {
 		int entity2 = entityManager.createEntity();
 
 		PositionComponent positionComponent1 = new PositionComponent(new Vector2(0, 0));
-		entityManager.addComponent(entity1, positionComponent1);
 		MovementComponent movementComponent1 = new MovementComponent(new Vector2(0, 0));
-		entityManager.addComponent(entity1, movementComponent1);
 		PositionComponent positionComponent2 = new PositionComponent(new Vector2(1, 1));
+
+		entityManager.addComponent(entity1, positionComponent1);
+		entityManager.addComponent(entity1, movementComponent1);
 		entityManager.addComponent(entity2, positionComponent2);
 
 		Collection<? extends Component> allPositions = entityManager
 				.getAllComponentsOfType(PositionComponent.class);
-		Assert.assertEquals(allPositions.size(), 2);
+		Assert.assertEquals(2, allPositions.size());
+
 		Collection<? extends Component> allMovements = entityManager
 				.getAllComponentsOfType(MovementComponent.class);
-		Assert.assertEquals(allMovements.size(), 1);
+		Assert.assertEquals(1, allMovements.size());
 	}
 
 
@@ -162,16 +171,17 @@ public class EntityManagerTest {
 		int entity3 = entityManager.createEntity();
 
 		PositionComponent positionComponent1 = new PositionComponent(new Vector2(0, 0));
-		entityManager.addComponent(entity1, positionComponent1);
 		PositionComponent positionComponent2 = new PositionComponent(new Vector2(0, 0));
-		entityManager.addComponent(entity2, positionComponent2);
 		MovementComponent movementComponent3 = new MovementComponent(new Vector2(0, 0));
+
+		entityManager.addComponent(entity1, positionComponent1);
+		entityManager.addComponent(entity2, positionComponent2);
 		entityManager.addComponent(entity3, movementComponent3);
 
 		Set<Integer> positionEntities = entityManager
 				.getAllEntitiesPossessingComponent(PositionComponent.class);
 
-		Assert.assertEquals(positionEntities.size(), 2);
+		Assert.assertEquals(2, positionEntities.size());
 		Assert.assertTrue(positionEntities.contains(entity1));
 		Assert.assertTrue(positionEntities.contains(entity2));
 		Assert.assertFalse(positionEntities.contains(entity3));
@@ -186,20 +196,21 @@ public class EntityManagerTest {
 		int entity3 = entityManager.createEntity();
 
 		PositionComponent positionComponent1 = new PositionComponent(new Vector2(0, 0));
-		entityManager.addComponent(entity1, positionComponent1);
 		MovementComponent movementComponent1 = new MovementComponent(new Vector2(0, 0));
-		entityManager.addComponent(entity1, movementComponent1);
 		PositionComponent positionComponent2 = new PositionComponent(new Vector2(0, 0));
-		entityManager.addComponent(entity2, positionComponent2);
 		MovementComponent movementComponent3 = new MovementComponent(new Vector2(0, 0));
+
+		entityManager.addComponent(entity1, positionComponent1);
+		entityManager.addComponent(entity1, movementComponent1);
+		entityManager.addComponent(entity2, positionComponent2);
 		entityManager.addComponent(entity3, movementComponent3);
 
-		Set<Integer> positionAndMovementEntities = entityManager
-				.getAllEntitiesPossessingComponents(PositionComponent.class, MovementComponent.class);
+		Set<Integer> positionAndMovementEntities = entityManager.getAllEntitiesPossessingAllComponents(
+				PositionComponent.class, MovementComponent.class);
 
-		Assert.assertEquals(positionAndMovementEntities.size(), 3);
+		Assert.assertEquals(1, positionAndMovementEntities.size());
 		Assert.assertTrue(positionAndMovementEntities.contains(entity1));
-		Assert.assertTrue(positionAndMovementEntities.contains(entity2));
-		Assert.assertTrue(positionAndMovementEntities.contains(entity3));
+		Assert.assertFalse(positionAndMovementEntities.contains(entity2));
+		Assert.assertFalse(positionAndMovementEntities.contains(entity3));
 	}
 }
