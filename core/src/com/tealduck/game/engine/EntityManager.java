@@ -1,16 +1,20 @@
 package com.tealduck.game.engine;
 
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 
 public class EntityManager {
+	// TODO: Javadoc
+	// TODO: Fix type of getAllComponentsForEntity in the submitted diagram
+	// TODO: Maybe add a method that returns HashMap<Integer, ? extends Component>
+
 	private Set<Integer> entities;
 	private HashMap<Class<? extends Component>, HashMap<Integer, ? extends Component>> componentsMap;
 	private int nextEntityId = 0;
@@ -41,10 +45,13 @@ public class EntityManager {
 	 * @return
 	 */
 	public int removeEntity(int entity) {
-		// TODO: remove entity
 		entities.remove(entity);
 
-		return 0;
+		for (HashMap<Integer, ? extends Component> map : componentsMap.values()) {
+			map.remove(entity);
+		}
+
+		return entity;
 	}
 
 
@@ -142,36 +149,35 @@ public class EntityManager {
 	 * @return
 	 */
 	public HashMap<Class<? extends Component>, ? extends Component> getAllComponentsForEntity(int entity) {
-		// TODO: getAllComponentsForEntity
-		// TODO: fix type of getAllComponentsForEntity in the submitted
-		// diagram
-
 		HashMap<Class<? extends Component>, Component> components = new HashMap<Class<? extends Component>, Component>();
 
 		Iterator<Entry<Class<? extends Component>, HashMap<Integer, ? extends Component>>> it = componentsMap
 				.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry<Class<? extends Component>, HashMap<Integer, ? extends Component>> pair = (Map.Entry<Class<? extends Component>, HashMap<Integer, ? extends Component>>) it.next();
+			Map.Entry<Class<? extends Component>, HashMap<Integer, ? extends Component>> pair = it.next();
 
 			Class<? extends Component> key = pair.getKey();
 			HashMap<Integer, ? extends Component> value = pair.getValue();
-			
+
 			if (value.containsKey(entity)) {
 				components.put(key, value.get(entity));
 			}
 		}
-		
+
 		return components;
 	}
 
-	
 
 	/**
 	 * @param componentType
 	 * @return
 	 */
-	public <T extends Component> List<T> getAllComponentsOfType(Class<T> componentType) {
-		// TODO: getAllComponentsOfType
+	public <T extends Component> Collection<? extends Component> getAllComponentsOfType(Class<T> componentType) {
+		HashMap<Integer, ? extends Component> map = componentsMap.get(componentType);
+		if (map != null) {
+			return map.values();
+		}
+
 		return null;
 	}
 
@@ -181,7 +187,11 @@ public class EntityManager {
 	 * @return
 	 */
 	public <T extends Component> Set<Integer> getAllEntitiesPossessingComponent(Class<T> componentType) {
-		// TODO: getAllEntitiesPossessingComponent
+		HashMap<Integer, ? extends Component> map = componentsMap.get(componentType);
+		if (map != null) {
+			return map.keySet();
+		}
+
 		return null;
 	}
 
@@ -190,9 +200,14 @@ public class EntityManager {
 	 * @param componentTypes
 	 * @return
 	 */
-	public <T extends Component> Set<Integer> getAllEntitiesPossessingComponents(Class<T>[] componentTypes) {
-		// TODO: getAllEntitiesPossessingComponents
-		return null;
+	public Set<Integer> getAllEntitiesPossessingComponents(Class<? extends Component>... componentTypes) {
+		Set<Integer> entities = new HashSet<Integer>();
+
+		for (Class<? extends Component> componentType : componentTypes) {
+			entities.addAll(getAllEntitiesPossessingComponent(componentType));
+		}
+
+		return entities;
 	}
 
 

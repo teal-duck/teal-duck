@@ -1,11 +1,11 @@
 package com.tealduck.game.engine;
 
 
-public abstract class System {
+public abstract class SystemAbstract {
 	protected EntityManager entityManager;
 
 
-	public System(EntityManager entityManager) {
+	public SystemAbstract(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 
