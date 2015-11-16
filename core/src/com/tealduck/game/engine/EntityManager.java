@@ -15,7 +15,6 @@ import java.util.Set;
  *
  */
 public class EntityManager {
-	// TODO: Javadoc
 	// TODO: Fix type of getAllComponentsForEntity in the submitted diagram
 	// TODO: Maybe add a method that returns HashMap<Integer, ? extends Component>
 
