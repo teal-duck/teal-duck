@@ -17,6 +17,8 @@ import com.tealduck.game.engine.EntityManager;
 
 
 public class EntityManagerTest {
+	// TODO: Maybe instead of using Position/MovementComponent classes, define 2 classes in this test case so that
+	// if/when the components change, the constructor calls here don't have to change
 	private EntityManager entityManager;
 
 
