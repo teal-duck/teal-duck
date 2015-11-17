@@ -1,19 +1,15 @@
 package com.tealduck.game.engine;
 
 
-import static java.lang.System.out;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 
 /**
- * Provides a ordered set for ordering systems.
+ * Provides a ordered data structure and iterator for game systems.
  */
 public class SystemManager implements Iterable<System> {
-	// TODO: SystemManager
-
 	private List<SystemWithPriority<? extends System>> systems;
 
 
@@ -23,10 +19,24 @@ public class SystemManager implements Iterable<System> {
 
 
 	/**
+	 * Adds the system to the list of systems based on priority. If there already is a system of the same type, it
+	 * is removed and returned. Priority is in ascending order (i.e. 0 comes before 1).
+	 *
+	 * @param <T>
+	 *                T extends {@link System}
 	 * @param system
+	 *                system to add
 	 * @param priority
+	 *                priority to add system with
+	 * @return system that was removed if there was one, else null
+	 * @throws IllegalArgumentException
+	 *                 if system is null
 	 */
-	public <T extends System> void addSystem(T system, int priority) {
+	public <T extends System> T addSystem(T system, int priority) {
+		if (system == null) {
+			throw new IllegalArgumentException("system is null");
+		}
+
 		SystemWithPriority<T> systemWithPriority = new SystemWithPriority<T>(system, priority);
 
 		int addAtIndex = -1;
@@ -45,47 +55,69 @@ public class SystemManager implements Iterable<System> {
 
 		}
 
+		T removed = null;
 		if (removeAtIndex >= 0) {
-			out.println("Removing at " + removeAtIndex);
-			systems.remove(removeAtIndex);
+			@SuppressWarnings("unchecked")
+			SystemWithPriority<T> removedWithPriority = (SystemWithPriority<T>) systems
+					.remove(removeAtIndex);
+			removed = removedWithPriority.system;
 		}
 
 		if (addAtIndex < 0) {
-			out.println("No addAtIndex found, adding to end");
 			addAtIndex = systems.size();
 		}
 
-		out.println("Adding " + system.toString() + " with priority " + priority + " at " + addAtIndex);
 		systems.add(addAtIndex, systemWithPriority);
+
+		return removed;
 	}
 
 
 	/**
+	 * Removes a system of the given type if there is one. Returns the system it removed.
+	 *
+	 * @param <T>
+	 *                T extends {@link System}
 	 * @param systemType
-	 * @return
+	 *                the type of system to remove
+	 * @return the system that was removed or null
+	 * @throws IllegalArgumentException
+	 *                 if systemType is null
 	 */
+	@SuppressWarnings("unchecked")
 	public <T extends System> T removeSystem(Class<T> systemType) {
+		if (systemType == null) {
+			throw new IllegalArgumentException("systemType is null");
+		}
+		int index = -1;
+
+		for (int i = 0, l = systems.size(); i < l; i += 1) {
+			if (systems.get(i).system.getClass().equals(systemType)) {
+				index = i;
+				break;
+			}
+		}
+
+		if (index >= 0) {
+			SystemWithPriority<T> systemWithPriority = (SystemWithPriority<T>) systems.remove(index);
+			return systemWithPriority.system;
+		}
+
 		return null;
 	}
 
 
 	/**
-	 * @return
-	 */
-	public List<SystemWithPriority<? extends System>> getSystems() {
-		return systems;
-	}
-
-
-	/**
-	 * 
+	 * Clears the list of systems
 	 */
 	public void clear() {
 		systems.clear();
 	}
 
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see java.lang.Iterable#iterator()
 	 */
 	@Override
@@ -106,6 +138,12 @@ public class SystemManager implements Iterable<System> {
 	}
 
 
+	/**
+	 * Internal class used to pair a system with its priority
+	 *
+	 * @param <T>
+	 *                T extends {@link System}
+	 */
 	private class SystemWithPriority<T extends System> {
 		public T system;
 		public int priority;

@@ -4,8 +4,6 @@ package com.tealduck.game.tests.engine;
 import org.junit.Before;
 import org.junit.Test;
 
-import static java.lang.System.out;
-
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.systems.CollisionSystem;
@@ -35,32 +33,38 @@ public class SystemManagerTest {
 
 		systemManager.addSystem(ils, 0);
 
-		out.println(systemManager);
-		out.println("");
+		System.out.println(systemManager);
+		System.out.println("");
 
 		MovementSystem ms = new MovementSystem(entityManager);
 		systemManager.addSystem(ms, 4);
 
-		out.println(systemManager);
-		out.println("");
+		System.out.println(systemManager);
+		System.out.println("");
 
 		PatrolLogicSystem pls = new PatrolLogicSystem(entityManager);
 		systemManager.addSystem(pls, 2);
 
-		out.println(systemManager);
-		out.println("");
+		System.out.println(systemManager);
+		System.out.println("");
 
 		CollisionSystem cs = new CollisionSystem(entityManager);
 		systemManager.addSystem(cs, 3);
 
-		out.println(systemManager);
-		out.println("");
+		System.out.println(systemManager);
+		System.out.println("");
 
 		// Test adding a duplicate
 		CollisionSystem cs2 = new CollisionSystem(entityManager);
 		systemManager.addSystem(cs2, 1);
 
-		out.println(systemManager);
-		out.println("");
+		System.out.println(systemManager);
+		System.out.println("");
+
+		systemManager.removeSystem(PatrolLogicSystem.class);
+
+		System.out.println(systemManager);
+		System.out.println("");
+
 	}
 }
