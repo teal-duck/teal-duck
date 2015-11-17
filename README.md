@@ -30,3 +30,4 @@
 1. Find package on http://search.maven.org/
 2. Open teal-duck/build.gradle
 3. Add line ```compile "<group>:<name>:<version>"``` within ```dependencies {...}``` for relevant project (core or desktop)
+See also https://docs.gradle.org/current/userguide/artifact_dependencies_tutorial.html
