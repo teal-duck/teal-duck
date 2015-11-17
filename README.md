@@ -20,10 +20,14 @@
 
 ## Push changes to GitHub
 1. Exit eclipse.
+2. Open terminal, ```cd``` to teal-duck.
+3. Run ```git branch``` to make sure you are on your correct branch.
 2. Run ```git status``` to see all changes you have made to project.
 3. Run ```git add <filename>``` for each file added/edited.
 4. Run ```git commit -m "<commit message>"``` Try to add a helpful message describing your change(s).
-5. Run ```git push``` to push changes to GitHub.
+5. Run ```git push``` to push changes to your branch on GitHub.
+6. Open GitHub, change to your branch. There should be a yellow banner saying that you have recently pushed th branch Click to open a pull request.
+7. Complete pull request form and submit.
 
 
 ## Add a dependency
@@ -31,3 +35,13 @@
 2. Open teal-duck/build.gradle
 3. Add line ```compile "<group>:<name>:<version>"``` within ```dependencies {...}``` for relevant project (core or desktop)
 See also https://docs.gradle.org/current/userguide/artifact_dependencies_tutorial.html
+
+
+## Create a new branch to work in
+1. Open teal-duck on https://github.com/teal-duck/teal-duck
+2. Click on ```Branch: master```, type in name of your new branch, press enter.
+3. Open terminal, ```cd``` to teal-duck.
+4. ```git pull```
+5. ```git checkout <branch-name>```
+6. You have created and switched to your new branch.
+
