@@ -4,8 +4,9 @@ package com.tealduck.game.engine;
 import java.util.HashMap;
 
 
+
 /**
- * Maps string tags to entity IDs.
+ * Maps string tags to entity IDs. Wrapper around built-in {@link HashMap}
  */
 public class EntityTagManager {
 	// TODO: EntityTagManager Javadoc and tests

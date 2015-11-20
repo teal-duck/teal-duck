@@ -21,7 +21,6 @@ public class SystemManagerTest {
 	@Before
 	public void setup() {
 		systemManager = new SystemManager();
-
 		entityManager = new EntityManager();
 	}
 
@@ -29,8 +28,8 @@ public class SystemManagerTest {
 	@Test
 	public void testAddSystem() {
 		// TODO: Add asserts to SystemManagerTest
+		
 		InputLogicSystem ils = new InputLogicSystem(entityManager);
-
 		systemManager.addSystem(ils, 0);
 
 		System.out.println(systemManager);
