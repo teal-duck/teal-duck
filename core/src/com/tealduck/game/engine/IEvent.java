@@ -2,5 +2,11 @@ package com.tealduck.game.engine;
 
 
 public interface IEvent {
-	public void fire(int sender, int receiver);
+	/**
+	 * @param entityManager
+	 * @param sender
+	 * @param receiver
+	 * @return false if the receiver entity should be removed, else true
+	 */
+	public boolean fire(EntityManager entityManager, EntityTagManager entityTagManager, int sender, int receiver);
 }

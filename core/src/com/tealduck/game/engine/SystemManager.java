@@ -9,12 +9,12 @@ import java.util.List;
 /**
  * Provides a ordered data structure and iterator for game systems.
  */
-public class SystemManager implements Iterable<System> {
-	private List<SystemWithPriority<? extends System>> systems;
+public class SystemManager implements Iterable<GameSystem> {
+	private List<SystemWithPriority<? extends GameSystem>> systems;
 
 
 	public SystemManager() {
-		systems = new ArrayList<SystemWithPriority<? extends System>>();
+		systems = new ArrayList<SystemWithPriority<? extends GameSystem>>();
 	}
 
 
@@ -23,7 +23,7 @@ public class SystemManager implements Iterable<System> {
 	 * is removed and returned. Priority is in ascending order (i.e. 0 comes before 1).
 	 *
 	 * @param <T>
-	 *                T extends {@link System}
+	 *                T extends {@link GameSystem}
 	 * @param system
 	 *                system to add
 	 * @param priority
@@ -32,7 +32,7 @@ public class SystemManager implements Iterable<System> {
 	 * @throws IllegalArgumentException
 	 *                 if system is null
 	 */
-	public <T extends System> T addSystem(T system, int priority) {
+	public <T extends GameSystem> T addSystem(T system, int priority) {
 		if (system == null) {
 			throw new IllegalArgumentException("system is null");
 		}
@@ -43,7 +43,7 @@ public class SystemManager implements Iterable<System> {
 		int removeAtIndex = -1;
 
 		for (int i = 0, l = systems.size(); i < l; i += 1) {
-			SystemWithPriority<? extends System> s = systems.get(i);
+			SystemWithPriority<? extends GameSystem> s = systems.get(i);
 
 			if (system.getClass().equals(s.system.getClass())) {
 				removeAtIndex = i;
@@ -77,7 +77,7 @@ public class SystemManager implements Iterable<System> {
 	 * Removes a system of the given type if there is one. Returns the system it removed.
 	 *
 	 * @param <T>
-	 *                T extends {@link System}
+	 *                T extends {@link GameSystem}
 	 * @param systemType
 	 *                the type of system to remove
 	 * @return the system that was removed or null
@@ -85,7 +85,7 @@ public class SystemManager implements Iterable<System> {
 	 *                 if systemType is null
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends System> T removeSystem(Class<T> systemType) {
+	public <T extends GameSystem> T removeSystem(Class<T> systemType) {
 		if (systemType == null) {
 			throw new IllegalArgumentException("systemType is null");
 		}
@@ -121,10 +121,10 @@ public class SystemManager implements Iterable<System> {
 	 * @see java.lang.Iterable#iterator()
 	 */
 	@Override
-	public Iterator<System> iterator() {
-		List<System> pureSystems = new ArrayList<System>();
+	public Iterator<GameSystem> iterator() {
+		List<GameSystem> pureSystems = new ArrayList<GameSystem>();
 
-		for (SystemWithPriority<? extends System> pureSystem : systems) {
+		for (SystemWithPriority<? extends GameSystem> pureSystem : systems) {
 			pureSystems.add(pureSystem.system);
 		}
 
@@ -142,9 +142,9 @@ public class SystemManager implements Iterable<System> {
 	 * Internal class used to pair a system with its priority
 	 *
 	 * @param <T>
-	 *                T extends {@link System}
+	 *                T extends {@link GameSystem}
 	 */
-	private class SystemWithPriority<T extends System> {
+	private class SystemWithPriority<T extends GameSystem> {
 		public T system;
 		public int priority;
 

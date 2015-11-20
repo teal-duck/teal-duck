@@ -2,14 +2,14 @@ package com.tealduck.game.engine;
 
 
 /**
- * Abstract base class for all systems. Requires implementing the {@link System#update} method. Has reference to
+ * Abstract base class for all systems. Requires implementing the {@link GameSystem#update} method. Has reference to
  * {@link EntityManager} so update method can access entities.
  */
-public abstract class System {
+public abstract class GameSystem {
 	protected EntityManager entityManager;
 
 
-	public System(EntityManager entityManager) {
+	public GameSystem(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 

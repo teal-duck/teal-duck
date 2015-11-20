@@ -2,10 +2,10 @@ package com.tealduck.game.systems;
 
 
 import com.tealduck.game.engine.EntityManager;
-import com.tealduck.game.engine.System;
+import com.tealduck.game.engine.GameSystem;
 
 
-public class PatrolLogicSystem extends System {
+public class PatrolLogicSystem extends GameSystem {
 	public PatrolLogicSystem(EntityManager entityManager) {
 		super(entityManager);
 	}

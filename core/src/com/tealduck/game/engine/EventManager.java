@@ -12,11 +12,13 @@ public class EventManager {
 	// Map from entities to (map from event names to functions)
 	private HashMap<Integer, HashMap<String, IEvent>> events;
 	private EntityManager entityManager;
+	private EntityTagManager entityTagManager;
 
 
-	public EventManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
+	public EventManager(EntityManager entityManager, EntityTagManager entityTagManager) {
 		events = new HashMap<Integer, HashMap<String, IEvent>>();
+		this.entityManager = entityManager;
+		this.entityTagManager = entityTagManager;
 	}
 
 
@@ -48,8 +50,9 @@ public class EventManager {
 	 * @param senderEntity
 	 * @param receiverEntity
 	 * @param name
+	 * @return
 	 */
-	public void triggerEvent(int senderEntity, int receiverEntity, String name) {
+	public boolean triggerEvent(int senderEntity, int receiverEntity, String name) {
 		// TODO: Probably add another parameter for extra data to pass to the function
 		// Currently not sure how to best handle this
 
@@ -69,7 +72,14 @@ public class EventManager {
 					"Receiver entity " + receiverEntity + " can't respond to " + name);
 		}
 
-		function.fire(senderEntity, receiverEntity);
+		boolean keepEntityAlive = function.fire(entityManager, entityTagManager, senderEntity, receiverEntity);
+		if (!keepEntityAlive) {
+			removeEntity(receiverEntity);
+			entityManager.removeEntity(receiverEntity);
+			entityTagManager.removeTagsAssociatedWithEntity(receiverEntity);
+		}
+
+		return keepEntityAlive;
 	}
 
 
