@@ -281,6 +281,9 @@ public class EntityManager {
 
 	/**
 	 * Gets all the instances of a given component type.
+	 * 
+	 * Call like so:
+	 * getAllComponentsOfType(ExampleComponent.class);
 	 *
 	 * @param <T>
 	 *                T extends {@link Component}
