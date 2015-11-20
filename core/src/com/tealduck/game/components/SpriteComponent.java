@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 
-public class RenderComponent extends Component {
+public class SpriteComponent extends Component {
 	public Sprite sprite;
 	
-	public RenderComponent(Texture texture){
+	public SpriteComponent(Texture texture){
 		sprite = new Sprite(texture);
 	}
 }
