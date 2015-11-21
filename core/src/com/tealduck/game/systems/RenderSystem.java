@@ -14,14 +14,31 @@ import com.tealduck.game.engine.Component;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
 
+/**
+ * System handling rendering of all sprites.
+ * @author aacn500
+ *
+ */
 public class RenderSystem extends GameSystem {
+	/**
+	 * SpriteBatch used to draw to screen
+	 */
 	SpriteBatch batch;
 	
+	/**
+	 * 
+	 * @param entityManager EntityManager containing entities for game
+	 * @param batch SpriteBatch used to draw to screen
+	 */
 	public RenderSystem(EntityManager entityManager, SpriteBatch batch){
 		super(entityManager);
 		this.batch = batch;
 	}
 	
+	/**
+	 * Redraws all entities with sprites to the screen.
+	 * @param deltaTime time elapsed since last update
+	 */
 	@Override
 	public void update(float deltaTime){
 		Gdx.gl.glClearColor(1, 0, 0, 1);
@@ -36,13 +53,10 @@ public class RenderSystem extends GameSystem {
 			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
 			
 			batch.draw(sprite, position.x, position.y);
+			
 		}
 		
 		batch.end();
 	}
 	
-	public void draw(){
-		
-	}
-
 }
