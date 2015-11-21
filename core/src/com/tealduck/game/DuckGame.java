@@ -1,6 +1,8 @@
 package com.tealduck.game;
 
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,6 +14,8 @@ import com.tealduck.game.components.SpriteComponent;
 import com.tealduck.game.engine.Component;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
+import com.tealduck.game.engine.GameSystem;
+import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.systems.RenderSystem;
 
 
@@ -20,7 +24,7 @@ public class DuckGame extends ApplicationAdapter {
 	Texture img;
 	EntityManager entityManager;
 	EntityTagManager entityTagManager;
-	RenderSystem renderSystem;
+	SystemManager systemManager;
 
 
 	@Override
@@ -29,16 +33,25 @@ public class DuckGame extends ApplicationAdapter {
 		img = new Texture("badlogic.jpg");
 		entityManager = new EntityManager();
 		entityTagManager = new EntityTagManager();
+		systemManager = new SystemManager();
+		
 		entityTagManager.addTag("DUCK", entityManager.createEntity());
+		
 		entityManager.addComponent(entityTagManager.getEntity("DUCK"), new SpriteComponent(img));
 		entityManager.addComponent(entityTagManager.getEntity("DUCK"), new PositionComponent(new Vector2(0, 0)));
-		renderSystem = new RenderSystem(entityManager, batch);
+		
+		systemManager.addSystem(new RenderSystem(entityManager, batch), 5);
 	}
 
 
 	@Override
 	public void render() {
-		renderSystem.update(50.0f); 
+		Iterator<GameSystem> systems = systemManager.iterator();
+		while (systems.hasNext()){
+			GameSystem system = systems.next();
+			system.update(50.0f);
+			
+		}
 	}
 	
 }
