@@ -33,8 +33,6 @@ public class SystemManagerTest {
 
 	@Test
 	public void testAddSystem() {
-		// TODO: Add asserts to SystemManagerTest
-
 		InputLogicSystem ils = new InputLogicSystem(entityManager, entityTagManager, eventManager);
 		systemManager.addSystem(ils, 0);
 

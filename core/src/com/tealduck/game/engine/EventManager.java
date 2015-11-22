@@ -8,7 +8,6 @@ import java.util.HashMap;
  * Stores the events performable on entities and provides an API for triggering events.
  */
 public class EventManager {
-	// TODO: EventManager
 	// Map from entities to (map from event names to functions)
 	private HashMap<Integer, HashMap<String, IEvent>> events;
 	private EntityManager entityManager;
@@ -106,7 +105,6 @@ public class EventManager {
 	 * @return
 	 */
 	public HashMap<String, IEvent> removeEntity(int entity) {
-		// TODO: What type should this return (+ update class diagrams in report)
 		return events.remove(entity);
 	}
 

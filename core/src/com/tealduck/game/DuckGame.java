@@ -2,7 +2,6 @@ package com.tealduck.game;
 
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tealduck.game.engine.EntityManager;
@@ -32,12 +31,18 @@ public class DuckGame extends Game {
 
 		batch = new SpriteBatch();
 
-		for (Controller controller : Controllers.getControllers()) {
-			System.out.println(controller.getName());
-		}
+		setupControllers();
 
 		setScreen(new GameScreen(this));
 
+	}
+
+
+	public void setupControllers() {
+		// TODO: setupControllers
+		ControllerHelper controllerHelper = new ControllerHelper();
+		Controllers.addListener(controllerHelper);
+		ControllerHelper.printControllers();
 	}
 
 

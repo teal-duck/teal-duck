@@ -1,10 +1,14 @@
 package com.tealduck.game.screen;
 
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.Tag;
 import com.tealduck.game.component.MovementComponent;
@@ -12,6 +16,9 @@ import com.tealduck.game.component.PathfindingComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
+import com.tealduck.game.component.input.Action;
+import com.tealduck.game.component.input.ControlMap;
+import com.tealduck.game.component.input.ControllerBindingType;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.EventManager;
@@ -66,6 +73,13 @@ public class GameScreen implements Screen {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param entityTagManager
+	 * @param texture
+	 * @param location
+	 * @return
+	 */
 	private int createPlayer(EntityManager entityManager, EntityTagManager entityTagManager, Texture texture,
 			Vector2 location) {
 		int playerId = entityManager.createEntityWithTag(entityTagManager, Tag.PLAYER);
@@ -73,12 +87,41 @@ public class GameScreen implements Screen {
 		entityManager.addComponent(playerId, new SpriteComponent(texture));
 		entityManager.addComponent(playerId, new PositionComponent(location));
 		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0), 150));
-		entityManager.addComponent(playerId, new UserInputComponent());
+
+		ControlMap controls = new ControlMap();
+
+		controls.addKeyForAction(Action.RIGHT, Keys.D, Keys.RIGHT);
+		controls.addKeyForAction(Action.LEFT, Keys.A, Keys.LEFT);
+		controls.addKeyForAction(Action.UP, Keys.W, Keys.UP);
+		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
+
+		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, 0, 0.3f);
+		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, 0, 0.3f);
+		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, 1, 0.3f);
+		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, 1, 0.3f);
+
+		entityManager.addComponent(playerId, new UserInputComponent(controls, getFirstControllerOrNull()));
 
 		return playerId;
 	}
 
 
+	/**
+	 * @return
+	 */
+	private Controller getFirstControllerOrNull() {
+		Array<Controller> controllers = Controllers.getControllers();
+		Controller controller = (controllers.size > 0) ? controllers.first() : null;
+		return controller;
+	}
+
+
+	/**
+	 * @param entityManager
+	 * @param texture
+	 * @param location
+	 * @return
+	 */
 	private int createEnemy(EntityManager entityManager, Texture texture, Vector2 location) {
 		int enemyId = entityManager.createEntity();
 		entityManager.addComponent(enemyId, new SpriteComponent(texture));
@@ -87,6 +130,13 @@ public class GameScreen implements Screen {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param texture
+	 * @param location
+	 * @param targetId
+	 * @return
+	 */
 	private int createPathfindingEnemy(EntityManager entityManager, Texture texture, Vector2 location,
 			int targetId) {
 		int enemyId = createEnemy(entityManager, texture, location);

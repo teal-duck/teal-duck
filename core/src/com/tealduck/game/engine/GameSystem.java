@@ -18,7 +18,6 @@ public abstract class GameSystem {
 	}
 
 
-	// TODO: Is delta time in seconds or milliseconds
 	/**
 	 * Called each frame to update some part of the game.
 	 *
