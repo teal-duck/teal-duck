@@ -2,8 +2,8 @@ package com.tealduck.game.component;
 
 
 import com.badlogic.gdx.controllers.Controller;
-import com.tealduck.game.component.input.ControlMap;
 import com.tealduck.game.engine.Component;
+import com.tealduck.game.input.ControlMap;
 
 
 public class UserInputComponent extends Component {

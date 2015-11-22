@@ -1,4 +1,4 @@
-package com.tealduck.game.component.input;
+package com.tealduck.game.input;
 
 
 /**

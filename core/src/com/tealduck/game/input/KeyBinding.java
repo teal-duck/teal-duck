@@ -1,4 +1,4 @@
-package com.tealduck.game.component.input;
+package com.tealduck.game.input;
 
 
 import com.badlogic.gdx.Gdx;
@@ -9,7 +9,7 @@ import com.badlogic.gdx.Input.Keys;
  *
  */
 public class KeyBinding {
-	private static final int NO_KEY = Keys.UNKNOWN;
+	public static final int NO_KEY = Keys.UNKNOWN;
 
 	private int primary;
 	private int secondary;
@@ -66,6 +66,34 @@ public class KeyBinding {
 		} else {
 			setPrimary(key);
 		}
+	}
+
+
+	/**
+	 *
+	 */
+	public void removePrimary() {
+		// TODO: Should remove key methods return previous state
+		primary = secondary;
+		secondary = KeyBinding.NO_KEY;
+	}
+
+
+	/**
+	 *
+	 */
+	public void removeSecondary() {
+		secondary = KeyBinding.NO_KEY;
+	}
+
+
+	/**
+	 * @param newPrimary
+	 */
+	public void setPrimaryKeepOldAsSecondary(int newPrimary) {
+		// TODO: Change name of setPrimaryKeepOldAsSecondary
+		secondary = primary;
+		primary = newPrimary;
 	}
 
 

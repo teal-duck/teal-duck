@@ -6,12 +6,12 @@ import java.util.Set;
 import com.badlogic.gdx.controllers.Controller;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.UserInputComponent;
-import com.tealduck.game.component.input.Action;
-import com.tealduck.game.component.input.ControlMap;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.GameSystem;
+import com.tealduck.game.input.Action;
+import com.tealduck.game.input.ControlMap;
 
 
 public class InputLogicSystem extends GameSystem {
