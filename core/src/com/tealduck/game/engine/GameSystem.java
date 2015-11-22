@@ -7,10 +7,14 @@ package com.tealduck.game.engine;
  */
 public abstract class GameSystem {
 	protected EntityManager entityManager;
+	protected EntityTagManager entityTagManager;
+	protected EventManager eventManager;
 
 
-	public GameSystem(EntityManager entityManager) {
+	public GameSystem(EntityManager entityManager, EntityTagManager entityTagManager, EventManager eventManager) {
 		this.entityManager = entityManager;
+		this.entityTagManager = entityTagManager;
+		this.eventManager = eventManager;
 	}
 
 

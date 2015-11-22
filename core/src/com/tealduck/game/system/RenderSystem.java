@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.engine.EntityManager;
+import com.tealduck.game.engine.EntityTagManager;
+import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.GameSystem;
 
 
@@ -37,8 +39,9 @@ public class RenderSystem extends GameSystem {
 	 * @param batch
 	 *                SpriteBatch used to draw to screen
 	 */
-	public RenderSystem(EntityManager entityManager, OrthographicCamera camera, SpriteBatch batch) {
-		super(entityManager);
+	public RenderSystem(EntityManager entityManager, EntityTagManager entityTagManager, EventManager eventManager,
+			OrthographicCamera camera, SpriteBatch batch) {
+		super(entityManager, entityTagManager, eventManager);
 
 		this.camera = camera;
 		this.batch = batch;
