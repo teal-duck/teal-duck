@@ -63,7 +63,7 @@ public class EntityManagerTest {
 		int entity2 = entityManager.createEntity();
 
 		PositionComponent positionComponent = new PositionComponent(new Vector2(0, 0));
-		MovementComponent movementComponent = new MovementComponent(new Vector2(0, 0));
+		MovementComponent movementComponent = new MovementComponent(new Vector2(0, 0), 0);
 		PositionComponent positionComponent2 = new PositionComponent(new Vector2(1, 1));
 
 		entityManager.addComponent(entity1, positionComponent);
@@ -101,7 +101,7 @@ public class EntityManagerTest {
 		int entity = entityManager.createEntity();
 
 		PositionComponent positionComponent = new PositionComponent(new Vector2(0, 0));
-		MovementComponent movementComponent = new MovementComponent(new Vector2(0, 0));
+		MovementComponent movementComponent = new MovementComponent(new Vector2(0, 0), 0);
 
 		entityManager.addComponent(entity, positionComponent);
 		entityManager.addComponent(entity, movementComponent);
@@ -123,7 +123,7 @@ public class EntityManagerTest {
 	public void testGetAllComponentsForEntity() {
 		int entity = entityManager.createEntity();
 		PositionComponent positionComponent = new PositionComponent(new Vector2(0, 0));
-		MovementComponent movementComponent = new MovementComponent(new Vector2(0, 0));
+		MovementComponent movementComponent = new MovementComponent(new Vector2(0, 0), 0);
 
 		HashMap<Class<? extends Component>, ? extends Component> components = entityManager
 				.getEntityComponents(entity);
@@ -150,7 +150,7 @@ public class EntityManagerTest {
 		int entity2 = entityManager.createEntity();
 
 		PositionComponent positionComponent1 = new PositionComponent(new Vector2(0, 0));
-		MovementComponent movementComponent1 = new MovementComponent(new Vector2(0, 0));
+		MovementComponent movementComponent1 = new MovementComponent(new Vector2(0, 0), 0);
 		PositionComponent positionComponent2 = new PositionComponent(new Vector2(1, 1));
 
 		entityManager.addComponent(entity1, positionComponent1);
@@ -175,7 +175,7 @@ public class EntityManagerTest {
 
 		PositionComponent positionComponent1 = new PositionComponent(new Vector2(0, 0));
 		PositionComponent positionComponent2 = new PositionComponent(new Vector2(0, 0));
-		MovementComponent movementComponent3 = new MovementComponent(new Vector2(0, 0));
+		MovementComponent movementComponent3 = new MovementComponent(new Vector2(0, 0), 0);
 
 		entityManager.addComponent(entity1, positionComponent1);
 		entityManager.addComponent(entity2, positionComponent2);
@@ -198,9 +198,9 @@ public class EntityManagerTest {
 		int entity3 = entityManager.createEntity();
 
 		PositionComponent positionComponent1 = new PositionComponent(new Vector2(0, 0));
-		MovementComponent movementComponent1 = new MovementComponent(new Vector2(0, 0));
+		MovementComponent movementComponent1 = new MovementComponent(new Vector2(0, 0), 0);
 		PositionComponent positionComponent2 = new PositionComponent(new Vector2(0, 0));
-		MovementComponent movementComponent3 = new MovementComponent(new Vector2(0, 0));
+		MovementComponent movementComponent3 = new MovementComponent(new Vector2(0, 0), 0);
 
 		entityManager.addComponent(entity1, positionComponent1);
 		entityManager.addComponent(entity1, movementComponent1);

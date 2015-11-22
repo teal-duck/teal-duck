@@ -7,10 +7,12 @@ import com.tealduck.game.engine.Component;
 
 public class MovementComponent extends Component {
 	public Vector2 velocity;
+	public float maxSpeed;
 
 
-	public MovementComponent(Vector2 velocity) {
+	public MovementComponent(Vector2 velocity, float maxSpeed) {
 		this.velocity = velocity;
+		this.maxSpeed = maxSpeed;
 	}
 
 

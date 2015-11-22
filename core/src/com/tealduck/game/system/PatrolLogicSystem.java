@@ -42,13 +42,14 @@ public class PatrolLogicSystem extends GameSystem {
 
 				// TODO: How to handle entity movement speeds
 				// Value in MovementComponent?
-				float entitySpeed = 20;
-				Vector2 difference = targetPosition.cpy().sub(entityPosition);
-				Vector2 velocity = difference.setLength(entitySpeed);
+				// float entitySpeed = 20;
+				// Vector2 difference = targetPosition.cpy().sub(entityPosition);
+				// Vector2 velocity = difference.setLength(entitySpeed);
 
 				MovementComponent movementComponent = entityManager.getComponent(entity,
 						MovementComponent.class);
-				movementComponent.velocity = velocity;
+				movementComponent.velocity.set(targetPosition).sub(entityPosition)
+						.setLength(movementComponent.maxSpeed);
 			}
 		}
 	}

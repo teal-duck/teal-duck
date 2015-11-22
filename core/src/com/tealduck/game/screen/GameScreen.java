@@ -72,13 +72,7 @@ public class GameScreen implements Screen {
 
 		entityManager.addComponent(playerId, new SpriteComponent(texture));
 		entityManager.addComponent(playerId, new PositionComponent(location));
-
-		float speed = 30;
-		Vector2 direction = new Vector2(1, 1);
-		Vector2 velocity = direction.setLength(speed);
-
-		entityManager.addComponent(playerId, new MovementComponent(velocity));
-
+		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0), 150));
 		entityManager.addComponent(playerId, new UserInputComponent());
 
 		return playerId;
@@ -96,7 +90,7 @@ public class GameScreen implements Screen {
 	private int createPathfindingEnemy(EntityManager entityManager, Texture texture, Vector2 location,
 			int targetId) {
 		int enemyId = createEnemy(entityManager, texture, location);
-		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0)));
+		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), 80));
 		entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
 		return enemyId;
 	}

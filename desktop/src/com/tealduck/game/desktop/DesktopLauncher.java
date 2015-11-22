@@ -15,6 +15,9 @@ public class DesktopLauncher {
 		config.y = -1;
 		config.width = 600;
 		config.height = 480;
+		config.useGL30 = false;
+		config.allowSoftwareMode = true;
+		config.vSyncEnabled = true;
 		config.foregroundFPS = 60;
 
 		// config.resizable = false;
