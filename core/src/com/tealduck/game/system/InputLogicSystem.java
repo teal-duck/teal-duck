@@ -1,4 +1,4 @@
-package com.tealduck.game.systems;
+package com.tealduck.game.system;
 
 
 import com.tealduck.game.engine.EntityManager;

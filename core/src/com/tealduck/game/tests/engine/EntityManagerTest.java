@@ -10,8 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
-import com.tealduck.game.components.MovementComponent;
-import com.tealduck.game.components.PositionComponent;
+import com.tealduck.game.component.MovementComponent;
+import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.engine.Component;
 import com.tealduck.game.engine.EntityManager;
 

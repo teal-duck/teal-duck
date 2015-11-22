@@ -6,10 +6,10 @@ import org.junit.Test;
 
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.SystemManager;
-import com.tealduck.game.systems.CollisionSystem;
-import com.tealduck.game.systems.InputLogicSystem;
-import com.tealduck.game.systems.MovementSystem;
-import com.tealduck.game.systems.PatrolLogicSystem;
+import com.tealduck.game.system.CollisionSystem;
+import com.tealduck.game.system.InputLogicSystem;
+import com.tealduck.game.system.MovementSystem;
+import com.tealduck.game.system.PatrolLogicSystem;
 
 
 public class SystemManagerTest {
@@ -28,7 +28,7 @@ public class SystemManagerTest {
 	@Test
 	public void testAddSystem() {
 		// TODO: Add asserts to SystemManagerTest
-		
+
 		InputLogicSystem ils = new InputLogicSystem(entityManager);
 		systemManager.addSystem(ils, 0);
 

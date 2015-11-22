@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 
 /**
- * 
+ *
  * Maps string tags to entity IDs. Wrapper around built-in {@link HashMap}
  */
 public class EntityTagManager {
@@ -75,7 +75,7 @@ public class EntityTagManager {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public void clear() {
 		tags.clear();

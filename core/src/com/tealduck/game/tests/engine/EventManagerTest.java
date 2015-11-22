@@ -48,7 +48,7 @@ public class EventManagerTest {
 		String testEvent2Name = "TEST_EVENT_2";
 		IEvent testEvent2 = new IEvent() {
 			@Override
-			public boolean fire(EntityManager entityManager, EntityTagManager entityTagManager, 	int sender,
+			public boolean fire(EntityManager entityManager, EntityTagManager entityTagManager, int sender,
 					int receiver) {
 				System.out.println("[Test event 2] Receiver " + receiver + " got event from sender "
 						+ sender);

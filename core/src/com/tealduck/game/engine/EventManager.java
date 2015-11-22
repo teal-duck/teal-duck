@@ -26,7 +26,7 @@ public class EventManager {
 	 * @param entity
 	 * @param name
 	 * @param function
-	 * 
+	 *
 	 */
 	public void addEvent(int entity, String name, IEvent function) {
 		if (name == null) {
@@ -112,7 +112,7 @@ public class EventManager {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public void clear() {
 		events.clear();
@@ -121,7 +121,7 @@ public class EventManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

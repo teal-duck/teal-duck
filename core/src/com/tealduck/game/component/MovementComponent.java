@@ -1,4 +1,4 @@
-package com.tealduck.game.components;
+package com.tealduck.game.component;
 
 
 import com.badlogic.gdx.math.Vector2;
