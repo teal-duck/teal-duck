@@ -79,10 +79,9 @@ public class RenderSystem extends GameSystem {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
-		Set<Integer> entitiesWithSpriteComponents = entityManager
-				.getEntitiesWithComponent(SpriteComponent.class);
+		Set<Integer> entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
 
-		for (int entity : entitiesWithSpriteComponents) {
+		for (int entity : entities) {
 			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
 			sprite.draw(batch);
 		}

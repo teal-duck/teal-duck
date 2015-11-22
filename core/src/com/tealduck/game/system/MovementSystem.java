@@ -30,10 +30,10 @@ public class MovementSystem extends GameSystem {
 
 	private void moveEntities(float deltaTime) {
 		@SuppressWarnings("unchecked")
-		Set<Integer> entitiesWithPositionAndMovementComponents = entityManager
-				.getEntitiesWithComponents(PositionComponent.class, MovementComponent.class);
+		Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class,
+				MovementComponent.class);
 
-		for (int entity : entitiesWithPositionAndMovementComponents) {
+		for (int entity : entities) {
 			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
 			Vector2 velocity = entityManager.getComponent(entity, MovementComponent.class).velocity;
 
@@ -49,10 +49,10 @@ public class MovementSystem extends GameSystem {
 	 */
 	private void updateSpriteLocations() {
 		@SuppressWarnings("unchecked")
-		Set<Integer> entitiesWithSpriteAndPositionComponents = entityManager
-				.getEntitiesWithComponents(PositionComponent.class, SpriteComponent.class);
+		Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class,
+				SpriteComponent.class);
 
-		for (int entity : entitiesWithSpriteAndPositionComponents) {
+		for (int entity : entities) {
 			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
 			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
 

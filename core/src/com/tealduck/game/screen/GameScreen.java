@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.Tag;
 import com.tealduck.game.component.MovementComponent;
+import com.tealduck.game.component.PathfindingComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
@@ -45,13 +46,15 @@ public class GameScreen implements Screen {
 		EventManager eventManager = game.getEventManager();
 		SystemManager systemManager = game.getSystemManager();
 
-		createPlayer(entityManager, entityTagManager, duckTexture, new Vector2(0, 0));
+		int playerId = createPlayer(entityManager, entityTagManager, duckTexture, new Vector2(0, 0));
 
 		Vector2[] enemyLocations = new Vector2[] { new Vector2(200, 200), new Vector2(100, 300),
 				new Vector2(400, 100) };
 		for (Vector2 location : enemyLocations) {
 			createEnemy(entityManager, enemyTexture, location);
 		}
+
+		createPathfindingEnemy(entityManager, enemyTexture, new Vector2(0, 200), playerId);
 
 		// TODO: Tidy up system instantiation
 		systemManager.addSystem(new InputLogicSystem(entityManager, entityTagManager, eventManager), 0);
@@ -84,10 +87,17 @@ public class GameScreen implements Screen {
 
 	private int createEnemy(EntityManager entityManager, Texture texture, Vector2 location) {
 		int enemyId = entityManager.createEntity();
-
 		entityManager.addComponent(enemyId, new SpriteComponent(texture));
 		entityManager.addComponent(enemyId, new PositionComponent(location));
+		return enemyId;
+	}
 
+
+	private int createPathfindingEnemy(EntityManager entityManager, Texture texture, Vector2 location,
+			int targetId) {
+		int enemyId = createEnemy(entityManager, texture, location);
+		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0)));
+		entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
 		return enemyId;
 	}
 
