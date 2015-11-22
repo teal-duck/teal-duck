@@ -1,12 +1,12 @@
 package com.tealduck.game.screen;
 
 
-import java.util.Iterator;
-
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.DuckGame;
+import com.tealduck.game.Tag;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.engine.EntityManager;
@@ -20,27 +20,27 @@ public class GameScreen implements Screen {
 	private final DuckGame game;
 
 	private Texture img;
-	private EntityManager entityManager;
-	private EntityTagManager entityTagManager;
-	private SystemManager systemManager;
+	private OrthographicCamera camera;
 
 
 	public GameScreen(DuckGame gam) {
 		game = gam;
 
+		camera = new OrthographicCamera();
+		resize(game.getWidth(), game.getHeight());
+
 		img = new Texture("badlogic.jpg");
-		entityManager = new EntityManager();
-		entityTagManager = new EntityTagManager();
-		systemManager = new SystemManager();
 
-		entityTagManager.addTag("DUCK", entityManager.createEntity());
+		EntityManager entityManager = game.getEntityManager();
+		EntityTagManager entityTagManager = game.getEntityTagManager();
 
-		entityManager.addComponent(entityTagManager.getEntity("DUCK"), new SpriteComponent(img));
-		entityManager.addComponent(entityTagManager.getEntity("DUCK"),
-				new PositionComponent(new Vector2(0, 0)));
+		int duckId = entityManager.createEntityWithTag(entityTagManager, Tag.DUCK);
 
-		systemManager.addSystem(new RenderSystem(entityManager, game.getBatch()), 5);
+		entityManager.addComponent(duckId, new SpriteComponent(img));
+		entityManager.addComponent(duckId, new PositionComponent(new Vector2(0, 0)));
 
+		SystemManager systemManager = game.getSystemManager();
+		systemManager.addSystem(new RenderSystem(entityManager, camera, game.getBatch()), 5);
 	}
 
 
@@ -50,18 +50,17 @@ public class GameScreen implements Screen {
 
 
 	@Override
-	public void render(float delta) {
-		Iterator<GameSystem> systems = systemManager.iterator();
-		while (systems.hasNext()) {
-			GameSystem system = systems.next();
-			system.update(50.0f);
-
+	public void render(float deltaTime) {
+		for (GameSystem system : game.getSystemManager()) {
+			system.update(deltaTime);
 		}
 	}
 
 
 	@Override
 	public void resize(int width, int height) {
+		// System.out.println("Screen resized to (" + width + ", " + height + ")");
+		camera.setToOrtho(false, game.getWidth(), game.getHeight());
 	}
 
 
@@ -82,9 +81,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		entityManager.clear();
-		entityTagManager.clear();
-		systemManager.clear();
+		img.dispose();
 	}
-
 }

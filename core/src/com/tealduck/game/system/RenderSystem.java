@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -24,18 +25,22 @@ public class RenderSystem extends GameSystem {
 	/**
 	 * SpriteBatch used to draw to screen
 	 */
-	SpriteBatch batch;
+	private SpriteBatch batch;
+	private OrthographicCamera camera;
 
 
 	/**
 	 *
 	 * @param entityManager
 	 *                EntityManager containing entities for game
+	 * @param camera
 	 * @param batch
 	 *                SpriteBatch used to draw to screen
 	 */
-	public RenderSystem(EntityManager entityManager, SpriteBatch batch) {
+	public RenderSystem(EntityManager entityManager, OrthographicCamera camera, SpriteBatch batch) {
 		super(entityManager);
+
+		this.camera = camera;
 		this.batch = batch;
 	}
 
@@ -51,6 +56,11 @@ public class RenderSystem extends GameSystem {
 	public void update(float deltaTime) {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		camera.update();
+
+		batch.setProjectionMatrix(camera.combined);
+
 		batch.begin();
 
 		Set<Integer> entitiesWithSpriteAndPositionComponents = entityManager

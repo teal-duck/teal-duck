@@ -47,6 +47,21 @@ public class EntityManager {
 
 
 	/**
+	 * Shortcut method for creating an entity and assigning it a tag.
+	 *
+	 * @param entityTagManager
+	 * @param tag
+	 * @return the reserved ID
+	 * @see {@link EntityTagManager#createEntity()}
+	 */
+	public int createEntityWithTag(EntityTagManager entityTagManager, String tag) {
+		int id = createEntity();
+		entityTagManager.addTag(tag, id);
+		return id;
+	}
+
+
+	/**
 	 * Removes an entity and all its associated components.
 	 *
 	 * @param entity
@@ -64,6 +79,21 @@ public class EntityManager {
 		for (HashMap<Integer, ? extends Component> map : componentsMap.values()) {
 			map.remove(entity);
 		}
+
+		return entity;
+	}
+
+
+	/**
+	 * Removes an entity and its associated tags.
+	 *
+	 * @param entity
+	 * @param entityTagManager
+	 * @return
+	 */
+	public int removeEntityWithTag(int entity, EntityTagManager entityTagManager) {
+		removeEntity(entity);
+		entityTagManager.removeTagsAssociatedWithEntity(entity);
 
 		return entity;
 	}
@@ -316,7 +346,7 @@ public class EntityManager {
 	 * @return set of entity IDs
 	 * @throws IllegalArgumentException
 	 *                 if componentType is null
-	 * @see {@link EntityManager#getAllEntitiesPossessingAllComponents(Class...)
+	 * @see {@link EntityManager#getAllEntitiesPossessingAllComponents(Class<? extends Component>... components)}
 	 */
 	public <T extends Component> Set<Integer> getAllEntitiesPossessingComponent(Class<T> componentType) {
 		if (componentType == null) {
@@ -333,14 +363,14 @@ public class EntityManager {
 
 	/**
 	 * Gets the set of entities that have an instance of all the component types. Performs set intersection using
-	 * {@link EntityManager#getAllEntitiesPossessingComponent(Class)}.
+	 * {@link EntityManager#getAllEntitiesPossessingComponent(Class<T>) componentType}.
 	 *
 	 * @param <T>
 	 *                T extends {@link Component}
 	 * @param componentTypes
 	 *                types of components
 	 * @return set of entity IDs
-	 * @see {@link EntityManager#getAllEntitiesPossessingComponent(Class)}
+	 * @see {@link EntityManager#getAllEntitiesPossessingComponent(Class<T>) componentType}.
 	 */
 	public Set<Integer> getAllEntitiesPossessingAllComponents(Class<? extends Component>... componentTypes) {
 		Set<Integer> entities = new HashSet<Integer>(this.entities);
@@ -355,10 +385,10 @@ public class EntityManager {
 
 	/**
 	 * Clears the set of entities and the links between entities and components, and resets the starting ID to 0.
-	 * Recommended to call {@link EntityTagManager#clear} with this method because the IDs stored there are now
+	 * Recommended to call {@link EntityTagManager#clear()} with this method because the IDs stored there are now
 	 * invalid.
 	 *
-	 * @see {@link EntityTagManager#clear}
+	 * @see {@link EntityTagManager#clear()}
 	 */
 	public void clear() {
 		entities.clear();
