@@ -52,7 +52,7 @@ public class EntityManager {
 	 * @param entityTagManager
 	 * @param tag
 	 * @return the reserved ID
-	 * @see {@link EntityTagManager#createEntity()}
+	 * @see {@link EntityTagManager#createEntity}
 	 */
 	public int createEntityWithTag(EntityTagManager entityTagManager, String tag) {
 		int id = createEntity();
@@ -285,7 +285,7 @@ public class EntityManager {
 	 * @throws IllegalArgumentException
 	 *                 if the entity isn't in the set of entities
 	 */
-	public HashMap<Class<? extends Component>, ? extends Component> getAllComponentsForEntity(int entity) {
+	public HashMap<Class<? extends Component>, ? extends Component> getEntityComponents(int entity) {
 		if (!entityExists(entity)) {
 			throw new IllegalArgumentException("entity " + entity + " doesn't exist");
 		}
@@ -346,9 +346,9 @@ public class EntityManager {
 	 * @return set of entity IDs
 	 * @throws IllegalArgumentException
 	 *                 if componentType is null
-	 * @see {@link EntityManager#getAllEntitiesPossessingAllComponents(Class<? extends Component>... components)}
+	 * @see {@link EntityManager#getEntitiesWithComponents}
 	 */
-	public <T extends Component> Set<Integer> getAllEntitiesPossessingComponent(Class<T> componentType) {
+	public <T extends Component> Set<Integer> getEntitiesWithComponent(Class<T> componentType) {
 		if (componentType == null) {
 			throw new IllegalArgumentException("componentType is null");
 		}
@@ -363,20 +363,20 @@ public class EntityManager {
 
 	/**
 	 * Gets the set of entities that have an instance of all the component types. Performs set intersection using
-	 * {@link EntityManager#getAllEntitiesPossessingComponent(Class<T>) componentType}.
+	 * {@link EntityManager#getEntitiesWithComponent}.
 	 *
 	 * @param <T>
 	 *                T extends {@link Component}
 	 * @param componentTypes
 	 *                types of components
 	 * @return set of entity IDs
-	 * @see {@link EntityManager#getAllEntitiesPossessingComponent(Class<T>) componentType}.
+	 * @see {@link EntityManager#getEntitiesWithComponent}.
 	 */
-	public Set<Integer> getAllEntitiesPossessingAllComponents(Class<? extends Component>... componentTypes) {
+	public Set<Integer> getEntitiesWithComponents(Class<? extends Component>... componentTypes) {
 		Set<Integer> entities = new HashSet<Integer>(this.entities);
 
 		for (Class<? extends Component> componentType : componentTypes) {
-			entities.retainAll(getAllEntitiesPossessingComponent(componentType));
+			entities.retainAll(getEntitiesWithComponent(componentType));
 		}
 
 		return entities;

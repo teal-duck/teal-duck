@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.tealduck.game.component.PositionComponent;
+import com.tealduck.game.Tag;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
@@ -48,32 +47,38 @@ public class RenderSystem extends GameSystem {
 	}
 
 
+	private void centerCameraToEntity(int entityId) {
+		Sprite entitySprite = entityManager.getComponent(entityId, SpriteComponent.class).sprite;
+
+		camera.position.set(entitySprite.getX() + (entitySprite.getWidth() / 2),
+				entitySprite.getY() + (entitySprite.getHeight() / 2), 0);
+
+	}
+
+
 	/**
 	 * Redraws all entities with sprites to the screen.
 	 *
 	 * @param deltaTime
 	 *                time elapsed since last update
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void update(float deltaTime) {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		centerCameraToEntity(entityTagManager.getEntity(Tag.PLAYER));
 		camera.update();
 
 		batch.setProjectionMatrix(camera.combined);
-
 		batch.begin();
 
-		Set<Integer> entitiesWithSpriteAndPositionComponents = entityManager
-				.getAllEntitiesPossessingAllComponents(PositionComponent.class, SpriteComponent.class);
+		Set<Integer> entitiesWithSpriteComponents = entityManager
+				.getEntitiesWithComponent(SpriteComponent.class);
 
-		for (int entity : entitiesWithSpriteAndPositionComponents) {
+		for (int entity : entitiesWithSpriteComponents) {
 			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
-			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
-
-			batch.draw(sprite, position.x, position.y);
+			sprite.draw(batch);
 		}
 
 		batch.end();

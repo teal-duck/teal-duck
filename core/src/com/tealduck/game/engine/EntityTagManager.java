@@ -32,8 +32,10 @@ public class EntityTagManager {
 	/**
 	 * @param tag
 	 * @return
+	 * @throws NullPointerException
+	 *                 if tag isn't used
 	 */
-	public int getEntity(String tag) {
+	public int getEntity(String tag) throws NullPointerException {
 		return tags.get(tag);
 	}
 
@@ -41,6 +43,8 @@ public class EntityTagManager {
 	/**
 	 * @param tag
 	 * @return
+	 * @throws NullPointerException
+	 *                 if tag isn't used
 	 */
 	public int removeTag(String tag) {
 		return tags.remove(tag);
