@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.engine.EntityManager;
@@ -22,6 +23,31 @@ public class MovementSystem extends GameSystem {
 
 	@Override
 	public void update(float deltaTime) {
+		moveEntities(deltaTime);
+		updateSpriteLocations();
+	}
+
+
+	private void moveEntities(float deltaTime) {
+		@SuppressWarnings("unchecked")
+		Set<Integer> entitiesWithPositionAndMovementComponents = entityManager
+				.getEntitiesWithComponents(PositionComponent.class, MovementComponent.class);
+
+		for (int entity : entitiesWithPositionAndMovementComponents) {
+			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
+			Vector2 velocity = entityManager.getComponent(entity, MovementComponent.class).velocity;
+
+			position.mulAdd(velocity, deltaTime);
+		}
+
+	}
+
+
+	/**
+	 * For each entity that has a position and sprite, updates the position in the sprite to be the same as the
+	 * position.
+	 */
+	private void updateSpriteLocations() {
 		@SuppressWarnings("unchecked")
 		Set<Integer> entitiesWithSpriteAndPositionComponents = entityManager
 				.getEntitiesWithComponents(PositionComponent.class, SpriteComponent.class);
@@ -32,5 +58,6 @@ public class MovementSystem extends GameSystem {
 
 			sprite.setPosition(position.x, position.y);
 		}
+
 	}
 }

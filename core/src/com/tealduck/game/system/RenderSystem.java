@@ -47,6 +47,12 @@ public class RenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * Translates the camera so that it is centered on an entity.
+	 *
+	 * @param entityId
+	 *                id of the entity to center on
+	 */
 	private void centerCameraToEntity(int entityId) {
 		Sprite entitySprite = entityManager.getComponent(entityId, SpriteComponent.class).sprite;
 

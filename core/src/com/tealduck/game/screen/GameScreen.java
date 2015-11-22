@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.Tag;
+import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
@@ -68,6 +69,13 @@ public class GameScreen implements Screen {
 
 		entityManager.addComponent(playerId, new SpriteComponent(texture));
 		entityManager.addComponent(playerId, new PositionComponent(location));
+
+		float speed = 30;
+		Vector2 direction = new Vector2(1, 1);
+		Vector2 velocity = direction.setLength(speed);
+
+		entityManager.addComponent(playerId, new MovementComponent(velocity));
+
 		entityManager.addComponent(playerId, new UserInputComponent());
 
 		return playerId;
