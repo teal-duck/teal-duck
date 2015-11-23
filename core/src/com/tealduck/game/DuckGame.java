@@ -2,7 +2,6 @@ package com.tealduck.game;
 
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
@@ -39,9 +38,9 @@ public class DuckGame extends Game {
 
 
 	public void setupControllers() {
-		// TODO: setupControllers
-		ControllerHelper controllerHelper = new ControllerHelper();
-		Controllers.addListener(controllerHelper);
+		// TODO: setupControllers and controller helper
+		// ControllerHelper controllerHelper = new ControllerHelper();
+		// Controllers.addListener(controllerHelper);
 		ControllerHelper.printControllers();
 	}
 

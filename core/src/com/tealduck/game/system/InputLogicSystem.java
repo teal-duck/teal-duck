@@ -33,16 +33,13 @@ public class InputLogicSystem extends GameSystem {
 			ControlMap controls = userInputComponent.controls;
 			Controller controller = userInputComponent.controller;
 
-			float dx = 0;
-			float dy = 0;
-
 			float rightState = controls.getStateForAction(Action.RIGHT, controller);
 			float leftState = controls.getStateForAction(Action.LEFT, controller);
 			float upState = controls.getStateForAction(Action.UP, controller);
 			float downState = controls.getStateForAction(Action.DOWN, controller);
 
-			dx = rightState - leftState;
-			dy = upState - downState;
+			float dx = rightState - leftState;
+			float dy = upState - downState;
 
 			MovementComponent movementComponent = entityManager.getComponent(entity,
 					MovementComponent.class);

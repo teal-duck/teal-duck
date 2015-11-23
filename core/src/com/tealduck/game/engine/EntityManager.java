@@ -17,6 +17,7 @@ import java.util.Set;
 public class EntityManager {
 	// TODO: Fix type of getAllComponentsForEntity in the submitted diagram
 	// TODO: Maybe add a method that returns HashMap<Integer, ? extends Component>
+	// TODO: Fix the @link tags in javadocs
 
 	private Set<Integer> entities;
 	private HashMap<Class<? extends Component>, HashMap<Integer, ? extends Component>> componentsMap;

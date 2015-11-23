@@ -19,6 +19,7 @@ public class DesktopLauncher {
 		config.allowSoftwareMode = true;
 		config.vSyncEnabled = true;
 		config.foregroundFPS = 60;
+		config.backgroundFPS = 30;
 
 		// config.resizable = false;
 		// FileType fileType = FileType.Local;

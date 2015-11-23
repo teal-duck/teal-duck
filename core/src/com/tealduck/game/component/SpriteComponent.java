@@ -13,6 +13,7 @@ import com.tealduck.game.engine.Component;
  *
  */
 public class SpriteComponent extends Component {
+	// TODO: Change SpriteComponent to use sprite sheets + animation
 	/**
 	 *
 	 */
