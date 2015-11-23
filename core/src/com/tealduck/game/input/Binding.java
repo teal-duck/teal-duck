@@ -203,4 +203,10 @@ public class Binding {
 		removeKeyBinding();
 		removeControllerBinding();
 	}
+
+
+	@Override
+	public String toString() {
+		return "Binding(" + keyBinding.toString() + ", " + controllerBinding.toString() + ")";
+	}
 }

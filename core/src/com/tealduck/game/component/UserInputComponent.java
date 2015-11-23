@@ -15,4 +15,11 @@ public class UserInputComponent extends Component {
 		this.controls = controls;
 		this.controller = controller;
 	}
+
+
+	@Override
+	public String toString() {
+		return "UserInputComponent(" + controls.toString() + ", "
+				+ ((controller != null) ? controller.toString() : "null") + ")";
+	}
 }

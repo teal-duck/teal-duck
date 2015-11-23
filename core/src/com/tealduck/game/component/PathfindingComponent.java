@@ -17,4 +17,9 @@ public class PathfindingComponent extends Component {
 		this.targetEntityId = targetEntityId;
 	}
 
+
+	@Override
+	public String toString() {
+		return "PathfindingComponent(" + targetEntityId + ")";
+	}
 }

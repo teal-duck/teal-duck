@@ -28,4 +28,10 @@ public class SpriteComponent extends Component {
 	public SpriteComponent(Texture texture) {
 		sprite = new Sprite(texture);
 	}
+
+
+	@Override
+	public String toString() {
+		return "SpriteComponent(" + sprite.toString() + ")";
+	}
 }

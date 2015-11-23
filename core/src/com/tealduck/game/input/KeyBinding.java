@@ -218,4 +218,10 @@ public class KeyBinding {
 		primary = KeyBinding.NO_KEY;
 		secondary = KeyBinding.NO_KEY;
 	}
+
+
+	@Override
+	public String toString() {
+		return "KeyBinding(Keys." + Keys.toString(primary) + ", Keys." + Keys.toString(secondary) + ")";
+	}
 }

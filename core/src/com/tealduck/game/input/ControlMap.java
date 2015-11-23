@@ -405,4 +405,10 @@ public class ControlMap {
 
 		return Math.max(controllerState, keyState);
 	}
+
+
+	@Override
+	public String toString() {
+		return "ControlMap(" + controls.toString() + ")";
+	}
 }

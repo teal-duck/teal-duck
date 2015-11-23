@@ -100,7 +100,10 @@ public class GameScreen implements Screen {
 		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, 1, 0.3f);
 		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, 1, 0.3f);
 
-		entityManager.addComponent(playerId, new UserInputComponent(controls, getFirstControllerOrNull()));
+		UserInputComponent uic = new UserInputComponent(controls, getFirstControllerOrNull());
+		entityManager.addComponent(playerId, uic);
+
+		System.out.println(uic);
 
 		return playerId;
 	}

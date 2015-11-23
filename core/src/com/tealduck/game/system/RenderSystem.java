@@ -88,4 +88,14 @@ public class RenderSystem extends GameSystem {
 
 		batch.end();
 	}
+
+
+	// TODO: Possibly sort all entities so that ones with the same texture get rendered together
+	// Faster for the GPU to render lots of the same texture, then lots of a different
+	// Rather than constantly binding a different texture
+	// Psuedocode?
+	@SuppressWarnings("unused")
+	private void renderEntitiesSorted() {
+
+	}
 }

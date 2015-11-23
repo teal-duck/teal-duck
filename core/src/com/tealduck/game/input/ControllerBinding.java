@@ -267,4 +267,31 @@ public class ControllerBinding {
 
 		return state;
 	}
+
+
+	@Override
+	public String toString() {
+		String string = "";
+
+		switch (controllerBindingType) {
+		case AXIS_NEGATIVE:
+		case AXIS_POSITIVE:
+			string = "ControllerBinding(" + controllerBindingType + ", " + index + ", " + deadzone + ")";
+			break;
+		case BUTTON:
+			string = "ControllerBinding(" + controllerBindingType + ", " + index + ")";
+			break;
+		case POV:
+			string = "ControllerBinding(" + controllerBindingType + ", " + index + ", " + povDirection
+					+ ")";
+			break;
+		case NONE:
+		default:
+			string = "ControllerBinding(" + controllerBindingType + ")";
+			break;
+
+		}
+
+		return string;
+	}
 }
