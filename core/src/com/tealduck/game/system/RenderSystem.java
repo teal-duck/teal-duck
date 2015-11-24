@@ -18,6 +18,7 @@ import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.GameSystem;
+import com.tealduck.game.world.World;
 
 
 /**
@@ -35,6 +36,7 @@ public class RenderSystem extends GameSystem {
 
 	// TODO: Improve handling of gridTexture
 	private Texture gridTexture;
+	private World world;
 
 
 	/**
@@ -46,13 +48,16 @@ public class RenderSystem extends GameSystem {
 	 *                SpriteBatch used to draw to screen
 	 */
 	public RenderSystem(EntityManager entityManager, EntityTagManager entityTagManager, EventManager eventManager,
-			OrthographicCamera camera, SpriteBatch batch, Texture gridTexture) {
+			OrthographicCamera camera, SpriteBatch batch, Texture gridTexture, World world) {
 		super(entityManager, entityTagManager, eventManager);
 
 		this.camera = camera;
 		this.batch = batch;
 
 		this.gridTexture = gridTexture;
+
+		// TODO: Move world out of render system constructor
+		this.world = world;
 	}
 
 
@@ -71,6 +76,7 @@ public class RenderSystem extends GameSystem {
 	}
 
 
+	@SuppressWarnings("unused")
 	private float findBiggestMultipleOfBelow(float x, float y) {
 		float m = 0;
 
@@ -101,33 +107,69 @@ public class RenderSystem extends GameSystem {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		centerCameraToEntity(entityTagManager.getEntity(Tag.PLAYER));
-		camera.update();
-
-		batch.setProjectionMatrix(camera.combined);
+		// camera.update();
 
 		float viewportWidth = camera.viewportWidth;
 		float viewportHeight = camera.viewportHeight;
 
 		float cameraLeft = camera.position.x - (viewportWidth / 2);
 		float cameraRight = camera.position.x + (viewportWidth / 2);
-		float cameraTop = camera.position.y - (viewportHeight / 2);
-		float cameraBottom = camera.position.y + (viewportHeight / 2);
+		float cameraTop = camera.position.y + (viewportHeight / 2);
+		float cameraBottom = camera.position.y - (viewportHeight / 2);
 
-		int textureWidth = gridTexture.getWidth();
-		int textureHeight = gridTexture.getHeight();
+		// int textureWidth = gridTexture.getWidth();
+		// int textureHeight = gridTexture.getHeight();
 
-		float startX = findBiggestMultipleOfBelow(textureWidth, cameraLeft) - textureWidth;
-		float endX = findBiggestMultipleOfBelow(textureWidth, cameraRight) + textureWidth;
-		float startY = findBiggestMultipleOfBelow(textureHeight, cameraTop) - textureHeight;
-		float endY = findBiggestMultipleOfBelow(textureHeight, cameraBottom) + textureHeight;
+		// int startX = (int) findBiggestMultipleOfBelow(textureWidth, cameraLeft) - textureWidth;
+		// int endX = (int) findBiggestMultipleOfBelow(textureWidth, cameraRight) + textureWidth;
+		// int startY = (int) findBiggestMultipleOfBelow(textureHeight, cameraTop) - textureHeight;
+		// int endY = (int) findBiggestMultipleOfBelow(textureHeight, cameraBottom) + textureHeight;
+		//
+		// int renderWidth = endX - startX;
+		// int renderHeight = endY - startY;
 
-		int renderWidth = (int) (endX - startX);
-		int renderHeight = (int) (endY - startY);
+		int tileWidth = gridTexture.getWidth();
+		int tileHeight = gridTexture.getHeight();
+
+		if (cameraLeft < 0) {
+			camera.position.x = viewportWidth / 2;
+		}
+		if (cameraBottom < 0) {
+			camera.position.y = viewportHeight / 2;
+		}
+
+		if (cameraRight > (world.getWidth() * tileWidth)) {
+			camera.position.x = (world.getWidth() * tileWidth) - (viewportWidth / 2);
+		}
+
+		if (cameraTop > (world.getHeight() * tileHeight)) {
+			camera.position.y = (world.getHeight() * tileHeight) - (viewportHeight / 2);
+		}
+
+		camera.update();
+		batch.setProjectionMatrix(camera.combined);
 
 		// Y is from endY and size of -renderHeight to flip it
+		// batch.begin();
+		// batch.draw(gridTexture, startX, endY, renderWidth, -renderHeight, 0, 0, renderWidth / textureWidth,
+		// renderHeight / textureHeight);
+		// batch.end();
+		//
+		// System.out.println(camera.project(new Vector3(0, 0, 0)));
+
+		// int worldTopLeftPixel = tileHeight * world.getHeight();
+
 		batch.begin();
-		batch.draw(gridTexture, startX, endY, renderWidth, -renderHeight, 0, 0, renderWidth / textureWidth,
-				renderHeight / textureHeight);
+		for (int y = 0; y < world.getHeight(); y += 1) {
+			for (int x = 0; x < world.getWidth(); x += 1) {
+				if (world.isTileSolid(x, y)) {
+					int xPixel = x * tileWidth;
+					int yPixel = y * tileHeight;
+
+					batch.draw(gridTexture, xPixel, yPixel);
+				}
+			}
+		}
 		batch.end();
 
 		boolean useSortedRendering = false;

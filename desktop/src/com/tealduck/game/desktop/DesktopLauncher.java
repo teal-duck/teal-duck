@@ -13,8 +13,8 @@ public class DesktopLauncher {
 		config.title = "Teal Duck Awesome Game";
 		config.x = -1;
 		config.y = -1;
-		config.width = 600;
-		config.height = 480;
+		config.width = 64 * 10;
+		config.height = 64 * 8;
 		config.useGL30 = false;
 		config.allowSoftwareMode = true;
 		config.vSyncEnabled = true;
