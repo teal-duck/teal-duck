@@ -1,23 +1,21 @@
 package com.tealduck.game.screen;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.Tag;
+import com.tealduck.game.TextureNames;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PathfindingComponent;
 import com.tealduck.game.component.PositionComponent;
@@ -44,7 +42,6 @@ public class GameScreen implements Screen {
 	private OrthographicCamera camera;
 	private Viewport viewport;
 
-	// TODO: Change texture loading to use AssetManager and regions for animations
 	private Texture duckTexture;
 	private Texture enemyTexture;
 	private Texture gridTexture;
@@ -54,22 +51,108 @@ public class GameScreen implements Screen {
 
 	public GameScreen(DuckGame gam) {
 		game = gam;
+	}
 
+
+	/**
+	 * @param assetManager
+	 */
+	public static boolean startAssetLoading(AssetManager assetManager) {
+		TextureParameter textureParameter = new TextureParameter();
+		textureParameter.minFilter = TextureFilter.Nearest;
+		textureParameter.magFilter = TextureFilter.Nearest;
+
+		assetManager.load(TextureNames.DUCK, Texture.class, textureParameter);
+		assetManager.load(TextureNames.ENEMY, Texture.class, textureParameter);
+		assetManager.load(TextureNames.GRID, Texture.class, textureParameter);
+
+		return true;
+	}
+
+
+	/**
+	 * @param entityManager
+	 * @param entityTagManager
+	 * @param texture
+	 * @param location
+	 * @return
+	 */
+	private int createPlayer(EntityManager entityManager, EntityTagManager entityTagManager, Texture texture,
+			Vector2 location) {
+		int playerId = entityManager.createEntityWithTag(entityTagManager, Tag.PLAYER);
+
+		entityManager.addComponent(playerId, new SpriteComponent(texture));
+		entityManager.addComponent(playerId, new PositionComponent(location));
+
+		float maxSpeed = 150.0f;
+		float sprintScale = 3.0f;
+		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0), maxSpeed, sprintScale));
+
+		ControlMap controls = new ControlMap();
+
+		controls.addKeyForAction(Action.RIGHT, Keys.D, Keys.RIGHT);
+		controls.addKeyForAction(Action.LEFT, Keys.A, Keys.LEFT);
+		controls.addKeyForAction(Action.UP, Keys.W, Keys.UP);
+		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
+		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT);
+
+		float deadzone = 0.3f;
+		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, 0, deadzone);
+		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, 0, deadzone);
+		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, 1, deadzone);
+		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, 1, deadzone);
+		controls.addControllerForAction(Action.SPRINT, ControllerBindingType.BUTTON, 5);
+
+		UserInputComponent uic = new UserInputComponent(controls, game.getFirstControllerOrNull());
+		// System.out.println(uic);
+		entityManager.addComponent(playerId, uic);
+
+		return playerId;
+	}
+
+
+	/**
+	 * @param entityManager
+	 * @param texture
+	 * @param location
+	 * @return
+	 */
+	private int createEnemy(EntityManager entityManager, Texture texture, Vector2 location) {
+		int enemyId = entityManager.createEntity();
+		entityManager.addComponent(enemyId, new SpriteComponent(texture));
+		entityManager.addComponent(enemyId, new PositionComponent(location));
+		return enemyId;
+	}
+
+
+	/**
+	 * @param entityManager
+	 * @param texture
+	 * @param location
+	 * @param targetId
+	 * @return
+	 */
+	private int createPathfindingEnemy(EntityManager entityManager, Texture texture, Vector2 location,
+			int targetId) {
+		int enemyId = createEnemy(entityManager, texture, location);
+		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), 80));
+		entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
+		return enemyId;
+	}
+
+
+	@Override
+	public void show() {
 		camera = new OrthographicCamera();
 		// TODO: Viewport and window size
 		viewport = new ScalingViewport(Scaling.fit, 64 * 10, 64 * 8, camera);
+		resize(game.getWindowWidth(), game.getWindowHeight());
 
-		resize(game.getWidth(), game.getHeight());
+		AssetManager assetManager = game.getAssetManager();
 
-		duckTexture = new Texture("textures/duck_64x64.png");
-		duckTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-
-		enemyTexture = new Texture("textures/badlogic_64x64.png");
-		enemyTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-
-		gridTexture = new Texture("textures/grid_64x64.png");
-		gridTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-		gridTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		duckTexture = assetManager.get(TextureNames.DUCK);
+		enemyTexture = assetManager.get(TextureNames.ENEMY);
+		gridTexture = assetManager.get(TextureNames.GRID);
 
 		EntityManager entityManager = game.getEntityManager();
 		EntityTagManager entityTagManager = game.getEntityTagManager();
@@ -112,119 +195,10 @@ public class GameScreen implements Screen {
 	}
 
 
-	/**
-	 * @param entityManager
-	 * @param entityTagManager
-	 * @param texture
-	 * @param location
-	 * @return
-	 */
-	private int createPlayer(EntityManager entityManager, EntityTagManager entityTagManager, Texture texture,
-			Vector2 location) {
-		int playerId = entityManager.createEntityWithTag(entityTagManager, Tag.PLAYER);
-
-		entityManager.addComponent(playerId, new SpriteComponent(texture));
-		entityManager.addComponent(playerId, new PositionComponent(location));
-
-		float maxSpeed = 150.0f;
-		float sprintScale = 3.0f;
-		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0), maxSpeed, sprintScale));
-
-		ControlMap controls = new ControlMap();
-
-		controls.addKeyForAction(Action.RIGHT, Keys.D, Keys.RIGHT);
-		controls.addKeyForAction(Action.LEFT, Keys.A, Keys.LEFT);
-		controls.addKeyForAction(Action.UP, Keys.W, Keys.UP);
-		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
-
-		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT);
-
-		float deadzone = 0.3f;
-
-		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, 0, deadzone);
-		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, 0, deadzone);
-		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, 1, deadzone);
-		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, 1, deadzone);
-
-		controls.addControllerForAction(Action.SPRINT, ControllerBindingType.BUTTON, 5);
-
-		UserInputComponent uic = new UserInputComponent(controls, getFirstControllerOrNull());
-		entityManager.addComponent(playerId, uic);
-
-		System.out.println(uic);
-
-		return playerId;
-	}
-
-
-	/**
-	 * @return
-	 */
-	private Controller getFirstControllerOrNull() {
-		Array<Controller> controllers = Controllers.getControllers();
-		Controller controller = (controllers.size > 0) ? controllers.first() : null;
-		return controller;
-	}
-
-
-	/**
-	 * @param entityManager
-	 * @param texture
-	 * @param location
-	 * @return
-	 */
-	private int createEnemy(EntityManager entityManager, Texture texture, Vector2 location) {
-		int enemyId = entityManager.createEntity();
-		entityManager.addComponent(enemyId, new SpriteComponent(texture));
-		entityManager.addComponent(enemyId, new PositionComponent(location));
-		return enemyId;
-	}
-
-
-	/**
-	 * @param entityManager
-	 * @param texture
-	 * @param location
-	 * @param targetId
-	 * @return
-	 */
-	private int createPathfindingEnemy(EntityManager entityManager, Texture texture, Vector2 location,
-			int targetId) {
-		int enemyId = createEnemy(entityManager, texture, location);
-		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), 80));
-		entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
-		return enemyId;
-	}
-
-
-	@Override
-	public void show() {
-	}
-
-
 	@Override
 	public void render(float deltaTime) {
-		calculateFPS(deltaTime);
-
 		for (GameSystem system : game.getSystemManager()) {
 			system.update(deltaTime);
-		}
-	}
-
-
-	private float time = 0;
-	private int frames = 0;
-
-
-	private void calculateFPS(float deltaTime) {
-		time += deltaTime;
-		frames += 1;
-
-		while (time >= 1) {
-			System.out.println("Calculated FPS: " + frames + "; Libgdx FPS: "
-					+ Gdx.graphics.getFramesPerSecond());
-			frames = 0;
-			time -= 1;
 		}
 	}
 
@@ -257,10 +231,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO: Automate texture disposal
-		// Probably use libgdx AssetManager
-		duckTexture.dispose();
-		enemyTexture.dispose();
-		gridTexture.dispose();
+		game.getAssetManager().clear();
 	}
 }
