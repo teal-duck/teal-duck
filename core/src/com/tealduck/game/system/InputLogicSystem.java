@@ -30,6 +30,8 @@ public class InputLogicSystem extends GameSystem {
 		for (int entity : entities) {
 			UserInputComponent userInputComponent = entityManager.getComponent(entity,
 					UserInputComponent.class);
+			MovementComponent movementComponent = entityManager.getComponent(entity,
+					MovementComponent.class);
 			ControlMap controls = userInputComponent.controls;
 			Controller controller = userInputComponent.controller;
 
@@ -40,18 +42,17 @@ public class InputLogicSystem extends GameSystem {
 
 			float dx = rightState - leftState;
 			float dy = upState - downState;
-			
+
 			int velocityLimit = 1;
-			
+
+			float shiftScale = 1;
+
 			if (controls.getStateForAction(Action.SPRINT, controller) == 1) {
-				dx *= 3;
-				dy *= 3;
-				velocityLimit = 3;
+				shiftScale = movementComponent.sprintScale;
 			}
 
-			MovementComponent movementComponent = entityManager.getComponent(entity,
-					MovementComponent.class);
-			movementComponent.velocity.set(dx, dy).limit(velocityLimit).scl(movementComponent.maxSpeed);
+			movementComponent.velocity.set(dx, dy).limit(velocityLimit).scl(movementComponent.maxSpeed)
+					.scl(shiftScale);
 
 		}
 	}

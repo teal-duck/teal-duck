@@ -98,7 +98,10 @@ public class GameScreen implements Screen {
 
 		entityManager.addComponent(playerId, new SpriteComponent(texture));
 		entityManager.addComponent(playerId, new PositionComponent(location));
-		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0), 150));
+
+		float maxSpeed = 150.0f;
+		float sprintScale = 3.0f;
+		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0), maxSpeed, sprintScale));
 
 		ControlMap controls = new ControlMap();
 
@@ -106,17 +109,16 @@ public class GameScreen implements Screen {
 		controls.addKeyForAction(Action.LEFT, Keys.A, Keys.LEFT);
 		controls.addKeyForAction(Action.UP, Keys.W, Keys.UP);
 		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
-		
+
 		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT);
-		
 
 		float deadzone = 0.3f;
-		
+
 		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, 0, deadzone);
 		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, 0, deadzone);
 		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, 1, deadzone);
 		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, 1, deadzone);
-		
+
 		controls.addControllerForAction(Action.SPRINT, ControllerBindingType.BUTTON, 5);
 
 		UserInputComponent uic = new UserInputComponent(controls, getFirstControllerOrNull());
