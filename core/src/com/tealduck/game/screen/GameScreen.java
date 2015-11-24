@@ -107,10 +107,12 @@ public class GameScreen implements Screen {
 		controls.addKeyForAction(Action.UP, Keys.W, Keys.UP);
 		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
 
-		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, 0, 0.3f);
-		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, 0, 0.3f);
-		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, 1, 0.3f);
-		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, 1, 0.3f);
+		float deadzone = 0.3f;
+
+		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, 0, deadzone);
+		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, 0, deadzone);
+		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, 1, deadzone);
+		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, 1, deadzone);
 
 		UserInputComponent uic = new UserInputComponent(controls, getFirstControllerOrNull());
 		entityManager.addComponent(playerId, uic);

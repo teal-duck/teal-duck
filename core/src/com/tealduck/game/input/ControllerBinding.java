@@ -47,9 +47,11 @@ public class ControllerBinding {
 	 * @param deadzone
 	 * @throws IllegalArgumentException
 	 *                 if controllerBindingType is null
+	 * @throws IllegalArgumentException
+	 *                 if deadzone is out of range
 	 */
 	public ControllerBinding(ControllerBindingType controllerBindingType, int index, float deadzone) {
-		this(controllerBindingType, index, 0, null);
+		this(controllerBindingType, index, deadzone, null);
 	}
 
 
@@ -76,15 +78,18 @@ public class ControllerBinding {
 	 *                 if controllerBindingType is null
 	 * @throws IllegalArgumentException
 	 *                 if povDirection is null and controllerBindingType is POV
+	 * @throws IllegalArgumentException
+	 *                 if deadzone is out of range
 	 * @see {@link ControllerBinding#setControllerBindingType(ControllerBindingType)}
 	 * @see {@link ControllerBinding#setPovDirection(PovDirection)}
+	 * @see {@link ControllerBinding#setDeadzone(float)}
 	 */
 	public ControllerBinding(ControllerBindingType controllerBindingType, int index, float deadzone,
 			PovDirection povDirection) {
 		setControllerBindingType(controllerBindingType);
 		this.controllerBindingType = controllerBindingType;
 		this.index = index;
-		this.deadzone = deadzone;
+		setDeadzone(deadzone);
 		setPovDirection(povDirection);
 	}
 
@@ -120,12 +125,17 @@ public class ControllerBinding {
 
 
 	/**
-	 * Sets the deadzone for the binding.
+	 * Sets the deadzone for the binding. Must be between 0 and 1 inclusive.
 	 *
 	 * @param deadzone
 	 *                the deadzone
+	 * @throws IllegalArgumentException
+	 *                 if deadzone is out of range
 	 */
 	public void setDeadzone(float deadzone) {
+		if ((deadzone < 0) || (deadzone > 1)) {
+			throw new IllegalArgumentException("deadzone must be between 0 and 1 inclusive");
+		}
 		this.deadzone = deadzone;
 	}
 
@@ -233,6 +243,7 @@ public class ControllerBinding {
 		switch (controllerBindingType) {
 		case AXIS_POSITIVE:
 			state = controller.getAxis(index);
+
 			if (state < 0) {
 				state = 0;
 			}
