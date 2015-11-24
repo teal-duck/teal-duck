@@ -64,4 +64,4 @@ build/
 .DS_Store
 
 
-.xcf
+*.xcf
