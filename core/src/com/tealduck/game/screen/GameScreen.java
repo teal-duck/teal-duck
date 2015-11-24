@@ -1,6 +1,8 @@
 package com.tealduck.game.screen;
 
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -73,7 +75,11 @@ public class GameScreen implements Screen {
 			createEnemy(entityManager, enemyTexture, location);
 		}
 
-		createPathfindingEnemy(entityManager, enemyTexture, new Vector2(0, 200), playerId);
+		Random random = new Random();
+		for (int i = 0; i < 1000; i += 1) {
+			createPathfindingEnemy(entityManager, enemyTexture,
+					new Vector2(random.nextInt(1000), random.nextInt(1000)), playerId);
+		}
 
 		// TODO: Tidy up system instantiation
 		systemManager.addSystem(new InputLogicSystem(entityManager, entityTagManager, eventManager), 0);

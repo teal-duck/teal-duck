@@ -1,6 +1,7 @@
 package com.tealduck.game.system;
 
 
+import java.util.Random;
 import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
@@ -39,6 +40,12 @@ public class PatrolLogicSystem extends GameSystem {
 
 				Vector2 targetPosition = entityManager.getComponent(targetEntityId,
 						PositionComponent.class).position;
+
+				int extra = 100;
+				Random random = new Random();
+				targetPosition = targetPosition.cpy()
+						.add(new Vector2(random.nextInt(extra) - (extra / 2),
+								random.nextInt(extra) - (extra / 2)));
 
 				MovementComponent movementComponent = entityManager.getComponent(entity,
 						MovementComponent.class);

@@ -185,12 +185,14 @@ public class RenderSystem extends GameSystem {
 		// Iterate through the map of texture to sprites
 		// Bind the texture, then render each sprite
 		for (Entry<Texture, ArrayList<Sprite>> entry : textures.entrySet()) {
-			/// Texture texture = entry.getKey();
+			Texture texture = entry.getKey();
 
-			// Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
+			Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
 			batch.begin();
-			// texture.bind();
+			batch.disableBlending();
+			texture.bind();
 			for (Sprite sprite : entry.getValue()) {
+
 				sprite.draw(batch);
 			}
 			batch.end();

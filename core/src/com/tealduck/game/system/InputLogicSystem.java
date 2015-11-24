@@ -46,7 +46,6 @@ public class InputLogicSystem extends GameSystem {
 			int velocityLimit = 1;
 
 			float shiftScale = 1;
-
 			if (controls.getStateForAction(Action.SPRINT, controller) == 1) {
 				shiftScale = movementComponent.sprintScale;
 			}
