@@ -7,7 +7,13 @@ import java.util.Random;
 public class World {
 	private int width;
 	private int height;
+
 	// TODO: Decide on representation of a tile
+	// E.g. class Tile, then class Wall extends Tile etc (but then we end up with what ECS tries to avoid)
+	// enum Tile { WALL, DOOR } etc
+	// Integer ID
+	// Bit fields
+
 	// Tiles array is tiles[row][column]
 	private boolean[][] tiles;
 
