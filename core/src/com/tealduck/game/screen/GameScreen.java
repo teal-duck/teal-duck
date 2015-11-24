@@ -8,16 +8,15 @@ import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.tealduck.game.DuckGame;
+import com.tealduck.game.MapNames;
 import com.tealduck.game.Tag;
 import com.tealduck.game.TextureNames;
 import com.tealduck.game.component.MovementComponent;
-import com.tealduck.game.component.PathfindingComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
@@ -33,20 +32,29 @@ import com.tealduck.game.system.CollisionSystem;
 import com.tealduck.game.system.InputLogicSystem;
 import com.tealduck.game.system.MovementSystem;
 import com.tealduck.game.system.PatrolLogicSystem;
-import com.tealduck.game.system.RenderSystem;
-import com.tealduck.game.world.World;
+import com.tealduck.game.system.WorldRenderSystem;
 
 
 public class GameScreen implements Screen {
+	// TODO: Split game screen into multiple smaller classes
 	private final DuckGame game;
-	private OrthographicCamera camera;
-	private Viewport viewport;
 
 	private Texture duckTexture;
 	private Texture enemyTexture;
-	private Texture gridTexture;
 
-	private World world;
+	private TiledMap tiledMap;
+	private OrthographicCamera mapCamera;
+	private OrthogonalTiledMapRenderer mapRenderer;
+
+	// private float tileSize = 64f;
+	// private float unitScale = 1; // / tileSize;
+	// private int screenTilesWide = 10;
+	// private int screenTilesHigh = 8;
+
+	// private float mapWidth;
+	// private float mapHeight;
+	// private float tileWidth;
+	// private float tileHeight;
 
 
 	public GameScreen(DuckGame gam) {
@@ -55,7 +63,10 @@ public class GameScreen implements Screen {
 
 
 	/**
+	 * Starts the asset manager loading the assets needed for this screen.
+	 *
 	 * @param assetManager
+	 * @return true if there are assets to load, else false
 	 */
 	public static boolean startAssetLoading(AssetManager assetManager) {
 		TextureParameter textureParameter = new TextureParameter();
@@ -64,9 +75,64 @@ public class GameScreen implements Screen {
 
 		assetManager.load(TextureNames.DUCK, Texture.class, textureParameter);
 		assetManager.load(TextureNames.ENEMY, Texture.class, textureParameter);
-		assetManager.load(TextureNames.GRID, Texture.class, textureParameter);
+
+		assetManager.load(MapNames.TEST_MAP, TiledMap.class);
 
 		return true;
+	}
+
+
+	@Override
+	public void show() {
+		AssetManager assetManager = game.getAssetManager();
+
+		duckTexture = assetManager.get(TextureNames.DUCK);
+		enemyTexture = assetManager.get(TextureNames.ENEMY);
+
+		tiledMap = assetManager.get(MapNames.TEST_MAP);
+
+		// MapProperties prop = tiledMap.getProperties();
+		// mapWidth = prop.get("width", Integer.class);
+		// mapHeight = prop.get("height", Integer.class);
+		// tileWidth = prop.get("tilewidth", Integer.class);
+		// tileHeight = prop.get("tileheight", Integer.class);
+
+		float unitScale = 1 / 1;
+		mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
+		mapCamera = new OrthographicCamera();
+		resize(game.getWindowWidth(), game.getWindowHeight());
+
+		EntityManager entityManager = game.getEntityManager();
+		EntityTagManager entityTagManager = game.getEntityTagManager();
+		EventManager eventManager = game.getEventManager();
+		SystemManager systemManager = game.getSystemManager();
+
+		int playerX = 128;
+		int playerY = 128;
+
+		int playerId = createPlayer(entityManager, entityTagManager, duckTexture,
+				new Vector2(playerX, playerY));
+
+		Vector2[] enemyLocations = new Vector2[] { new Vector2(200, 200), new Vector2(100, 300),
+				new Vector2(400, 100) };
+		for (Vector2 location : enemyLocations) {
+			createEnemy(entityManager, enemyTexture, location);
+		}
+
+		int followingEnemyCount = 2;
+		for (int i = 0; i < followingEnemyCount; i += 1) {
+			createPathfindingEnemy(entityManager, enemyTexture,
+					new Vector2(MathUtils.random(100, 1000), MathUtils.random(100, 1000)),
+					playerId);
+		}
+
+		// TODO: Tidy up system instantiation
+		systemManager.addSystem(new InputLogicSystem(entityManager, entityTagManager, eventManager), 0);
+		systemManager.addSystem(new PatrolLogicSystem(entityManager, entityTagManager, eventManager), 1);
+		systemManager.addSystem(new CollisionSystem(entityManager, entityTagManager, eventManager), 2);
+		systemManager.addSystem(new MovementSystem(entityManager, entityTagManager, eventManager), 3);
+		systemManager.addSystem(new WorldRenderSystem(entityManager, entityTagManager, eventManager,
+				mapRenderer, mapCamera), 4);
 	}
 
 
@@ -84,8 +150,8 @@ public class GameScreen implements Screen {
 		entityManager.addComponent(playerId, new SpriteComponent(texture));
 		entityManager.addComponent(playerId, new PositionComponent(location));
 
-		float maxSpeed = 150.0f;
-		float sprintScale = 3.0f;
+		float maxSpeed = 200.0f;
+		float sprintScale = 2.0f;
 		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0), maxSpeed, sprintScale));
 
 		ControlMap controls = new ControlMap();
@@ -96,7 +162,7 @@ public class GameScreen implements Screen {
 		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
 		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT);
 
-		float deadzone = 0.3f;
+		float deadzone = 0.1f;
 		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, 0, deadzone);
 		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, 0, deadzone);
 		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, 1, deadzone);
@@ -136,62 +202,8 @@ public class GameScreen implements Screen {
 			int targetId) {
 		int enemyId = createEnemy(entityManager, texture, location);
 		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), 80));
-		entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
+		// entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
 		return enemyId;
-	}
-
-
-	@Override
-	public void show() {
-		camera = new OrthographicCamera();
-		// TODO: Viewport and window size
-		viewport = new ScalingViewport(Scaling.fit, 64 * 10, 64 * 8, camera);
-		resize(game.getWindowWidth(), game.getWindowHeight());
-
-		AssetManager assetManager = game.getAssetManager();
-
-		duckTexture = assetManager.get(TextureNames.DUCK);
-		enemyTexture = assetManager.get(TextureNames.ENEMY);
-		gridTexture = assetManager.get(TextureNames.GRID);
-
-		EntityManager entityManager = game.getEntityManager();
-		EntityTagManager entityTagManager = game.getEntityTagManager();
-		EventManager eventManager = game.getEventManager();
-		SystemManager systemManager = game.getSystemManager();
-
-		int worldWidth = 20;
-		int worldHeight = 20;
-		world = new World(worldWidth, worldHeight);
-
-		int tileWidth = gridTexture.getWidth();
-		int tileHeight = gridTexture.getHeight();
-
-		int playerX = World.projectTileLocationToPixel(1, tileWidth);
-		int playerY = World.projectTileLocationToPixel(world.getHeight() - 2, tileHeight);
-
-		int playerId = createPlayer(entityManager, entityTagManager, duckTexture,
-				new Vector2(playerX, playerY));
-
-		Vector2[] enemyLocations = new Vector2[] { new Vector2(200, 200), new Vector2(100, 300),
-				new Vector2(400, 100) };
-		for (Vector2 location : enemyLocations) {
-			createEnemy(entityManager, enemyTexture, location);
-		}
-
-		int followingEnemyCount = 2;
-		for (int i = 0; i < followingEnemyCount; i += 1) {
-			createPathfindingEnemy(entityManager, enemyTexture,
-					new Vector2(MathUtils.random(100, 1000), MathUtils.random(100, 1000)),
-					playerId);
-		}
-
-		// TODO: Tidy up system instantiation
-		systemManager.addSystem(new InputLogicSystem(entityManager, entityTagManager, eventManager), 0);
-		systemManager.addSystem(new PatrolLogicSystem(entityManager, entityTagManager, eventManager), 1);
-		systemManager.addSystem(new CollisionSystem(entityManager, entityTagManager, eventManager), 2);
-		systemManager.addSystem(new MovementSystem(entityManager, entityTagManager, eventManager), 3);
-		systemManager.addSystem(new RenderSystem(entityManager, entityTagManager, eventManager, camera,
-				game.getBatch(), gridTexture, world), 4);
 	}
 
 
@@ -206,11 +218,8 @@ public class GameScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		// System.out.println("Screen resized to (" + width + ", " + height + ")");
-		// int tileSize = 64;
-		// int screenTileWidth = 10;
-		// int screenTileHeight = 8;
-		// camera.setToOrtho(false, tileSize * screenTileWidth, tileSize * screenTileHeight);
-		viewport.update(width, height);
+		mapCamera.setToOrtho(false, width * mapRenderer.getUnitScale(), height * mapRenderer.getUnitScale());
+		mapCamera.update();
 	}
 
 

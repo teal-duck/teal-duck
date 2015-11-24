@@ -47,8 +47,8 @@ public class AssetLoadingScreen implements Screen {
 
 	private boolean loaded = false;
 	private float time = 0;
-	private float slowDownLoading = 0.1f;
-	private float timeToStayOnLoadingScreen = 1.0f;
+	private float slowDownLoading = 0.0f;
+	private float timeToStayOnLoadingScreen = 0.0f;
 
 
 	@Override

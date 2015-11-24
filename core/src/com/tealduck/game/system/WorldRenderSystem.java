@@ -10,15 +10,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.tealduck.game.Tag;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.GameSystem;
-import com.tealduck.game.world.World;
 
 
 /**
@@ -27,16 +28,18 @@ import com.tealduck.game.world.World;
  * @author aacn500
  *
  */
-public class RenderSystem extends GameSystem {
+public class WorldRenderSystem extends GameSystem {
 	/**
 	 * SpriteBatch used to draw to screen
 	 */
-	private SpriteBatch batch;
+	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
+	private Batch batch;
 
-	// TODO: Improve handling of gridTexture
-	private Texture gridTexture;
-	private World world;
+	private float mapWidth;
+	private float mapHeight;
+	private float tileWidth;
+	private float tileHeight;
 
 
 	/**
@@ -47,17 +50,21 @@ public class RenderSystem extends GameSystem {
 	 * @param batch
 	 *                SpriteBatch used to draw to screen
 	 */
-	public RenderSystem(EntityManager entityManager, EntityTagManager entityTagManager, EventManager eventManager,
-			OrthographicCamera camera, SpriteBatch batch, Texture gridTexture, World world) {
+	public WorldRenderSystem(EntityManager entityManager, EntityTagManager entityTagManager,
+			EventManager eventManager, OrthogonalTiledMapRenderer renderer, OrthographicCamera camera) {
 		super(entityManager, entityTagManager, eventManager);
 
+		this.renderer = renderer;
 		this.camera = camera;
-		this.batch = batch;
 
-		this.gridTexture = gridTexture;
+		batch = renderer.getBatch();
+		batch.disableBlending();
 
-		// TODO: Move world out of render system constructor
-		this.world = world;
+		MapProperties prop = renderer.getMap().getProperties();
+		mapWidth = prop.get("width", Integer.class);
+		mapHeight = prop.get("height", Integer.class);
+		tileWidth = prop.get("tilewidth", Integer.class);
+		tileHeight = prop.get("tileheight", Integer.class);
 	}
 
 
@@ -68,30 +75,41 @@ public class RenderSystem extends GameSystem {
 	 *                id of the entity to center on
 	 */
 	private void centerCameraToEntity(int entityId) {
-		Sprite entitySprite = entityManager.getComponent(entityId, SpriteComponent.class).sprite;
+		if (entityManager.entityHasComponent(entityId, SpriteComponent.class)) {
+			Sprite entitySprite = entityManager.getComponent(entityId, SpriteComponent.class).sprite;
 
-		camera.position.set(entitySprite.getX() + (entitySprite.getWidth() / 2),
-				entitySprite.getY() + (entitySprite.getHeight() / 2), 0);
-
+			camera.position.set(entitySprite.getX() + (entitySprite.getWidth() / 2),
+					entitySprite.getY() + (entitySprite.getHeight() / 2), 0);
+		}
 	}
 
 
-	@SuppressWarnings("unused")
-	private float findBiggestMultipleOfBelow(float x, float y) {
-		float m = 0;
+	/**
+	 *
+	 */
+	private void clampCamera() {
+		float viewportWidth = camera.viewportWidth;
+		float viewportHeight = camera.viewportHeight;
 
-		if (y > 0) {
-			while (m < y) {
-				m += x;
-			}
-			m -= x;
-		} else {
-			while (m > y) {
-				m -= x;
-			}
+		float cameraLeft = camera.position.x - (viewportWidth / 2);
+		float cameraRight = camera.position.x + (viewportWidth / 2);
+		float cameraTop = camera.position.y + (viewportHeight / 2);
+		float cameraBottom = camera.position.y - (viewportHeight / 2);
+
+		if (cameraLeft < 0) {
+			camera.position.x = viewportWidth / 2;
+		}
+		if (cameraBottom < 0) {
+			camera.position.y = viewportHeight / 2;
 		}
 
-		return m;
+		if (cameraRight > (mapWidth * tileWidth)) {
+			camera.position.x = (mapWidth * tileWidth) - (viewportWidth / 2);
+		}
+
+		if (cameraTop > (mapHeight * tileHeight)) {
+			camera.position.y = (mapHeight * tileHeight) - (viewportHeight / 2);
+		}
 	}
 
 
@@ -107,88 +125,34 @@ public class RenderSystem extends GameSystem {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		centerCameraToEntity(entityTagManager.getEntity(Tag.PLAYER));
-		// camera.update();
-
-		float viewportWidth = camera.viewportWidth;
-		float viewportHeight = camera.viewportHeight;
-
-		float cameraLeft = camera.position.x - (viewportWidth / 2);
-		float cameraRight = camera.position.x + (viewportWidth / 2);
-		float cameraTop = camera.position.y + (viewportHeight / 2);
-		float cameraBottom = camera.position.y - (viewportHeight / 2);
-
-		// int textureWidth = gridTexture.getWidth();
-		// int textureHeight = gridTexture.getHeight();
-
-		// int startX = (int) findBiggestMultipleOfBelow(textureWidth, cameraLeft) - textureWidth;
-		// int endX = (int) findBiggestMultipleOfBelow(textureWidth, cameraRight) + textureWidth;
-		// int startY = (int) findBiggestMultipleOfBelow(textureHeight, cameraTop) - textureHeight;
-		// int endY = (int) findBiggestMultipleOfBelow(textureHeight, cameraBottom) + textureHeight;
-		//
-		// int renderWidth = endX - startX;
-		// int renderHeight = endY - startY;
-
-		int tileWidth = gridTexture.getWidth();
-		int tileHeight = gridTexture.getHeight();
-
-		if (cameraLeft < 0) {
-			camera.position.x = viewportWidth / 2;
-		}
-		if (cameraBottom < 0) {
-			camera.position.y = viewportHeight / 2;
-		}
-
-		if (cameraRight > (world.getWidth() * tileWidth)) {
-			camera.position.x = (world.getWidth() * tileWidth) - (viewportWidth / 2);
-		}
-
-		if (cameraTop > (world.getHeight() * tileHeight)) {
-			camera.position.y = (world.getHeight() * tileHeight) - (viewportHeight / 2);
-		}
-
+		clampCamera();
 		camera.update();
-		batch.setProjectionMatrix(camera.combined);
-
-		// Y is from endY and size of -renderHeight to flip it
-		// batch.begin();
-		// batch.draw(gridTexture, startX, endY, renderWidth, -renderHeight, 0, 0, renderWidth / textureWidth,
-		// renderHeight / textureHeight);
-		// batch.end();
-		//
-		// System.out.println(camera.project(new Vector3(0, 0, 0)));
-
-		// int worldTopLeftPixel = tileHeight * world.getHeight();
-
-		batch.begin();
-		for (int y = 0; y < world.getHeight(); y += 1) {
-			for (int x = 0; x < world.getWidth(); x += 1) {
-				if (world.isTileSolid(x, y)) {
-					int xPixel = x * tileWidth;
-					int yPixel = y * tileHeight;
-
-					batch.draw(gridTexture, xPixel, yPixel);
-				}
-			}
-		}
-		batch.end();
+		renderer.setView(camera);
+		renderer.render();
 
 		boolean useSortedRendering = false;
 		if (useSortedRendering) {
 			renderEntitiesSorted();
 		} else {
 			batch.begin();
-			// TODO: Is batch.disableBlending() needed?
 			batch.disableBlending();
 
 			Set<Integer> entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
 
 			for (int entity : entities) {
 				Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
-				sprite.draw(batch);
+				if (isSpriteOnScreen(sprite)) {
+					sprite.draw(batch);
+				}
 			}
 
 			batch.end();
 		}
+	}
+
+
+	private boolean isSpriteOnScreen(Sprite sprite) {
+		return true;
 	}
 
 	// TODO: Possibly sort all entities so that ones with the same texture get rendered together
@@ -239,10 +203,5 @@ public class RenderSystem extends GameSystem {
 			}
 			batch.end();
 		}
-	}
-
-
-	private boolean isSpriteOnScreen(Sprite sprite) {
-		return true;
 	}
 }

@@ -4,9 +4,13 @@ package com.tealduck.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
@@ -34,6 +38,8 @@ public class DuckGame extends Game {
 	@Override
 	public void create() {
 		assetManager = new AssetManager();
+		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+		Texture.setAssetManager(assetManager);
 
 		batch = new SpriteBatch(100);
 		batch.disableBlending();
@@ -52,8 +58,15 @@ public class DuckGame extends Game {
 	public void loadGameScreen() {
 		// TODO: Abstract loadGameScreen so that other screens can use it
 		// Maybe class LoadableScreen implements Screen
-		GameScreen.startAssetLoading(assetManager);
-		setScreen(new AssetLoadingScreen(this, assetManager, new GameScreen(this)));
+
+		boolean requiresAssets = GameScreen.startAssetLoading(assetManager);
+		GameScreen gameScreen = new GameScreen(this);
+
+		if (requiresAssets) {
+			setScreen(new AssetLoadingScreen(this, assetManager, gameScreen));
+		} else {
+			setScreen(gameScreen);
+		}
 	}
 
 
