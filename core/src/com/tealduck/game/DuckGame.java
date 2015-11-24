@@ -28,7 +28,10 @@ public class DuckGame extends Game {
 		systemManager = new SystemManager();
 		eventManager = new EventManager(entityManager, entityTagManager);
 
-		batch = new SpriteBatch();
+		batch = new SpriteBatch(10);
+		// TODO: Is batch.disableBlending() needed?
+		batch.disableBlending();
+		//
 
 		setupControllers();
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.tealduck.game.DuckGame;
@@ -46,7 +47,9 @@ public class GameScreen implements Screen {
 		resize(game.getWidth(), game.getHeight());
 
 		duckTexture = new Texture("duck_64x64.png");
+		duckTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		enemyTexture = new Texture("badlogic_64x64.png");
+		enemyTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
 		EntityManager entityManager = game.getEntityManager();
 		EntityTagManager entityTagManager = game.getEntityTagManager();
@@ -156,8 +159,26 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float deltaTime) {
+		calculateFPS(deltaTime);
+
 		for (GameSystem system : game.getSystemManager()) {
 			system.update(deltaTime);
+		}
+	}
+
+
+	private float time = 0;
+	private int frames = 0;
+
+
+	private void calculateFPS(float deltaTime) {
+		time += deltaTime;
+		frames += 1;
+
+		while (time >= 1) {
+			System.out.println("Frames Per Second: " + frames);
+			frames = 0;
+			time -= 1;
 		}
 	}
 
