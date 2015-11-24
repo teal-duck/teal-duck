@@ -33,6 +33,9 @@ public class RenderSystem extends GameSystem {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 
+	// TODO: Improve handling of gridTexture
+	private Texture gridTexture;
+
 
 	/**
 	 *
@@ -43,11 +46,13 @@ public class RenderSystem extends GameSystem {
 	 *                SpriteBatch used to draw to screen
 	 */
 	public RenderSystem(EntityManager entityManager, EntityTagManager entityTagManager, EventManager eventManager,
-			OrthographicCamera camera, SpriteBatch batch) {
+			OrthographicCamera camera, SpriteBatch batch, Texture gridTexture) {
 		super(entityManager, entityTagManager, eventManager);
 
 		this.camera = camera;
 		this.batch = batch;
+
+		this.gridTexture = gridTexture;
 	}
 
 
@@ -66,6 +71,24 @@ public class RenderSystem extends GameSystem {
 	}
 
 
+	private float findBiggestMultipleOfBelow(float x, float y) {
+		float m = 0;
+
+		if (y > 0) {
+			while (m < y) {
+				m += x;
+			}
+			m -= x;
+		} else {
+			while (m > y) {
+				m -= x;
+			}
+		}
+
+		return m;
+	}
+
+
 	/**
 	 * Redraws all entities with sprites to the screen.
 	 *
@@ -74,26 +97,56 @@ public class RenderSystem extends GameSystem {
 	 */
 	@Override
 	public void update(float deltaTime) {
-		Gdx.gl.glClearColor(0.6f, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		centerCameraToEntity(entityTagManager.getEntity(Tag.PLAYER));
 		camera.update();
 
 		batch.setProjectionMatrix(camera.combined);
-		renderEntitiesSorted();
-		// batch.begin();
-		// // TODO: Is batch.disableBlending() needed?
-		// batch.disableBlending();
-		//
-		// Set<Integer> entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
-		//
-		// for (int entity : entities) {
-		// Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
-		// sprite.draw(batch);
-		// }
-		//
-		// batch.end();
+
+		float viewportWidth = camera.viewportWidth;
+		float viewportHeight = camera.viewportHeight;
+
+		float cameraLeft = camera.position.x - (viewportWidth / 2);
+		float cameraRight = camera.position.x + (viewportWidth / 2);
+		float cameraTop = camera.position.y - (viewportHeight / 2);
+		float cameraBottom = camera.position.y + (viewportHeight / 2);
+
+		int textureWidth = gridTexture.getWidth();
+		int textureHeight = gridTexture.getHeight();
+
+		float startX = findBiggestMultipleOfBelow(textureWidth, cameraLeft) - textureWidth;
+		float endX = findBiggestMultipleOfBelow(textureWidth, cameraRight) + textureWidth;
+		float startY = findBiggestMultipleOfBelow(textureHeight, cameraTop) - textureHeight;
+		float endY = findBiggestMultipleOfBelow(textureHeight, cameraBottom) + textureHeight;
+
+		int renderWidth = (int) (endX - startX);
+		int renderHeight = (int) (endY - startY);
+
+		// Y is from endY and size of -renderHeight to flip it
+		batch.begin();
+		batch.draw(gridTexture, startX, endY, renderWidth, -renderHeight, 0, 0, renderWidth / textureWidth,
+				renderHeight / textureHeight);
+		batch.end();
+
+		boolean useSortedRendering = false;
+		if (useSortedRendering) {
+			renderEntitiesSorted();
+		} else {
+			batch.begin();
+			// TODO: Is batch.disableBlending() needed?
+			batch.disableBlending();
+
+			Set<Integer> entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
+
+			for (int entity : entities) {
+				Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
+				sprite.draw(batch);
+			}
+
+			batch.end();
+		}
 	}
 
 	// TODO: Possibly sort all entities so that ones with the same texture get rendered together
@@ -107,7 +160,9 @@ public class RenderSystem extends GameSystem {
 	private void renderEntitiesSorted() {
 		// Gdx.gl.glClearColor(0.6f, 0, 0, 1);
 		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 		// Use a map so that each sprite is categorised by the texture it uses
+		// TODO: Order of textures varies each time game is played
 		HashMap<Texture, ArrayList<Sprite>> textures = new HashMap<Texture, ArrayList<Sprite>>();
 
 		// Iterate through the entities

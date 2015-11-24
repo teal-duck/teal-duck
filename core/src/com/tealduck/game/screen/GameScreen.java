@@ -1,6 +1,7 @@
 package com.tealduck.game.screen;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.controllers.Controller;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.tealduck.game.DuckGame;
@@ -36,8 +38,10 @@ public class GameScreen implements Screen {
 	private final DuckGame game;
 	private OrthographicCamera camera;
 
+	// TODO: Change texture loading to use AssetManager and regions for animations
 	private Texture duckTexture;
 	private Texture enemyTexture;
+	private Texture gridTexture;
 
 
 	public GameScreen(DuckGame gam) {
@@ -48,8 +52,13 @@ public class GameScreen implements Screen {
 
 		duckTexture = new Texture("duck_64x64.png");
 		duckTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
 		enemyTexture = new Texture("badlogic_64x64.png");
 		enemyTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
+		gridTexture = new Texture("grid_64x64.png");
+		gridTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		gridTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
 		EntityManager entityManager = game.getEntityManager();
 		EntityTagManager entityTagManager = game.getEntityTagManager();
@@ -72,7 +81,7 @@ public class GameScreen implements Screen {
 		systemManager.addSystem(new CollisionSystem(entityManager, entityTagManager, eventManager), 2);
 		systemManager.addSystem(new MovementSystem(entityManager, entityTagManager, eventManager), 3);
 		systemManager.addSystem(new RenderSystem(entityManager, entityTagManager, eventManager, camera,
-				game.getBatch()), 4);
+				game.getBatch(), gridTexture), 4);
 	}
 
 
@@ -176,7 +185,8 @@ public class GameScreen implements Screen {
 		frames += 1;
 
 		while (time >= 1) {
-			System.out.println("Frames Per Second: " + frames);
+			System.out.println("Calculated FPS: " + frames + "; Libgdx FPS: "
+					+ Gdx.graphics.getFramesPerSecond());
 			frames = 0;
 			time -= 1;
 		}
@@ -207,7 +217,10 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		// TODO: Automate texture disposal
+		// Probably use libgdx AssetManager
 		duckTexture.dispose();
 		enemyTexture.dispose();
+		gridTexture.dispose();
 	}
 }
