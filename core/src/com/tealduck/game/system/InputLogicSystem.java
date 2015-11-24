@@ -40,10 +40,18 @@ public class InputLogicSystem extends GameSystem {
 
 			float dx = rightState - leftState;
 			float dy = upState - downState;
+			
+			int velocityLimit = 1;
+			
+			if (controls.getStateForAction(Action.SPRINT, controller) == 1) {
+				dx *= 3;
+				dy *= 3;
+				velocityLimit = 3;
+			}
 
 			MovementComponent movementComponent = entityManager.getComponent(entity,
 					MovementComponent.class);
-			movementComponent.velocity.set(dx, dy).limit(1).scl(movementComponent.maxSpeed);
+			movementComponent.velocity.set(dx, dy).limit(velocityLimit).scl(movementComponent.maxSpeed);
 
 		}
 	}
