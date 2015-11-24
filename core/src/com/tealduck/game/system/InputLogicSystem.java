@@ -52,7 +52,6 @@ public class InputLogicSystem extends GameSystem {
 
 			movementComponent.velocity.set(dx, dy).limit(velocityLimit).scl(movementComponent.maxSpeed)
 					.scl(shiftScale);
-
 		}
 	}
 }

@@ -1,8 +1,6 @@
 package com.tealduck.game.screen;
 
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -12,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
@@ -62,13 +61,13 @@ public class GameScreen implements Screen {
 
 		resize(game.getWidth(), game.getHeight());
 
-		duckTexture = new Texture("duck_64x64.png");
+		duckTexture = new Texture("textures/duck_64x64.png");
 		duckTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
-		enemyTexture = new Texture("badlogic_64x64.png");
+		enemyTexture = new Texture("textures/badlogic_64x64.png");
 		enemyTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
-		gridTexture = new Texture("grid_64x64.png");
+		gridTexture = new Texture("textures/grid_64x64.png");
 		gridTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		gridTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
@@ -96,11 +95,11 @@ public class GameScreen implements Screen {
 			createEnemy(entityManager, enemyTexture, location);
 		}
 
-		Random random = new Random();
 		int followingEnemyCount = 2;
 		for (int i = 0; i < followingEnemyCount; i += 1) {
 			createPathfindingEnemy(entityManager, enemyTexture,
-					new Vector2(random.nextInt(1000) + 100, random.nextInt(1000) + 100), playerId);
+					new Vector2(MathUtils.random(100, 1000), MathUtils.random(100, 1000)),
+					playerId);
 		}
 
 		// TODO: Tidy up system instantiation

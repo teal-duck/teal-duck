@@ -1,9 +1,9 @@
 package com.tealduck.game.system;
 
 
-import java.util.Random;
 import java.util.Set;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PathfindingComponent;
@@ -41,11 +41,9 @@ public class PatrolLogicSystem extends GameSystem {
 				Vector2 targetPosition = entityManager.getComponent(targetEntityId,
 						PositionComponent.class).position;
 
-				int extra = 100;
-				Random random = new Random();
-				targetPosition = targetPosition.cpy()
-						.add(new Vector2(random.nextInt(extra) - (extra / 2),
-								random.nextInt(extra) - (extra / 2)));
+				int extra = 0;
+				targetPosition = targetPosition.cpy().add(new Vector2(MathUtils.random(-extra, extra),
+						MathUtils.random(-extra, extra)));
 
 				MovementComponent movementComponent = entityManager.getComponent(entity,
 						MovementComponent.class);

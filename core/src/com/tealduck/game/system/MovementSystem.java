@@ -34,8 +34,10 @@ public class MovementSystem extends GameSystem {
 				MovementComponent.class);
 
 		for (int entity : entities) {
+			MovementComponent movementComponent = entityManager.getComponent(entity,
+					MovementComponent.class);
 			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
-			Vector2 velocity = entityManager.getComponent(entity, MovementComponent.class).velocity;
+			Vector2 velocity = movementComponent.velocity;
 
 			position.mulAdd(velocity, deltaTime);
 		}

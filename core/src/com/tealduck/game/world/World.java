@@ -5,6 +5,9 @@ import java.util.Random;
 
 
 public class World {
+	// TODO: Rewrite World to use libgdx maps + TMX
+	// See
+	// https://github.com/libgdx/libgdx/blob/master/tests/gdx-tests/src/com/badlogic/gdx/tests/superkoalio/SuperKoalio.java
 	private int width;
 	private int height;
 
