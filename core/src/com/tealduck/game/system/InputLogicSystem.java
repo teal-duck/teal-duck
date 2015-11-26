@@ -4,6 +4,7 @@ package com.tealduck.game.system;
 import java.util.Set;
 
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.UserInputComponent;
 import com.tealduck.game.engine.EntityManager;
@@ -50,8 +51,11 @@ public class InputLogicSystem extends GameSystem {
 				shiftScale = movementComponent.sprintScale;
 			}
 
-			movementComponent.velocity.set(dx, dy).limit(velocityLimit).scl(movementComponent.maxSpeed)
-					.scl(shiftScale);
+			Vector2 deltaVelocity = movementComponent.deltaVelocity;
+			deltaVelocity.set(dx, dy);
+			deltaVelocity.limit(velocityLimit);
+			deltaVelocity.scl(movementComponent.maxSpeed * shiftScale);
+			// movementComponent.velocity.add(new Vector2(dx, dy).scl(movementComponent.maxSpeed));
 		}
 	}
 }

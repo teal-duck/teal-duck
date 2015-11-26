@@ -17,6 +17,7 @@ import com.tealduck.game.MapNames;
 import com.tealduck.game.Tag;
 import com.tealduck.game.TextureNames;
 import com.tealduck.game.component.MovementComponent;
+import com.tealduck.game.component.PathfindingComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
@@ -152,7 +153,9 @@ public class GameScreen implements Screen {
 
 		float maxSpeed = 200.0f;
 		float sprintScale = 2.0f;
-		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0), maxSpeed, sprintScale));
+		float friction = 0.5f;
+		entityManager.addComponent(playerId,
+				new MovementComponent(new Vector2(0, 0), maxSpeed, sprintScale, friction));
 
 		ControlMap controls = new ControlMap();
 
@@ -202,7 +205,7 @@ public class GameScreen implements Screen {
 			int targetId) {
 		int enemyId = createEnemy(entityManager, texture, location);
 		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), 80));
-		// entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
+		entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
 		return enemyId;
 	}
 

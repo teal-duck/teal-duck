@@ -38,8 +38,13 @@ public class MovementSystem extends GameSystem {
 					MovementComponent.class);
 			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
 			Vector2 velocity = movementComponent.velocity;
+			Vector2 deltaVelocity = movementComponent.deltaVelocity;
+			float friction = movementComponent.friction;
 
+			velocity.add(deltaVelocity);
+			deltaVelocity.setZero();
 			position.mulAdd(velocity, deltaTime);
+			velocity.scl(friction);
 		}
 
 	}
