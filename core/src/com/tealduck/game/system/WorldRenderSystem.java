@@ -35,13 +35,14 @@ public class WorldRenderSystem extends GameSystem {
 	private float unitScale;
 
 
-	public WorldRenderSystem(EntityEngine entityEngine, TiledMap tiledMap) { // OrthogonalTiledMapRenderer renderer,
+	public WorldRenderSystem(EntityEngine entityEngine, TiledMap tiledMap, OrthographicCamera camera) { // OrthogonalTiledMapRenderer
+														// renderer,
 		// OrthographicCamera camera) {
 		super(entityEngine);
 
 		unitScale = 1 / 1;
 		renderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
-		camera = new OrthographicCamera();
+		this.camera = camera;
 
 		// this.renderer = renderer;
 		// this.camera = camera;

@@ -181,10 +181,15 @@ public class KeyBinding {
 	 *
 	 * @param input
 	 * @return
+	 * @throws IllegalArgumentException
+	 *                 if input is null
 	 * @see {@link KeyBinding#isSecondaryPressed(Input)}
 	 * @see {@link KeyBinding#isPressed(Input)}
 	 */
 	public boolean isPrimaryPressed(Input input) {
+		if (input == null) {
+			throw new IllegalArgumentException("input is null");
+		}
 		return hasPrimary() ? input.isKeyPressed(primary) : false;
 	}
 
@@ -194,10 +199,15 @@ public class KeyBinding {
 	 *
 	 * @param input
 	 * @return
+	 * @throws IllegalArgumentException
+	 *                 if input is null
 	 * @see {@link KeyBinding#isPrimaryPressed(Input)}
 	 * @see {@link KeyBinding#isPressed(Input)}
 	 */
 	public boolean isSecondaryPressed(Input input) {
+		if (input == null) {
+			throw new IllegalArgumentException("input is null");
+		}
 		return hasSecondary() ? input.isKeyPressed(secondary) : false;
 	}
 
@@ -207,10 +217,15 @@ public class KeyBinding {
 	 *
 	 * @param input
 	 * @return
+	 * @throws IllegalArgumentException
+	 *                 if input is null
 	 * @see {@link KeyBinding#isPrimaryPressed(Input)}
 	 * @see {@link KeyBinding#isSecondaryPressed(Input)}
 	 */
 	public boolean isPressed(Input input) {
+		if (input == null) {
+			throw new IllegalArgumentException("input is null");
+		}
 		return (isPrimaryPressed(input) || isSecondaryPressed(input));
 	}
 

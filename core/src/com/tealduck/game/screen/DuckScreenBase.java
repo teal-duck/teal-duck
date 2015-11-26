@@ -3,6 +3,8 @@ package com.tealduck.game.screen;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.engine.EntityEngine;
@@ -63,6 +65,8 @@ public abstract class DuckScreenBase implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		getCamera().setToOrtho(false, width, height);
+		getCamera().update();
 	}
 
 
@@ -83,6 +87,11 @@ public abstract class DuckScreenBase implements Screen {
 
 	public SpriteBatch getBatch() {
 		return game.getBatch();
+	}
+
+
+	public OrthographicCamera getCamera() {
+		return game.getCamera();
 	}
 
 
@@ -113,6 +122,11 @@ public abstract class DuckScreenBase implements Screen {
 
 	public EventManager getEventManager() {
 		return getEntityEngine().getEventManager();
+	}
+
+
+	public BitmapFont getFont() {
+		return game.getFont();
 	}
 
 

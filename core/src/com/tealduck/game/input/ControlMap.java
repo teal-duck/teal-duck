@@ -16,13 +16,20 @@ public class ControlMap {
 	// TODO: ControlMap (+ other input) tests
 
 	private EnumMap<Action, Binding> controls;
+	private Input input;
+
+
+	public ControlMap() {
+		this(Gdx.app.getInput());
+	}
 
 
 	/**
 	 * Creates a new control map. Calls clear to set all actions to have a default binding.
 	 */
-	public ControlMap() {
+	public ControlMap(Input input) {
 		controls = new EnumMap<Action, Binding>(Action.class);
+		this.input = input;
 		clear();
 	}
 
@@ -333,34 +340,18 @@ public class ControlMap {
 	 * Returns true if a key in the action's binding is pressed.
 	 *
 	 * @param action
-	 * @param input
 	 * @return true if the binding's key is pressed, else false
 	 * @throws IllegalArgumentException
 	 *                 if action is null
 	 * @see {@link KeyBinding#isPressed(Input)}
 	 * @see {@link ControlMap#isKeyForActionPressed(Action)}
-	 *
 	 */
-	public boolean isKeyForActionPressed(Action action, Input input) {
+	public boolean isKeyForActionPressed(Action action) {
 		if (action == null) {
 			throw new IllegalArgumentException("action is null");
 		}
 
 		return getKeyBindingForAction(action).isPressed(input);
-	}
-
-
-	/**
-	 * Returns true if a key in the action's binding is pressed.
-	 *
-	 * @param action
-	 * @return true if the binding's key is pressed, else false
-	 * @throws IllegalArgumentException
-	 *                 if action is null
-	 * @see {@link ControlMap#isKeyForActionPressed(Action, Input)
-	 */
-	public boolean isKeyForActionPressed(Action action) {
-		return isKeyForActionPressed(action, Gdx.app.getInput());
 	}
 
 
@@ -377,7 +368,6 @@ public class ControlMap {
 		if (action == null) {
 			throw new IllegalArgumentException("action is null");
 		}
-
 		return isKeyForActionPressed(action) ? 1 : 0;
 	}
 
@@ -390,7 +380,6 @@ public class ControlMap {
 	 * @return the state for the action, or 0 if controller is null
 	 * @throws IllegalArgumentException
 	 *                 if action is null
-	 * @see {@link ControllerBinding#getControllerStateForAction(Controller)}
 	 */
 	public float getControllerStateForAction(Action action, Controller controller) {
 		if (action == null) {
@@ -424,6 +413,83 @@ public class ControlMap {
 		return Math.max(controllerState, keyState);
 	}
 
+
+	// /**
+	// * Returns true if a key in the binding is pressed.
+	// *
+	// * @param action
+	// * @return true if the binding's key is pressed, else false
+	// * @throws IllegalArgumentException
+	// * if binding is null
+	// * @see {@link KeyBinding#isPressed(Input)}
+	// *
+	// */
+	// public static boolean isKeyForBindingPressed(Binding binding) {
+	// if (binding == null) {
+	// throw new IllegalArgumentException("binding is null");
+	// }
+	//
+	// return binding.getKeyBinding().isPressed(Gdx.app.getInput());
+	// }
+	//
+	//
+	// /**
+	// * Returns 1 if a key in the binding is pressed.
+	// *
+	// * @param action
+	// * @return 1 if the binding's key is pressed, else 0
+	// * @throws IllegalArgumentException
+	// * if binding is null
+	// * @see {@link ControlMap#isKeyForBindingPressed(Binding)}
+	// */
+	// public static float getKeyStateForBinding(Binding binding) {
+	// if (binding == null) {
+	// throw new IllegalArgumentException("binding is null");
+	// }
+	// return isKeyForBindingPressed(binding) ? 1 : 0;
+	// }
+	//
+	//
+	// /**
+	// * Returns the controller state for the binding as a float between 0 and 1. If controller is null, returns 0.
+	// *
+	// * @param binding
+	// * @param controller
+	// * @return the state for the binding, or 0 if controller is null
+	// * @throws IllegalArgumentException
+	// * if binding is null
+	// */
+	// public static float getControllerStateForBinding(Binding binding, Controller controller) {
+	// if (binding == null) {
+	// throw new IllegalArgumentException("binding is null");
+	// }
+	// if (controller == null) {
+	// return 0;
+	// }
+	// return binding.getControllerBinding().getControllerStateForAction(controller);
+	// }
+	//
+	//
+	// /**
+	// * Returns the larger value of either key state or controller state. If controller is null, returns key state.
+	// *
+	// * @param action
+	// * @param controller
+	// * @return the larger of the 2 states
+	// * @throws IllegalArgumentException
+	// * if binding is null
+	// * @see {@link ControlMap#getControllerStateForBinding(Binding, Controller)}
+	// * @see {@link ControlMap#getKeyStateForBinding(Binding)}
+	// */
+	// public static float getStateForBinding(Binding binding, Controller controller) {
+	// if (binding == null) {
+	// throw new IllegalArgumentException("action is null");
+	// }
+	// float controllerState = (controller != null) ? getControllerStateForBinding(binding, controller) : 0;
+	// float keyState = getKeyStateForBinding(binding);
+	//
+	// return Math.max(controllerState, keyState);
+	// }
 
 	@Override
 	public String toString() {

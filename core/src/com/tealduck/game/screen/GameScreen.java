@@ -16,7 +16,6 @@ import com.tealduck.game.MapNames;
 import com.tealduck.game.Tag;
 import com.tealduck.game.TextureNames;
 import com.tealduck.game.component.MovementComponent;
-import com.tealduck.game.component.PathfindingComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
@@ -26,6 +25,7 @@ import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.input.Action;
 import com.tealduck.game.input.ControlMap;
 import com.tealduck.game.input.ControllerBindingType;
+import com.tealduck.game.input.controller.PS4;
 import com.tealduck.game.system.CollisionSystem;
 import com.tealduck.game.system.GuiRenderSystem;
 import com.tealduck.game.system.InputLogicSystem;
@@ -122,7 +122,7 @@ public class GameScreen extends DuckScreenBase {
 		systemManager.addSystem(new MovementSystem(getEntityEngine()), 3);
 
 		// TODO: Change this to use SystemManager.getSystemOfType()
-		worldRenderSystem = new WorldRenderSystem(getEntityEngine(), tiledMap);
+		worldRenderSystem = new WorldRenderSystem(getEntityEngine(), tiledMap, getCamera());
 
 		systemManager.addSystem(worldRenderSystem, 4);
 		systemManager.addSystem(new GuiRenderSystem(getEntityEngine()), 5);
@@ -143,9 +143,9 @@ public class GameScreen extends DuckScreenBase {
 		entityManager.addComponent(playerId, new SpriteComponent(texture));
 		entityManager.addComponent(playerId, new PositionComponent(location));
 
-		float maxSpeed = 200.0f;
-		float sprintScale = 2.0f;
-		float friction = 0.5f;
+		float maxSpeed = 100f; // 200.0f;
+		float sprintScale = 1.5f;
+		float friction = 0.8f; // 0.5f;
 		entityManager.addComponent(playerId,
 				new MovementComponent(new Vector2(0, 0), maxSpeed, sprintScale, friction));
 
@@ -158,11 +158,15 @@ public class GameScreen extends DuckScreenBase {
 		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
 
 		float deadzone = 0.1f;
-		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, 0, deadzone);
-		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, 0, deadzone);
-		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, 1, deadzone);
-		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, 1, deadzone);
-		controls.addControllerForAction(Action.SPRINT, ControllerBindingType.BUTTON, 5);
+		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_X,
+				deadzone);
+		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_X,
+				deadzone);
+		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_Y,
+				deadzone);
+		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_Y,
+				deadzone);
+		controls.addControllerForAction(Action.SPRINT, ControllerBindingType.BUTTON, PS4.BUTTON_R1);
 
 		UserInputComponent uic = new UserInputComponent(controls, ControllerHelper.getFirstControllerOrNull());
 		Gdx.app.log("Controls", uic.controls.toString());
@@ -197,7 +201,7 @@ public class GameScreen extends DuckScreenBase {
 			int targetId) {
 		int enemyId = createEnemy(entityManager, texture, location);
 		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), 80));
-		entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
+		// entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
 		return enemyId;
 	}
 

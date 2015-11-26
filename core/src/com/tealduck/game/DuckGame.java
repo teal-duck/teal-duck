@@ -5,7 +5,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -21,6 +24,9 @@ public class DuckGame extends Game {
 	private AssetManager assetManager;
 	private SystemManager systemManager;
 	private EntityEngine entityEngine;
+	private OrthographicCamera camera;
+
+	private BitmapFont font;
 
 	private int windowWidth;
 	private int windowHeight;
@@ -42,6 +48,10 @@ public class DuckGame extends Game {
 
 		systemManager = new SystemManager();
 		entityEngine = new EntityEngine();
+
+		camera = new OrthographicCamera();
+
+		font = new BitmapFont();
 
 		setupControllers();
 
@@ -75,8 +85,8 @@ public class DuckGame extends Game {
 
 	public void setupControllers() {
 		// TODO: setupControllers and controller helper
-		// ControllerHelper controllerHelper = new ControllerHelper();
-		// Controllers.addListener(controllerHelper);
+		ControllerHelper controllerHelper = new ControllerHelper();
+		Controllers.addListener(controllerHelper);
 		ControllerHelper.printControllers();
 	}
 
@@ -103,8 +113,9 @@ public class DuckGame extends Game {
 		frames += 1;
 
 		while (time >= 1) {
-			Gdx.app.log("FPS", "Calculated FPS: " + frames + "; Libgdx FPS: "
-					+ Gdx.graphics.getFramesPerSecond());
+			String fpsText = "Calculated FPS: " + frames + "; Libgdx FPS: "
+					+ Gdx.graphics.getFramesPerSecond();
+			Gdx.app.log("FPS", fpsText);
 			frames = 0;
 			time -= 1;
 		}
@@ -135,6 +146,11 @@ public class DuckGame extends Game {
 	}
 
 
+	public OrthographicCamera getCamera() {
+		return camera;
+	}
+
+
 	public AssetManager getAssetManager() {
 		return assetManager;
 	}
@@ -149,7 +165,6 @@ public class DuckGame extends Game {
 		return entityEngine;
 	}
 
-
 	// public EntityManager getEntityManager() {
 	// return entityManager;
 	// }
@@ -163,6 +178,12 @@ public class DuckGame extends Game {
 	// public EventManager getEventManager() {
 	// return eventManager;
 	// }
+
+
+	public BitmapFont getFont() {
+		return font;
+	}
+
 
 	public int getWindowWidth() {
 		return windowWidth;

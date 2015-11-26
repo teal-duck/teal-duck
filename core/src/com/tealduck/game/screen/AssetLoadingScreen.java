@@ -1,9 +1,11 @@
 package com.tealduck.game.screen;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
@@ -63,6 +65,9 @@ public class AssetLoadingScreen extends DuckScreenBase {
 	@Override
 	public void render(float deltaTime) {
 		super.render(deltaTime);
+
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		AssetManager assetManager = getAssetManager();
 
