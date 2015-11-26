@@ -107,6 +107,12 @@ public class SystemManager implements Iterable<GameSystem> {
 	}
 
 
+	public <T extends GameSystem> T getSystemOfType(Class<T> systemType) {
+		// TODO: getSystemOfType
+		return null;
+	}
+
+
 	/**
 	 * Clears the list of systems
 	 */

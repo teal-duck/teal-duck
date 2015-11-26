@@ -5,11 +5,9 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.DuckGame;
@@ -21,6 +19,7 @@ import com.tealduck.game.component.PathfindingComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
+import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.EventManager;
@@ -30,6 +29,7 @@ import com.tealduck.game.input.Action;
 import com.tealduck.game.input.ControlMap;
 import com.tealduck.game.input.ControllerBindingType;
 import com.tealduck.game.system.CollisionSystem;
+import com.tealduck.game.system.GuiRenderSystem;
 import com.tealduck.game.system.InputLogicSystem;
 import com.tealduck.game.system.MovementSystem;
 import com.tealduck.game.system.PatrolLogicSystem;
@@ -44,8 +44,11 @@ public class GameScreen implements Screen {
 	private Texture enemyTexture;
 
 	private TiledMap tiledMap;
-	private OrthographicCamera mapCamera;
-	private OrthogonalTiledMapRenderer mapRenderer;
+
+	private WorldRenderSystem worldRenderSystem;
+
+	// private OrthographicCamera mapCamera;
+	// private OrthogonalTiledMapRenderer mapRenderer;
 
 	// private float tileSize = 64f;
 	// private float unitScale = 1; // / tileSize;
@@ -98,10 +101,7 @@ public class GameScreen implements Screen {
 		// tileWidth = prop.get("tilewidth", Integer.class);
 		// tileHeight = prop.get("tileheight", Integer.class);
 
-		float unitScale = 1 / 1;
-		mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
-		mapCamera = new OrthographicCamera();
-		resize(game.getWindowWidth(), game.getWindowHeight());
+		// float unitScale = 1 / 1;
 
 		EntityManager entityManager = game.getEntityManager();
 		EntityTagManager entityTagManager = game.getEntityTagManager();
@@ -127,13 +127,18 @@ public class GameScreen implements Screen {
 					playerId);
 		}
 
+		EntityEngine entityEngine = new EntityEngine(entityManager, entityTagManager, eventManager);
+
 		// TODO: Tidy up system instantiation
-		systemManager.addSystem(new InputLogicSystem(entityManager, entityTagManager, eventManager), 0);
-		systemManager.addSystem(new PatrolLogicSystem(entityManager, entityTagManager, eventManager), 1);
-		systemManager.addSystem(new CollisionSystem(entityManager, entityTagManager, eventManager), 2);
-		systemManager.addSystem(new MovementSystem(entityManager, entityTagManager, eventManager), 3);
-		systemManager.addSystem(new WorldRenderSystem(entityManager, entityTagManager, eventManager,
-				mapRenderer, mapCamera), 4);
+		systemManager.addSystem(new InputLogicSystem(entityEngine), 0);
+		systemManager.addSystem(new PatrolLogicSystem(entityEngine), 1);
+		systemManager.addSystem(new CollisionSystem(entityEngine), 2);
+		systemManager.addSystem(new MovementSystem(entityEngine), 3);
+		worldRenderSystem = new WorldRenderSystem(entityEngine, tiledMap);
+		systemManager.addSystem(worldRenderSystem, 4);
+		systemManager.addSystem(new GuiRenderSystem(entityEngine), 5);
+
+		resize(game.getWindowWidth(), game.getWindowHeight());
 	}
 
 
@@ -163,7 +168,7 @@ public class GameScreen implements Screen {
 		controls.addKeyForAction(Action.LEFT, Keys.A, Keys.LEFT);
 		controls.addKeyForAction(Action.UP, Keys.W, Keys.UP);
 		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
-		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT);
+		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
 
 		float deadzone = 0.1f;
 		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, 0, deadzone);
@@ -221,8 +226,11 @@ public class GameScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		// System.out.println("Screen resized to (" + width + ", " + height + ")");
-		mapCamera.setToOrtho(false, width * mapRenderer.getUnitScale(), height * mapRenderer.getUnitScale());
-		mapCamera.update();
+		// mapCamera.setToOrtho(false, width * mapRenderer.getUnitScale(), height * mapRenderer.getUnitScale());
+		// mapCamera.update();
+		if (worldRenderSystem != null) {
+			worldRenderSystem.resizeCamera(width, height);
+		}
 	}
 
 

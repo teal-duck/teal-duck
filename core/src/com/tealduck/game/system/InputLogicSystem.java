@@ -7,23 +7,23 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.UserInputComponent;
+import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
-import com.tealduck.game.engine.EntityTagManager;
-import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.GameSystem;
 import com.tealduck.game.input.Action;
 import com.tealduck.game.input.ControlMap;
 
 
 public class InputLogicSystem extends GameSystem {
-	public InputLogicSystem(EntityManager entityManager, EntityTagManager entityTagManager,
-			EventManager eventManager) {
-		super(entityManager, entityTagManager, eventManager);
+	public InputLogicSystem(EntityEngine entityEngine) {
+		super(entityEngine);
 	}
 
 
 	@Override
 	public void update(float deltaTime) {
+		EntityManager entityManager = getEntityManager();
+
 		@SuppressWarnings("unchecked")
 		Set<Integer> entities = entityManager.getEntitiesWithComponents(MovementComponent.class,
 				UserInputComponent.class);

@@ -8,23 +8,23 @@ import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PathfindingComponent;
 import com.tealduck.game.component.PositionComponent;
+import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
-import com.tealduck.game.engine.EntityTagManager;
-import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.GameSystem;
 
 
 public class PatrolLogicSystem extends GameSystem {
-	public PatrolLogicSystem(EntityManager entityManager, EntityTagManager entityTagManager,
-			EventManager eventManager) {
-		super(entityManager, entityTagManager, eventManager);
+	public PatrolLogicSystem(EntityEngine entityEngine) {
+		super(entityEngine);
 	}
 
 
 	@Override
 	public void update(float deltaTime) {
+		EntityManager entityManager = getEntityManager();
+
 		@SuppressWarnings("unchecked")
-		Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class,
+		Set<Integer> entities = getEntityManager().getEntitiesWithComponents(PositionComponent.class,
 				MovementComponent.class, PathfindingComponent.class);
 
 		for (int entity : entities) {

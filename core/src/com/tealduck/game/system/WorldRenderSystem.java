@@ -13,25 +13,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.tealduck.game.Tag;
 import com.tealduck.game.component.SpriteComponent;
+import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
-import com.tealduck.game.engine.EntityTagManager;
-import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.GameSystem;
 
 
-/**
- * System handling rendering of all sprites.
- *
- * @author aacn500
- *
- */
 public class WorldRenderSystem extends GameSystem {
-	/**
-	 * SpriteBatch used to draw to screen
-	 */
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
 	private Batch batch;
@@ -41,30 +32,34 @@ public class WorldRenderSystem extends GameSystem {
 	private float tileWidth;
 	private float tileHeight;
 
+	private float unitScale;
 
-	/**
-	 *
-	 * @param entityManager
-	 *                EntityManager containing entities for game
-	 * @param camera
-	 * @param batch
-	 *                SpriteBatch used to draw to screen
-	 */
-	public WorldRenderSystem(EntityManager entityManager, EntityTagManager entityTagManager,
-			EventManager eventManager, OrthogonalTiledMapRenderer renderer, OrthographicCamera camera) {
-		super(entityManager, entityTagManager, eventManager);
 
-		this.renderer = renderer;
-		this.camera = camera;
+	public WorldRenderSystem(EntityEngine entityEngine, TiledMap tiledMap) { // OrthogonalTiledMapRenderer renderer,
+		// OrthographicCamera camera) {
+		super(entityEngine);
+
+		unitScale = 1 / 1;
+		renderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
+		camera = new OrthographicCamera();
+
+		// this.renderer = renderer;
+		// this.camera = camera;
 
 		batch = renderer.getBatch();
 		batch.disableBlending();
 
-		MapProperties prop = renderer.getMap().getProperties();
+		MapProperties prop = tiledMap.getProperties();
 		mapWidth = prop.get("width", Integer.class);
 		mapHeight = prop.get("height", Integer.class);
 		tileWidth = prop.get("tilewidth", Integer.class);
 		tileHeight = prop.get("tileheight", Integer.class);
+	}
+
+
+	public void resizeCamera(int windowWidth, int windowHeight) {
+		camera.setToOrtho(false, windowWidth * renderer.getUnitScale(), windowHeight * renderer.getUnitScale());
+		camera.update();
 	}
 
 
@@ -75,6 +70,8 @@ public class WorldRenderSystem extends GameSystem {
 	 *                id of the entity to center on
 	 */
 	private void centerCameraToEntity(int entityId) {
+		EntityManager entityManager = getEntityManager();
+
 		if (entityManager.entityHasComponent(entityId, SpriteComponent.class)) {
 			Sprite entitySprite = entityManager.getComponent(entityId, SpriteComponent.class).sprite;
 
@@ -121,10 +118,11 @@ public class WorldRenderSystem extends GameSystem {
 	 */
 	@Override
 	public void update(float deltaTime) {
+		EntityManager entityManager = getEntityManager();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		centerCameraToEntity(entityTagManager.getEntity(Tag.PLAYER));
+		centerCameraToEntity(getEntityTagManager().getEntity(Tag.PLAYER));
 		clampCamera();
 		camera.update();
 		renderer.setView(camera);
@@ -164,6 +162,7 @@ public class WorldRenderSystem extends GameSystem {
 	// TODO: Is renderEntitiesSorted() better than not sorting and is its implementation correct?
 	// It feels smoother
 	private void renderEntitiesSorted() {
+		EntityManager entityManager = getEntityManager();
 		// Gdx.gl.glClearColor(0.6f, 0, 0, 1);
 		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

@@ -8,16 +8,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
+import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
-import com.tealduck.game.engine.EntityTagManager;
-import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.GameSystem;
 
 
 public class MovementSystem extends GameSystem {
-	public MovementSystem(EntityManager entityManager, EntityTagManager entityTagManager,
-			EventManager eventManager) {
-		super(entityManager, entityTagManager, eventManager);
+	public MovementSystem(EntityEngine entityEngine) {
+		super(entityEngine);
 	}
 
 
@@ -29,6 +27,8 @@ public class MovementSystem extends GameSystem {
 
 
 	private void moveEntities(float deltaTime) {
+		EntityManager entityManager = getEntityManager();
+
 		@SuppressWarnings("unchecked")
 		Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class,
 				MovementComponent.class);
@@ -55,6 +55,8 @@ public class MovementSystem extends GameSystem {
 	 * position.
 	 */
 	private void updateSpriteLocations() {
+		EntityManager entityManager = getEntityManager();
+
 		@SuppressWarnings("unchecked")
 		Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class,
 				SpriteComponent.class);
