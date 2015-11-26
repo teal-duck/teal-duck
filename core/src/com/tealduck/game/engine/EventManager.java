@@ -52,9 +52,6 @@ public class EventManager {
 	 * @return
 	 */
 	public boolean triggerEvent(int senderEntity, int receiverEntity, String name) {
-		// TODO: Probably add another parameter for extra data to pass to the function
-		// Currently not sure how to best handle this
-
 		if (name == null) {
 			throw new IllegalArgumentException("name is null");
 		}

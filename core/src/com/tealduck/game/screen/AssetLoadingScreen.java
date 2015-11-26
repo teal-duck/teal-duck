@@ -12,7 +12,7 @@ import com.tealduck.game.DuckGame;
 import com.tealduck.game.engine.SystemManager;
 
 
-public class AssetLoadingScreen extends DuckGameScreen {
+public class AssetLoadingScreen extends DuckScreenBase {
 	// TODO: Clean up AssetLoadingScreen
 
 	private int progressBarWidth;
@@ -25,7 +25,7 @@ public class AssetLoadingScreen extends DuckGameScreen {
 
 	private boolean loaded = false;
 	private float time = 0;
-	private float slowDownLoading = 0.2f;
+	private float slowDownLoading = 0.0f;
 	private float timeToStayOnLoadingScreen = 0.0f;
 
 
@@ -34,7 +34,7 @@ public class AssetLoadingScreen extends DuckGameScreen {
 	}
 
 
-	public void setNextScreen(DuckGameScreen nextScreen) {
+	public void setNextScreen(DuckScreenBase nextScreen) {
 		this.nextScreen = nextScreen;
 	}
 
@@ -70,7 +70,7 @@ public class AssetLoadingScreen extends DuckGameScreen {
 
 		if (loaded) {
 			if (time > timeToStayOnLoadingScreen) {
-				getGame().setScreen(nextScreen);
+				setScreen(nextScreen);
 			}
 		} else {
 			if (time > slowDownLoading) {

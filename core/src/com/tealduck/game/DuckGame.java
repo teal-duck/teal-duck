@@ -12,19 +12,18 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.screen.AssetLoadingScreen;
-import com.tealduck.game.screen.DuckGameScreen;
-import com.tealduck.game.screen.GameScreen;
+import com.tealduck.game.screen.DuckScreenBase;
+import com.tealduck.game.screen.MainMenuScreen;
 
 
 public class DuckGame extends Game {
-	private int windowWidth;
-	private int windowHeight;
-
 	private SpriteBatch batch;
 	private AssetManager assetManager;
 	private SystemManager systemManager;
-
 	private EntityEngine entityEngine;
+
+	private int windowWidth;
+	private int windowHeight;
 
 	private float time = 0;
 	private int frames = 0;
@@ -46,13 +45,14 @@ public class DuckGame extends Game {
 
 		setupControllers();
 
-		loadScreen(GameScreen.class);
+		loadScreen(MainMenuScreen.class);
 	}
 
 
 	@SuppressWarnings("unchecked")
-	public <T extends DuckGameScreen> T loadScreen(Class<T> screenClass) {
-		DuckGameScreen screen = null;
+	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass) {
+		Gdx.app.log("Screen", "Changing screen to " + screenClass.getSimpleName());
+		DuckScreenBase screen = null;
 		try {
 			screen = screenClass.getConstructor(DuckGame.class).newInstance(this);
 		} catch (Exception e) {
@@ -113,7 +113,6 @@ public class DuckGame extends Game {
 
 	@Override
 	public void dispose() {
-		super.dispose();
 		if (screen != null) {
 			screen.dispose();
 		}
@@ -126,6 +125,8 @@ public class DuckGame extends Game {
 		if (entityEngine != null) {
 			entityEngine.clear();
 		}
+
+		super.dispose();
 	}
 
 

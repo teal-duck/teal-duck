@@ -149,25 +149,23 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
+	// TODO: isSpriteOnScreen
 	private boolean isSpriteOnScreen(Sprite sprite) {
 		return true;
 	}
 
-	// TODO: Possibly sort all entities so that ones with the same texture get rendered together
+
+	// Possibly sort all entities so that ones with the same texture get rendered together
 	// Faster for the GPU to render lots of the same texture, then lots of a different
 	// Rather than constantly binding a different texture
 	// Possible implementation below
-
-
-	// TODO: Is renderEntitiesSorted() better than not sorting and is its implementation correct?
-	// It feels smoother
 	private void renderEntitiesSorted() {
 		EntityManager entityManager = getEntityManager();
 		// Gdx.gl.glClearColor(0.6f, 0, 0, 1);
 		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// Use a map so that each sprite is categorised by the texture it uses
-		// TODO: Order of textures varies each time game is played
+		// Order of textures varies each time game is played
 		HashMap<Texture, ArrayList<Sprite>> textures = new HashMap<Texture, ArrayList<Sprite>>();
 
 		// Iterate through the entities

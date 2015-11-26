@@ -14,7 +14,7 @@ import junit.framework.Assert;
 
 @SuppressWarnings("deprecation")
 public class EventManagerTest {
-	// TODO: EventManagerTest
+	// TODO: EventManager tests
 	private EntityManager entityManager;
 	private EventManager eventManager;
 
@@ -28,8 +28,6 @@ public class EventManagerTest {
 
 	@Test
 	public void testAddAndTriggerEvent() {
-		// TODO: Add asserts to testAndTriggerEvent
-
 		int entity1 = entityManager.createEntity();
 		int entity2 = entityManager.createEntity();
 

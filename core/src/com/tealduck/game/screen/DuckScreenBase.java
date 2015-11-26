@@ -13,11 +13,11 @@ import com.tealduck.game.engine.GameSystem;
 import com.tealduck.game.engine.SystemManager;
 
 
-public abstract class DuckGameScreen implements Screen {
+public abstract class DuckScreenBase implements Screen {
 	private final DuckGame game;
 
 
-	public DuckGameScreen(DuckGame game) {
+	public DuckScreenBase(DuckGame game) {
 		this.game = game;
 	}
 
@@ -81,11 +81,6 @@ public abstract class DuckGameScreen implements Screen {
 	}
 
 
-	public DuckGame getGame() {
-		return game;
-	}
-
-
 	public SpriteBatch getBatch() {
 		return game.getBatch();
 	}
@@ -130,4 +125,13 @@ public abstract class DuckGameScreen implements Screen {
 		return game.getWindowHeight();
 	}
 
+
+	public void setScreen(Screen screen) {
+		game.setScreen(screen);
+	}
+
+
+	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass) {
+		return game.loadScreen(screenClass);
+	}
 }

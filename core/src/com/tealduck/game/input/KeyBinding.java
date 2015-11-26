@@ -1,7 +1,7 @@
 package com.tealduck.game.input;
 
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 
 
@@ -56,8 +56,6 @@ public class KeyBinding {
 	}
 
 
-	// TODO: should setSecondary be kept? It goes against always enforcing there is always a primary key if there's
-	// a secondary
 	/**
 	 * Sets the secondary key.
 	 *
@@ -102,7 +100,6 @@ public class KeyBinding {
 	 * Replaces the primary key with the secondary. Sets the secondary to no key.
 	 */
 	public void removePrimary() {
-		// TODO: Should remove key methods return previous state
 		primary = secondary;
 		secondary = KeyBinding.NO_KEY;
 	}
@@ -122,7 +119,6 @@ public class KeyBinding {
 	 * @param newPrimary
 	 */
 	public void setPrimaryKeepOldAsSecondary(int newPrimary) {
-		// TODO: Change name of setPrimaryKeepOldAsSecondary
 		secondary = primary;
 		primary = newPrimary;
 	}
@@ -180,34 +176,42 @@ public class KeyBinding {
 	}
 
 
-	// TODO: Should KeyBinding isPressed methods take the input object as a parameter?
 	/**
 	 * Returns true if the primary key is pressed.
 	 *
+	 * @param input
 	 * @return
+	 * @see {@link KeyBinding#isSecondaryPressed(Input)}
+	 * @see {@link KeyBinding#isPressed(Input)}
 	 */
-	public boolean isPrimaryPressed() {
-		return hasPrimary() ? Gdx.input.isKeyPressed(primary) : false;
+	public boolean isPrimaryPressed(Input input) {
+		return hasPrimary() ? input.isKeyPressed(primary) : false;
 	}
 
 
 	/**
 	 * Returns true if the secondary key is pressed.
 	 *
+	 * @param input
 	 * @return
+	 * @see {@link KeyBinding#isPrimaryPressed(Input)}
+	 * @see {@link KeyBinding#isPressed(Input)}
 	 */
-	public boolean isSecondaryPressed() {
-		return hasSecondary() ? Gdx.input.isKeyPressed(secondary) : false;
+	public boolean isSecondaryPressed(Input input) {
+		return hasSecondary() ? input.isKeyPressed(secondary) : false;
 	}
 
 
 	/**
 	 * Returns true if either the primary or secondary key is pressed.
 	 *
+	 * @param input
 	 * @return
+	 * @see {@link KeyBinding#isPrimaryPressed(Input)}
+	 * @see {@link KeyBinding#isSecondaryPressed(Input)}
 	 */
-	public boolean isPressed() {
-		return (isPrimaryPressed() || isSecondaryPressed());
+	public boolean isPressed(Input input) {
+		return (isPrimaryPressed(input) || isSecondaryPressed(input));
 	}
 
 

@@ -1,6 +1,10 @@
 package com.tealduck.game.engine;
 
 
+/**
+ * Used to group entity manager, entity tag manager and event manager together as these classes are often passed around
+ * together.
+ */
 public class EntityEngine {
 	private EntityManager entityManager;
 	private EntityTagManager entityTagManager;

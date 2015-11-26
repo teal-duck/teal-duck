@@ -10,8 +10,6 @@ import java.util.Map.Entry;
  * Maps string tags to entity IDs. Wrapper around built-in {@link HashMap}
  */
 public class EntityTagManager {
-	// TODO: EntityTagManager Javadoc and tests
-
 	private HashMap<String, Integer> tags;
 
 
@@ -55,7 +53,6 @@ public class EntityTagManager {
 	 * @param entity
 	 */
 	public void removeTagsAssociatedWithEntity(int entity) {
-		// TODO: Test removeTagsAssociatedWithEntity
 		for (Entry<String, Integer> value : tags.entrySet()) {
 			if (value.getValue() == entity) {
 				tags.remove(value.getKey());

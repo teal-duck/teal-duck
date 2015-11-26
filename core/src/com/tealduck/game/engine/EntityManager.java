@@ -17,7 +17,6 @@ import java.util.Set;
 public class EntityManager {
 	// TODO: Fix type of getAllComponentsForEntity in the submitted diagram
 	// TODO: Maybe add a method that returns HashMap<Integer, ? extends Component>
-	// TODO: Fix the @link tags in javadocs
 
 	private Set<Integer> entities;
 	private HashMap<Class<? extends Component>, HashMap<Integer, ? extends Component>> componentsMap;
@@ -53,7 +52,8 @@ public class EntityManager {
 	 * @param entityTagManager
 	 * @param tag
 	 * @return the reserved ID
-	 * @see {@link EntityTagManager#createEntity}
+	 * @see {@link EntityManager#createEntity()}
+	 * @see {@link EntityTagManager#addTag(String, int)}
 	 */
 	public int createEntityWithTag(EntityTagManager entityTagManager, String tag) {
 		int id = createEntity();
@@ -347,7 +347,7 @@ public class EntityManager {
 	 * @return set of entity IDs
 	 * @throws IllegalArgumentException
 	 *                 if componentType is null
-	 * @see {@link EntityManager#getEntitiesWithComponents}
+	 * @see {@link EntityManager#getEntitiesWithComponents(Class...)}
 	 */
 	public <T extends Component> Set<Integer> getEntitiesWithComponent(Class<T> componentType) {
 		if (componentType == null) {
@@ -364,14 +364,14 @@ public class EntityManager {
 
 	/**
 	 * Gets the set of entities that have an instance of all the component types. Performs set intersection using
-	 * {@link EntityManager#getEntitiesWithComponent}.
+	 * {@link EntityManager#getEntitiesWithComponent(Class)}.
 	 *
 	 * @param <T>
 	 *                T extends {@link Component}
 	 * @param componentTypes
 	 *                types of components
 	 * @return set of entity IDs
-	 * @see {@link EntityManager#getEntitiesWithComponent}.
+	 * @see {@link EntityManager#getEntitiesWithComponent(Class)}.
 	 */
 	public Set<Integer> getEntitiesWithComponents(Class<? extends Component>... componentTypes) {
 		Set<Integer> entities = new HashSet<Integer>(this.entities);

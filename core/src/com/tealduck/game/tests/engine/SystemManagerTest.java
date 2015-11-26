@@ -16,7 +16,8 @@ import com.tealduck.game.system.PatrolLogicSystem;
 
 
 public class SystemManagerTest {
-	// TODO: SystemManagerTest
+	// TODO: SystemManager tests
+
 	private SystemManager systemManager;
 	private EntityManager entityManager;
 	private EntityTagManager entityTagManager;

@@ -128,8 +128,8 @@ public class Binding {
 		controllerBinding.setBinding(controllerBindingType, index);
 	}
 
-	// TODO: Add more setControllerBinding overloads for deadzone and povDirection in Binding
 
+	// TODO: Add more setControllerBinding overloads for deadzone and povDirection
 
 	/**
 	 * Gets the key binding.

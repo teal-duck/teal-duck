@@ -3,6 +3,8 @@ package com.tealduck.game.input;
 
 import java.util.EnumMap;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.PovDirection;
 
@@ -11,7 +13,7 @@ import com.badlogic.gdx.controllers.PovDirection;
  * Maps actions to bindings.
  */
 public class ControlMap {
-	// TODO: ControlMap (+ other input) javadoc, tests, exceptions, clean up, possible change return types from void
+	// TODO: ControlMap (+ other input) tests
 
 	private EnumMap<Action, Binding> controls;
 
@@ -269,7 +271,6 @@ public class ControlMap {
 	}
 
 
-	// TODO: Should remove key binding insert a default NO_KEY binding if there is none?
 	/**
 	 * Removes the key binding for the action.
 	 *
@@ -332,17 +333,34 @@ public class ControlMap {
 	 * Returns true if a key in the action's binding is pressed.
 	 *
 	 * @param action
+	 * @param input
 	 * @return true if the binding's key is pressed, else false
 	 * @throws IllegalArgumentException
 	 *                 if action is null
-	 * @see {@link KeyBinding#isPressed()}
+	 * @see {@link KeyBinding#isPressed(Input)}
+	 * @see {@link ControlMap#isKeyForActionPressed(Action)}
+	 *
 	 */
-	public boolean isKeyForActionPressed(Action action) {
+	public boolean isKeyForActionPressed(Action action, Input input) {
 		if (action == null) {
 			throw new IllegalArgumentException("action is null");
 		}
 
-		return getKeyBindingForAction(action).isPressed();
+		return getKeyBindingForAction(action).isPressed(input);
+	}
+
+
+	/**
+	 * Returns true if a key in the action's binding is pressed.
+	 *
+	 * @param action
+	 * @return true if the binding's key is pressed, else false
+	 * @throws IllegalArgumentException
+	 *                 if action is null
+	 * @see {@link ControlMap#isKeyForActionPressed(Action, Input)
+	 */
+	public boolean isKeyForActionPressed(Action action) {
+		return isKeyForActionPressed(action, Gdx.app.getInput());
 	}
 
 

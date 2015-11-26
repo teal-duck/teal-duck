@@ -2,6 +2,7 @@ package com.tealduck.game.engine;
 
 
 public interface IEvent {
+	// TODO: Probably add another parameter for extra data to pass to the function
 	/**
 	 * @param entityManager
 	 * @param sender

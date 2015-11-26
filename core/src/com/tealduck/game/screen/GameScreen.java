@@ -1,6 +1,7 @@
 package com.tealduck.game.screen;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
@@ -33,7 +34,7 @@ import com.tealduck.game.system.PatrolLogicSystem;
 import com.tealduck.game.system.WorldRenderSystem;
 
 
-public class GameScreen extends DuckGameScreen {
+public class GameScreen extends DuckScreenBase {
 	// TODO: Split game screen into multiple smaller classes
 	// private final DuckGame game;
 
@@ -50,11 +51,10 @@ public class GameScreen extends DuckGameScreen {
 	}
 
 
-	/**
-	 * Starts the asset manager loading the assets needed for this screen.
+	/*
+	 * (non-Javadoc)
 	 *
-	 * @param assetManager
-	 * @return true if there are assets to load, else false
+	 * @see com.tealduck.game.screen.DuckScreenBase#startAssetLoading(com.badlogic.gdx.assets.AssetManager)
 	 */
 	@Override
 	public boolean startAssetLoading(AssetManager assetManager) {
@@ -71,6 +71,11 @@ public class GameScreen extends DuckGameScreen {
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tealduck.game.screen.DuckScreenBase#load()
+	 */
 	@Override
 	protected void load() {
 		AssetManager assetManager = getAssetManager();
@@ -104,6 +109,11 @@ public class GameScreen extends DuckGameScreen {
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tealduck.game.screen.DuckScreenBase#loadSystems(com.tealduck.game.engine.SystemManager)
+	 */
 	@Override
 	protected void loadSystems(SystemManager systemManager) {
 		systemManager.addSystem(new InputLogicSystem(getEntityEngine()), 0);
@@ -111,6 +121,7 @@ public class GameScreen extends DuckGameScreen {
 		systemManager.addSystem(new CollisionSystem(getEntityEngine()), 2);
 		systemManager.addSystem(new MovementSystem(getEntityEngine()), 3);
 
+		// TODO: Change this to use SystemManager.getSystemOfType()
 		worldRenderSystem = new WorldRenderSystem(getEntityEngine(), tiledMap);
 
 		systemManager.addSystem(worldRenderSystem, 4);
@@ -154,7 +165,7 @@ public class GameScreen extends DuckGameScreen {
 		controls.addControllerForAction(Action.SPRINT, ControllerBindingType.BUTTON, 5);
 
 		UserInputComponent uic = new UserInputComponent(controls, ControllerHelper.getFirstControllerOrNull());
-		// System.out.println(uic);
+		Gdx.app.log("Controls", uic.controls.toString());
 		entityManager.addComponent(playerId, uic);
 
 		return playerId;
@@ -194,9 +205,7 @@ public class GameScreen extends DuckGameScreen {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		// System.out.println("Screen resized to (" + width + ", " + height + ")");
-		// mapCamera.setToOrtho(false, width * mapRenderer.getUnitScale(), height * mapRenderer.getUnitScale());
-		// mapCamera.update();
+
 		if (worldRenderSystem != null) {
 			worldRenderSystem.resizeCamera(width, height);
 		}
