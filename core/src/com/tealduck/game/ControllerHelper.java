@@ -5,6 +5,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.utils.Array;
 
 
 public class ControllerHelper extends ControllerAdapter {
@@ -68,4 +69,12 @@ public class ControllerHelper extends ControllerAdapter {
 			System.out.println("No controllers attached");
 		}
 	}
+
+
+	public static Controller getFirstControllerOrNull() {
+		Array<Controller> controllers = Controllers.getControllers();
+		Controller controller = (controllers.size > 0) ? controllers.first() : null;
+		return controller;
+	}
+
 }

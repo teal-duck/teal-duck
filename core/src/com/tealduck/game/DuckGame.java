@@ -5,18 +5,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.utils.Array;
-import com.tealduck.game.engine.EntityManager;
-import com.tealduck.game.engine.EntityTagManager;
-import com.tealduck.game.engine.EventManager;
+import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.screen.AssetLoadingScreen;
+import com.tealduck.game.screen.DuckGameScreen;
 import com.tealduck.game.screen.GameScreen;
 
 
@@ -24,12 +20,11 @@ public class DuckGame extends Game {
 	private int windowWidth;
 	private int windowHeight;
 
-	private AssetManager assetManager;
 	private SpriteBatch batch;
-	private EntityManager entityManager;
-	private EntityTagManager entityTagManager;
+	private AssetManager assetManager;
 	private SystemManager systemManager;
-	private EventManager eventManager;
+
+	private EntityEngine entityEngine;
 
 	private float time = 0;
 	private int frames = 0;
@@ -37,36 +32,44 @@ public class DuckGame extends Game {
 
 	@Override
 	public void create() {
-		assetManager = new AssetManager();
-		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-		Texture.setAssetManager(assetManager);
+		Gdx.app.log("Game", "Starting game");
 
 		batch = new SpriteBatch(100);
 		batch.disableBlending();
 
-		entityManager = new EntityManager();
-		entityTagManager = new EntityTagManager();
+		assetManager = new AssetManager();
+		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+		Texture.setAssetManager(assetManager);
+
 		systemManager = new SystemManager();
-		eventManager = new EventManager(entityManager, entityTagManager);
+		entityEngine = new EntityEngine();
+
 		setupControllers();
 
-		loadGameScreen();
-
+		loadScreen(GameScreen.class);
 	}
 
 
-	public void loadGameScreen() {
-		// TODO: Abstract loadGameScreen so that other screens can use it
-		// Maybe class LoadableScreen implements Screen
+	@SuppressWarnings("unchecked")
+	public <T extends DuckGameScreen> T loadScreen(Class<T> screenClass) {
+		DuckGameScreen screen = null;
+		try {
+			screen = screenClass.getConstructor(DuckGame.class).newInstance(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-		boolean requiresAssets = GameScreen.startAssetLoading(assetManager);
-		GameScreen gameScreen = new GameScreen(this);
+		boolean requiresAssets = screen.startAssetLoading(assetManager);
 
 		if (requiresAssets) {
-			setScreen(new AssetLoadingScreen(this, assetManager, gameScreen));
+			AssetLoadingScreen loadingScreen = new AssetLoadingScreen(this);
+			loadingScreen.setNextScreen(screen);
+			setScreen(loadingScreen);
 		} else {
-			setScreen(gameScreen);
+			setScreen(screen);
 		}
+
+		return (T) screen;
 	}
 
 
@@ -78,19 +81,9 @@ public class DuckGame extends Game {
 	}
 
 
-	/**
-	 * @return the first controller instance or null
-	 */
-	public Controller getFirstControllerOrNull() {
-		Array<Controller> controllers = Controllers.getControllers();
-		Controller controller = (controllers.size > 0) ? controllers.first() : null;
-		return controller;
-	}
-
-
 	@Override
 	public void resize(int width, int height) {
-		// System.out.println("Game resized to (" + width + ", " + height + ")");
+		Gdx.app.log("Resize", "Game resized to (" + width + ", " + height + ")");
 		windowWidth = width;
 		windowHeight = height;
 
@@ -110,7 +103,7 @@ public class DuckGame extends Game {
 		frames += 1;
 
 		while (time >= 1) {
-			System.out.println("Calculated FPS: " + frames + "; Libgdx FPS: "
+			Gdx.app.log("FPS", "Calculated FPS: " + frames + "; Libgdx FPS: "
 					+ Gdx.graphics.getFramesPerSecond());
 			frames = 0;
 			time -= 1;
@@ -130,11 +123,9 @@ public class DuckGame extends Game {
 		if (assetManager != null) {
 			assetManager.dispose();
 		}
-	}
-
-
-	public AssetManager getAssetManager() {
-		return assetManager;
+		if (entityEngine != null) {
+			entityEngine.clear();
+		}
 	}
 
 
@@ -143,13 +134,8 @@ public class DuckGame extends Game {
 	}
 
 
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
-
-
-	public EntityTagManager getEntityTagManager() {
-		return entityTagManager;
+	public AssetManager getAssetManager() {
+		return assetManager;
 	}
 
 
@@ -158,10 +144,24 @@ public class DuckGame extends Game {
 	}
 
 
-	public EventManager getEventManager() {
-		return eventManager;
+	public EntityEngine getEntityEngine() {
+		return entityEngine;
 	}
 
+
+	// public EntityManager getEntityManager() {
+	// return entityManager;
+	// }
+	//
+	//
+	// public EntityTagManager getEntityTagManager() {
+	// return entityTagManager;
+	// }
+	//
+	//
+	// public EventManager getEventManager() {
+	// return eventManager;
+	// }
 
 	public int getWindowWidth() {
 		return windowWidth;
@@ -171,5 +171,4 @@ public class DuckGame extends Game {
 	public int getWindowHeight() {
 		return windowHeight;
 	}
-
 }

@@ -25,21 +25,6 @@ public abstract class GameSystem {
 	}
 
 
-	public EntityManager getEntityManager() {
-		return entityEngine.getEntityManager();
-	}
-
-
-	public EntityTagManager getEntityTagManager() {
-		return entityEngine.getEntityTagManager();
-	}
-
-
-	public EventManager getEventManager() {
-		return entityEngine.getEventManager();
-	}
-
-
 	/**
 	 * Called each frame to update some part of the game.
 	 *
@@ -47,4 +32,19 @@ public abstract class GameSystem {
 	 *                the time elapsed since the previous frame in (seconds/millisecond)
 	 */
 	public abstract void update(float deltaTime);
+
+
+	protected EntityManager getEntityManager() {
+		return entityEngine.getEntityManager();
+	}
+
+
+	protected EntityTagManager getEntityTagManager() {
+		return entityEngine.getEntityTagManager();
+	}
+
+
+	protected EventManager getEventManager() {
+		return entityEngine.getEventManager();
+	}
 }

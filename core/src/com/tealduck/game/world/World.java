@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 
+@SuppressWarnings("unused")
 public class World {
 	private TiledMap tiledMap;
 	private OrthographicCamera mapCamera;
