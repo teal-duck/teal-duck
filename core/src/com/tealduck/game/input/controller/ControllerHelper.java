@@ -1,4 +1,4 @@
-package com.tealduck.game;
+package com.tealduck.game.input.controller;
 
 
 import com.badlogic.gdx.controllers.Controller;

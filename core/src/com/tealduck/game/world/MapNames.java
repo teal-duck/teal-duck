@@ -1,4 +1,4 @@
-package com.tealduck.game;
+package com.tealduck.game.world;
 
 
 public class MapNames {

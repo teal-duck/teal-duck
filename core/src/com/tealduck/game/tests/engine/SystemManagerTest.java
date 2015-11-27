@@ -43,7 +43,7 @@ public class SystemManagerTest {
 		System.out.println(systemManager);
 		System.out.println("");
 
-		MovementSystem ms = new MovementSystem(entityEngine);
+		MovementSystem ms = new MovementSystem(entityEngine, null);
 		systemManager.addSystem(ms, 4);
 
 		System.out.println(systemManager);

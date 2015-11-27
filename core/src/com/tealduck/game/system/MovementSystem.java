@@ -11,11 +11,16 @@ import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
+import com.tealduck.game.world.World;
 
 
 public class MovementSystem extends GameSystem {
-	public MovementSystem(EntityEngine entityEngine) {
+	private final World world;
+
+
+	public MovementSystem(EntityEngine entityEngine, World world) {
 		super(entityEngine);
+		this.world = world;
 	}
 
 
@@ -26,6 +31,7 @@ public class MovementSystem extends GameSystem {
 	}
 
 
+	@SuppressWarnings("unused")
 	private void moveEntities(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
 
@@ -43,7 +49,38 @@ public class MovementSystem extends GameSystem {
 
 			velocity.add(deltaVelocity);
 			deltaVelocity.setZero();
-			position.mulAdd(velocity, deltaTime);
+			// position.mulAdd(velocity, deltaTime);
+			//
+
+			float currentX = position.x;
+			float currentY = position.y;
+			float width = 64;
+			float height = 64;
+			float endX = position.x + (velocity.x * deltaTime);
+			float endY = position.y + (velocity.y * deltaTime);
+
+			float deltaX = endX - currentX;
+			float deltaY = endY - currentY;
+
+			// Handle X first
+			// Keep moving the entity to the left/right until they hit a tile or endX
+			// Adjust endX based on collision and size
+			// Then repeat for Y
+			// Move entity to new location
+
+			if (deltaX > 0) {
+				// Going right
+				int left = world.xPixelToTile(currentX);
+				int bottom = world.yPixelToTile(currentY);
+				int right = world.xPixelToTile(currentX + width);
+				int top = world.yPixelToTile(currentY + height);
+
+			} else {
+
+			}
+
+			position.set(endX, endY);
+
 			velocity.scl(friction);
 		}
 

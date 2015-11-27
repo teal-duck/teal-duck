@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.SystemManager;
+import com.tealduck.game.input.controller.ControllerHelper;
 import com.tealduck.game.screen.AssetLoadingScreen;
 import com.tealduck.game.screen.DuckScreenBase;
 import com.tealduck.game.screen.GameScreen;

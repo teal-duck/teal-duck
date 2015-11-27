@@ -7,14 +7,17 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.Tag;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.engine.EntityEngine;
@@ -28,35 +31,55 @@ public class WorldRenderSystem extends GameSystem {
 	private OrthographicCamera camera;
 	private Batch batch;
 
-	private float mapWidth;
-	private float mapHeight;
-	private float tileWidth;
-	private float tileHeight;
+	private World world;
+
+	private final int mapWidth;
+	private final int mapHeight;
+	private final int tileWidth;
+	private final int tileHeight;
 
 	private float unitScale;
 
 	private final int[] wallLayer = new int[] { 0 };
 
+	private int cornerSize;
+	private int halfCornerSize;
+	private Pixmap cornerPixmap;
+	private Pixmap collideTilePixmap;
+	private Texture cornerTexture;
+	private Texture collideTileTexture;
+
 
 	public WorldRenderSystem(EntityEngine entityEngine, World world, OrthographicCamera camera) {
 		super(entityEngine);
 
+		this.world = world;
 		TiledMap tiledMap = world.getTiledMap();
 		unitScale = 1 / 1;
 		renderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
 		this.camera = camera;
 
-		// this.renderer = renderer;
-		// this.camera = camera;
-
 		batch = renderer.getBatch();
 		batch.disableBlending();
 
-		MapProperties prop = tiledMap.getProperties();
-		mapWidth = prop.get("width", Integer.class);
-		mapHeight = prop.get("height", Integer.class);
-		tileWidth = prop.get("tilewidth", Integer.class);
-		tileHeight = prop.get("tileheight", Integer.class);
+		mapWidth = world.getMapWidth();
+		mapHeight = world.getMapHeight();
+		tileWidth = world.getTileWidth();
+		tileHeight = world.getTileHeight();
+
+		cornerSize = 8;
+		halfCornerSize = cornerSize / 2;
+
+		cornerPixmap = new Pixmap(cornerSize, cornerSize, Format.RGBA8888);
+		cornerPixmap.setColor(Color.RED);
+		cornerPixmap.fill();
+		cornerTexture = new Texture(cornerPixmap);
+
+		collideTilePixmap = new Pixmap(tileWidth, tileHeight, Format.RGBA8888);
+		collideTilePixmap.setColor(new Color(1f, 0, 0, 0.5f));
+		collideTilePixmap.fill();
+		collideTileTexture = new Texture(collideTilePixmap);
+
 	}
 
 
@@ -138,20 +161,77 @@ public class WorldRenderSystem extends GameSystem {
 			renderEntitiesSorted();
 		} else {
 			batch.begin();
-			batch.disableBlending();
+			batch.enableBlending();
+			// batch.disableBlending();
 
 			Set<Integer> entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
 
 			for (int entity : entities) {
 				Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
 				if (isSpriteOnScreen(sprite)) {
+					float x = sprite.getX();
+					float y = sprite.getY();
+					float w = sprite.getWidth();
+					float h = sprite.getHeight();
+					w -= 2;
+					h -= 2;
+
+					if (!printed) {
+						printed = true;
+						System.out.println("X: " + x + "; Y: " + y + "; W: " + w + "; H: " + h);
+					}
+
+					Vector2 bottomLeftTile = world.pixelToTile(x, y);
+					// Vector2 bottomRight = world.tileToPixel(world.pixelToTile(x + w, y));
+					// Vector2 topLeft = world.tileToPixel(world.pixelToTile(x, y + h));
+					Vector2 topRightTile = world.pixelToTile(x + w, y + h);
+
+					Vector2 bottomLeftPixel = world.tileToPixel(bottomLeftTile);
+					Vector2 topRightPixel = world.tileToPixel(topRightTile);
+
+					int leftTile = (int) bottomLeftTile.x;
+					int rightTile = (int) topRightTile.x;
+					int bottomTile = (int) bottomLeftTile.y;
+					int topTile = (int) topRightTile.y;
+
+					int leftPixel = (int) bottomLeftPixel.x;
+					int rightPixel = (int) topRightPixel.x;
+					int bottomPixel = (int) bottomLeftPixel.y;
+					int topPixel = (int) topRightPixel.y;
+
+					if (world.isTileCollidable(leftTile, bottomTile)) {
+						batch.draw(collideTileTexture, leftPixel, bottomPixel);
+					}
+					if (world.isTileCollidable(rightTile, bottomTile)) {
+						batch.draw(collideTileTexture, rightPixel, bottomPixel);
+					}
+					if (world.isTileCollidable(leftTile, topTile)) {
+						batch.draw(collideTileTexture, leftPixel, topPixel);
+					}
+					if (world.isTileCollidable(rightTile, topTile)) {
+						batch.draw(collideTileTexture, rightPixel, topPixel);
+					}
+
 					sprite.draw(batch);
+
+					batch.draw(cornerTexture, leftPixel - halfCornerSize,
+							bottomPixel - halfCornerSize);
+					batch.draw(cornerTexture, rightPixel - halfCornerSize,
+							bottomPixel - halfCornerSize);
+					batch.draw(cornerTexture, leftPixel - halfCornerSize,
+							topPixel - halfCornerSize);
+					batch.draw(cornerTexture, rightPixel - halfCornerSize,
+							topPixel - halfCornerSize);
+
 				}
 			}
 
 			batch.end();
 		}
 	}
+
+
+	boolean printed = false;
 
 
 	// TODO: isSpriteOnScreen

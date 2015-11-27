@@ -7,12 +7,12 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.tealduck.game.ControllerHelper;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.input.Action;
 import com.tealduck.game.input.ControlMap;
 import com.tealduck.game.input.ControllerBindingType;
+import com.tealduck.game.input.controller.ControllerHelper;
 import com.tealduck.game.input.controller.PS4;
 
 
