@@ -4,7 +4,6 @@ package com.tealduck.game.system;
 import java.util.Set;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
@@ -16,6 +15,7 @@ import com.tealduck.game.world.World;
 
 
 public class MovementSystem extends GameSystem {
+	@SuppressWarnings("unused")
 	private final World world;
 
 
@@ -52,71 +52,78 @@ public class MovementSystem extends GameSystem {
 			// position.mulAdd(velocity, deltaTime);
 			//
 
-			float currentX = position.x;
-			float currentY = position.y;
-			float width = 64;
-			float height = 64;
+			// float currentX = position.x;
+			// float currentY = position.y;
+			// float width = 64;
+			// float height = 64;
 			float endX = position.x + (velocity.x * deltaTime);
 			float endY = position.y + (velocity.y * deltaTime);
 
-			float deltaX = endX - currentX;
-			float deltaY = endY - currentY;
+			// float deltaX = endX - currentX;
+			// float deltaY = endY - currentY;
+
+			// TODO: Collision
+			// http://gamedev.stackexchange.com/questions/61620/reusable-top-down-collision-class
+			// Move entity to location
+			// Calculate the intersecting rectangle
+			// Find the smaller dimension of the rectangle (width on x or height on y)
+			// Push entity out of tile by that amount in that direction
+			// Set velocity in that direction to 0
+
+			// Swept AABB
+			// http://www.gamedev.net/page/resources/_/technical/game-programming/swept-aabb-collision-detection-and-response-r3084
+			// http://www.metanetsoftware.com/technique/tutorialA.html
+			// http://www.metanetsoftware.com/technique/tutorialB.html
+
+			// Also make the entities hitbox slightly smaller than 64x64
 
 			position.set(endX, endY);
 			velocity.scl(friction);
 
-			// Handle X first
-			// Keep moving the entity to the left/right until they hit a tile or endX
-			// Adjust endX based on collision and size
-			// Then repeat for Y
-			// Move entity to new location
-
-			float x = position.x;
-			float y = position.y;
-			float w = width;
-			float h = height;
-
-			int left = world.xPixelToTile(x);
-			int right = world.xPixelToTile(x + w);
-			int bottom = world.yPixelToTile(y);
-			int top = world.yPixelToTile(y + h);
-
-			Rectangle test = new Rectangle(0, 0, 0, 0);
-
-			float xIntercept = 0;
-			float yIntercept = 0;
-
-			if (deltaX > 0) {
-				left = world.xPixelToTile(currentX);
-				int end = world.xPixelToTile(endX + width) + 1;
-
-				for (; left <= end; left += 1) {
-					if (world.isTileCollidable(left, top) || world.isTileCollidable(left, bottom)) {
-						// horizontalCollision = true;
-						// horizontalCollisionLocation = left;
-						break;
-					}
-				}
-
-			} else if (deltaX < 0) {
-				right = world.xPixelToTile(currentX + width) + 1;
-				int end = world.xPixelToTile(endX);
-
-				for (; right >= end; right -= 1) {
-					if (world.isTileCollidable(right, top)
-							|| world.isTileCollidable(right, bottom)) {
-						// horizontalCollision = true;
-						// horizontalCollisionLocation = right;
-						break;
-					}
-				}
-			}
-
-			if (xIntercept < yIntercept) {
-
-			} else {
-
-			}
+			// float x = position.x;
+			// float y = position.y;
+			// float w = width;
+			// float h = height;
+			//
+			// int left = world.xPixelToTile(x);
+			// int right = world.xPixelToTile(x + w);
+			// int bottom = world.yPixelToTile(y);
+			// int top = world.yPixelToTile(y + h);
+			//
+			// float xIntercept = 0;
+			// float yIntercept = 0;
+			//
+			// if (deltaX > 0) {
+			// left = world.xPixelToTile(currentX);
+			// int end = world.xPixelToTile(endX + width) + 1;
+			//
+			// for (; left <= end; left += 1) {
+			// if (world.isTileCollidable(left, top) || world.isTileCollidable(left, bottom)) {
+			// // horizontalCollision = true;
+			// // horizontalCollisionLocation = left;
+			// break;
+			// }
+			// }
+			//
+			// } else if (deltaX < 0) {
+			// right = world.xPixelToTile(currentX + width) + 1;
+			// int end = world.xPixelToTile(endX);
+			//
+			// for (; right >= end; right -= 1) {
+			// if (world.isTileCollidable(right, top)
+			// || world.isTileCollidable(right, bottom)) {
+			// // horizontalCollision = true;
+			// // horizontalCollisionLocation = right;
+			// break;
+			// }
+			// }
+			// }
+			//
+			// if (xIntercept < yIntercept) {
+			//
+			// } else {
+			//
+			// }
 
 			// int horizontalCollisionLocation = -1;
 			// boolean horizontalCollision = false;
@@ -228,6 +235,7 @@ public class MovementSystem extends GameSystem {
 			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
 			Vector2 velocity = entityManager.getComponent(entity, MovementComponent.class).velocity;
 
+			sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 			sprite.setRotation(velocity.angle());
 		}
 	}

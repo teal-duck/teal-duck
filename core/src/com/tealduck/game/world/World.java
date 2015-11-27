@@ -175,12 +175,12 @@ public class World {
 		} else {
 
 			TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("Collision");
-			
+
 			Cell cell = layer.getCell(x, y);
 			if (cell == null) {
 				return false;
 			}
-			
+
 			String collidableProperty = cell.getTile().getProperties().get("collidable", String.class);
 			return ((collidableProperty != null) && collidableProperty.equals("true"));
 		}

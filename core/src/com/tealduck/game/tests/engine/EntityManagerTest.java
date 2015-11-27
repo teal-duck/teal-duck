@@ -41,19 +41,20 @@ public class EntityManagerTest {
 		// Test added to set of entities
 		Assert.assertEquals(2, entityManager.getEntityCount());
 	}
-	
+
+
 	@Test
-	public void testCreateEntityWithTag(){
+	public void testCreateEntityWithTag() {
 		int entity1 = entityManager.createEntityWithTag(entityTagManager, "TAG1");
 		int entity2 = entityManager.createEntityWithTag(entityTagManager, "TAG2");
-		
+
 		Assert.assertEquals(0, entity1);
 		Assert.assertEquals(1, entity2);
-		
+
 		Assert.assertEquals("TAG1", entityTagManager.getTagAssociatedWithEntity(entity1));
 		Assert.assertEquals("TAG2", entityTagManager.getTagAssociatedWithEntity(entity2));
-		
-		Assert.assertEquals(2,  entityManager.getEntityCount());
+
+		Assert.assertEquals(2, entityManager.getEntityCount());
 	}
 
 
@@ -70,17 +71,19 @@ public class EntityManagerTest {
 		Assert.assertFalse(entityManager.getEntities().contains(entity1));
 		Assert.assertTrue(entityManager.getEntities().contains(entity2));
 	}
-	
+
+
 	@Test
 	public void testRemoveEntityWithTag() {
 		int entity1 = entityManager.createEntityWithTag(entityTagManager, "TAG1");
 		int removedEntity = entityManager.removeEntityWithTag(entity1, entityTagManager);
-		
+
 		Assert.assertEquals(entity1, removedEntity);
-		
+
 		Assert.assertEquals(0, entityManager.getEntityCount());
 		Assert.assertFalse(entityTagManager.getTags().contains("TAG1"));
 	}
+
 
 	@Test
 	public void testRemoveEntityWithComponents() {
@@ -107,36 +110,39 @@ public class EntityManagerTest {
 		Assert.assertEquals(0, movementComponents.size());
 
 	}
-	
+
+
 	@Test
 	public void testGetEntities() {
 		int entity1 = entityManager.createEntity();
 		int entity2 = entityManager.createEntity();
 		entityManager.removeEntity(entity2);
 		Set<Integer> entities = entityManager.getEntities();
-		
+
 		Assert.assertTrue(entities.contains(entity1));
 		Assert.assertFalse(entities.contains(entity2));
 	}
-	
+
+
 	@Test
 	public void testGetEntityCount() {
 		Assert.assertEquals(0, entityManager.getEntityCount());
-		
+
 		entityManager.createEntity();
 		Assert.assertEquals(1, entityManager.getEntityCount());
-		
+
 		int entityToRemove = entityManager.createEntity();
 		Assert.assertEquals(2, entityManager.getEntityCount());
 		entityManager.removeEntity(entityToRemove);
 		Assert.assertEquals(1, entityManager.getEntityCount());
 	}
-	
+
+
 	@Test
 	public void testEntityExists() {
 		int entity1 = entityManager.createEntity();
 		Assert.assertTrue(entityManager.entityExists(entity1));
-		
+
 		entityManager.removeEntity(entity1);
 		Assert.assertFalse(entityManager.entityExists(entity1));
 	}
@@ -175,56 +181,61 @@ public class EntityManagerTest {
 		Assert.assertFalse(components.containsKey(PositionComponent.class));
 		Assert.assertTrue(components.containsKey(MovementComponent.class));
 	}
-	
+
+
 	@Test
 	public void testEntityHasComponent() {
 		int entity = entityManager.createEntity();
-		PositionComponent positionComponent = new PositionComponent(new Vector2(0,0));
-		
+		PositionComponent positionComponent = new PositionComponent(new Vector2(0, 0));
+
 		Assert.assertFalse(entityManager.entityHasComponent(entity, PositionComponent.class));
-		
+
 		entityManager.addComponent(entity, positionComponent);
 		Assert.assertTrue(entityManager.entityHasComponent(entity, PositionComponent.class));
 	}
-	
+
+
 	@Test
 	public void testGetComponent() {
 		int entity = entityManager.createEntity();
-		PositionComponent positionComponent = new PositionComponent(new Vector2(0,0));
+		PositionComponent positionComponent = new PositionComponent(new Vector2(0, 0));
 		entityManager.addComponent(entity, positionComponent);
-		
+
 		Assert.assertEquals(positionComponent, entityManager.getComponent(entity, PositionComponent.class));
 	}
-	
+
+
 	@Test
 	public void testGetEntityComponents() {
 		int entity = entityManager.createEntity();
-		
-		PositionComponent positionComponent = new PositionComponent(new Vector2(0,0));
-		MovementComponent movementComponent = new MovementComponent(new Vector2(1,0), 1.0f);
-		
+
+		PositionComponent positionComponent = new PositionComponent(new Vector2(0, 0));
+		MovementComponent movementComponent = new MovementComponent(new Vector2(1, 0), 1.0f);
+
 		entityManager.addComponent(entity, positionComponent);
 		entityManager.addComponent(entity, movementComponent);
-		
-		HashMap<Class<? extends Component>, ? extends Component> components = entityManager.getEntityComponents(entity);
-		
+
+		HashMap<Class<? extends Component>, ? extends Component> components = entityManager
+				.getEntityComponents(entity);
+
 		Assert.assertEquals(positionComponent, components.get(PositionComponent.class));
 		Assert.assertEquals(movementComponent, components.get(MovementComponent.class));
 	}
-	
+
+
 	@Test
 	public void testGetEntitiesWithComponent() {
 		int entity1 = entityManager.createEntity();
 		int entity2 = entityManager.createEntity();
 		int entity3 = entityManager.createEntity();
-		
-		PositionComponent positionComponent = new PositionComponent(new Vector2(0,0));
-		
+
+		PositionComponent positionComponent = new PositionComponent(new Vector2(0, 0));
+
 		entityManager.addComponent(entity1, positionComponent);
 		entityManager.addComponent(entity2, positionComponent);
-		
+
 		Set<Integer> components = entityManager.getEntitiesWithComponent(PositionComponent.class);
-		
+
 		Assert.assertTrue(components.contains(entity1));
 		Assert.assertTrue(components.contains(entity2));
 		Assert.assertFalse(components.contains(entity3));

@@ -74,14 +74,16 @@ public class EntityTagManager {
 		}
 		return null;
 	}
-	
+
+
 	/**
-	 * 
+	 *
 	 * @return Set containing Tags
 	 */
 	public Set<String> getTags() {
 		return tags.keySet();
 	}
+
 
 	/**
 	 *
