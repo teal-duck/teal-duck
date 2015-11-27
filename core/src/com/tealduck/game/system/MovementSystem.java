@@ -4,6 +4,7 @@ package com.tealduck.game.system;
 import java.util.Set;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
@@ -31,7 +32,6 @@ public class MovementSystem extends GameSystem {
 	}
 
 
-	@SuppressWarnings("unused")
 	private void moveEntities(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
 
@@ -44,11 +44,11 @@ public class MovementSystem extends GameSystem {
 					MovementComponent.class);
 			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
 			Vector2 velocity = movementComponent.velocity;
-			Vector2 deltaVelocity = movementComponent.acceleration;
+			Vector2 acceleration = movementComponent.acceleration;
 			float friction = movementComponent.friction;
 
-			velocity.mulAdd(deltaVelocity, deltaTime);
-			deltaVelocity.setZero();
+			velocity.mulAdd(acceleration, deltaTime);
+			acceleration.setZero();
 			// position.mulAdd(velocity, deltaTime);
 			//
 
@@ -62,26 +62,143 @@ public class MovementSystem extends GameSystem {
 			float deltaX = endX - currentX;
 			float deltaY = endY - currentY;
 
+			position.set(endX, endY);
+			velocity.scl(friction);
+
 			// Handle X first
 			// Keep moving the entity to the left/right until they hit a tile or endX
 			// Adjust endX based on collision and size
 			// Then repeat for Y
 			// Move entity to new location
 
+			float x = position.x;
+			float y = position.y;
+			float w = width;
+			float h = height;
+
+			int left = world.xPixelToTile(x);
+			int right = world.xPixelToTile(x + w);
+			int bottom = world.yPixelToTile(y);
+			int top = world.yPixelToTile(y + h);
+
+			Rectangle test = new Rectangle(0, 0, 0, 0);
+
+			float xIntercept = 0;
+			float yIntercept = 0;
+
 			if (deltaX > 0) {
-				// Going right
-				int left = world.xPixelToTile(currentX);
-				int bottom = world.yPixelToTile(currentY);
-				int right = world.xPixelToTile(currentX + width);
-				int top = world.yPixelToTile(currentY + height);
+				left = world.xPixelToTile(currentX);
+				int end = world.xPixelToTile(endX + width) + 1;
+
+				for (; left <= end; left += 1) {
+					if (world.isTileCollidable(left, top) || world.isTileCollidable(left, bottom)) {
+						// horizontalCollision = true;
+						// horizontalCollisionLocation = left;
+						break;
+					}
+				}
+
+			} else if (deltaX < 0) {
+				right = world.xPixelToTile(currentX + width) + 1;
+				int end = world.xPixelToTile(endX);
+
+				for (; right >= end; right -= 1) {
+					if (world.isTileCollidable(right, top)
+							|| world.isTileCollidable(right, bottom)) {
+						// horizontalCollision = true;
+						// horizontalCollisionLocation = right;
+						break;
+					}
+				}
+			}
+
+			if (xIntercept < yIntercept) {
 
 			} else {
 
 			}
 
-			position.set(endX, endY);
+			// int horizontalCollisionLocation = -1;
+			// boolean horizontalCollision = false;
+			// int verticalCollisionLocation = -1;
+			// boolean verticalCollision = false;
+			//
 
-			velocity.scl(friction);
+			//
+			// }
+			//
+			// int left = world.xPixelToTile(endX);
+			// int right = world.xPixelToTile(endX + width);
+			//
+			// if (deltaY > 0) {
+			// bottom = world.yPixelToTile(currentY);
+			// int end = world.yPixelToTile(endY + height) + 1;
+			//
+			// for (; bottom <= end; bottom += 1) {
+			// if (world.isTileCollidable(left, bottom)
+			// || world.isTileCollidable(right, bottom)) {
+			// verticalCollision = true;
+			// verticalCollisionLocation = bottom;
+			// break;
+			// }
+			// }
+			//
+			// // if (collision) {
+			// // float newY = world.yTileToPixel(collisionLocation - 1);
+			// // if (newY < endY) {
+			// // // endY = newY;
+			// // }
+			// // }
+			// }
+			//
+			// if (horizontalCollision) {
+			// if (deltaX > 0) {
+			// float newX = world.xTileToPixel(horizontalCollisionLocation - 1);
+			// if (newX < endX) {
+			// endX = newX;
+			// }
+			// } else {
+			// float newX = world.xTileToPixel(horizontalCollisionLocation + 1);
+			// if (newX > endX) {
+			// endX = newX;
+			// }
+			// }
+			// }
+
+			// int extra = 2;
+			//
+			// int left = world.xPixelToTile(endX - extra);
+			// int bottom = world.yPixelToTile(endY - extra);
+			// int right = world.xPixelToTile(endX + width + extra);
+			// int top = world.yPixelToTile(endY + height + extra);
+			//
+			// if (deltaX > 0) {
+			// // Going right
+			// if (world.isTileCollidable(right, top) || world.isTileCollidable(right, bottom)) {
+			// endX = world.xTileToPixel(right) - width;
+			// }
+			// } else {
+			// if (world.isTileCollidable(left, top) || world.isTileCollidable(left, bottom)) {
+			// endX = world.xTileToPixel(left + 1);
+			// }
+			// }
+
+			// left = world.xPixelToTile(endX - extra);
+			// bottom = world.yPixelToTile(endY - extra);
+			// right = world.xPixelToTile(endX + width + extra);
+			// top = world.yPixelToTile(endY + height + extra);
+			//
+			// if (deltaY > 0) {
+			// // Going up
+			// if (world.isTileCollidable(left, top) || world.isTileCollidable(right, top)) {
+			// endY = world.yTileToPixel(top) - height;
+			// }
+			// } else {
+			// if (world.isTileCollidable(left, bottom) || world.isTileCollidable(right, bottom)) {
+			// endY = world.yTileToPixel(bottom + 1);
+			// }
+			// }
+
 		}
 
 	}
@@ -91,10 +208,10 @@ public class MovementSystem extends GameSystem {
 	 * For each entity that has a position and sprite, updates the position in the sprite to be the same as the
 	 * position.
 	 */
+	@SuppressWarnings("unchecked")
 	private void updateSpriteLocations() {
 		EntityManager entityManager = getEntityManager();
 
-		@SuppressWarnings("unchecked")
 		Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class,
 				SpriteComponent.class);
 
@@ -105,5 +222,13 @@ public class MovementSystem extends GameSystem {
 			sprite.setPosition(position.x, position.y);
 		}
 
+		entities = entityManager.getEntitiesWithComponents(SpriteComponent.class, MovementComponent.class);
+
+		for (int entity : entities) {
+			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
+			Vector2 velocity = entityManager.getComponent(entity, MovementComponent.class).velocity;
+
+			sprite.setRotation(velocity.angle());
+		}
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -136,6 +137,9 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
+	float rotation = 0;
+
+
 	/**
 	 * Redraws all entities with sprites to the screen.
 	 *
@@ -212,7 +216,7 @@ public class WorldRenderSystem extends GameSystem {
 						batch.draw(collideTileTexture, rightPixel, topPixel);
 					}
 
-					sprite.draw(batch);
+					// sprite.draw(batch);
 
 					batch.draw(cornerTexture, leftPixel - halfCornerSize,
 							bottomPixel - halfCornerSize);
@@ -222,6 +226,20 @@ public class WorldRenderSystem extends GameSystem {
 							topPixel - halfCornerSize);
 					batch.draw(cornerTexture, rightPixel - halfCornerSize,
 							topPixel - halfCornerSize);
+					
+					sprite.draw(batch);
+
+//					Texture texture = sprite.getTexture();
+//
+//					if (Gdx.app.getInput().isKeyPressed(Keys.R)) {
+//						rotation += 10 * deltaTime;
+//					}
+//					
+//					rotation = sprite.getRotation();
+//					
+//
+//					batch.draw(texture, x, y, w / 2, h / 2, w, h, 1, 1, rotation, 0, 0, (int) w,
+//							(int) h, false, false);
 
 				}
 			}

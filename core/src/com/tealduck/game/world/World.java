@@ -9,6 +9,8 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -109,7 +111,7 @@ public class World {
 		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
 		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
 
-		float deadzone = 0.05f;
+		float deadzone = 0.2f;
 		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_X,
 				deadzone);
 		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_X,
@@ -171,7 +173,16 @@ public class World {
 		if ((x < 0) || (y < 0) || (x > mapWidth) || (y > mapHeight)) {
 			return true;
 		} else {
-			return true;
+
+			TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("Collision");
+			
+			Cell cell = layer.getCell(x, y);
+			if (cell == null) {
+				return false;
+			}
+			
+			String collidableProperty = cell.getTile().getProperties().get("collidable", String.class);
+			return ((collidableProperty != null) && collidableProperty.equals("true"));
 		}
 	}
 

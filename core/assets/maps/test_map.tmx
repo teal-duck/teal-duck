@@ -16,16 +16,16 @@
  </tileset>
  <layer name="Walls" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJztm9EKwyAQBE3y//9c+hAQ0dwZtR7dGRAhkdLJ2iUJ9EgpHeJDFfzxx18X/PHHXxf88cdfF/zxx18X/PHHXxf88cdfF/zxx18X/PHHXxf88cdfF/zxx18X/PFf7X8Z805u/3PBuHlas/sa3P5WRp75rBxPxvrdzNz/vT6R8h+lzN+7fjet/Z8qx3r7y1oXKf/e3rL666qsrZ3fzcj+t76/53yU/N9Q63tvv/9L/t57gC/5tenty1WU/qOdl+Ppkt2U/iOd10vE/HNW37NFzN+iJzPPc0GU/D2/77yz3j4P5J8fKX+rl0afAWtEyl+Vln+EvfkLnvxnvBOYMa+k9X9wpfEBYZcC8w==
+   eJztm9EKwyAQBE3y//9c+hAQ0dwZtR7dGRAhkdDJ2iUp9EgpHeJDFfzxx18X/PHHXxf88cdfF/zxx18X/PHHXxf88cdfF/zxx18X/PHHXxf88cdfF/zxx18X/PFf7X8Z805u/3PBuHlas/se3P5WRp75rBxPxvrdzNz/vT6R8h+lzN+7fjet/Z8qx3r7y1oXKf/e3rL666qsrZ3fzcj+tz6/53yU/N9Q63tvv/9L/t5ngC/5venty1WU/qOdl+Ppkt2U/iOd10vE/HNWP7NFzN+iJzPPe0GU/D3f77yz3r4P5NePlL/VSaPvgK1rRslflZZ/hL35C578Z/wmMGNeSev/4ErjA1e3AvE=
   </data>
  </layer>
  <layer name="Collision" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt1zkKxDAQBEB/wf//rPMFY93qRVWgyDqmAw3WdQEAAAAAAAAAAAD/5t5dwGbyn03+s92TRsn+CUbVUbuP/BnkP+vcXy19q6R/fc1Nyj9jXe/3VeRvX9d7PxLMqqOklyQY2fNaz92ppg756+Z+vQsSzMw/aq+ZSu547xvw7dwEKXXskvxvuoL8uWOFB1S2DAY=
+   eJzt1zkKxDAQBEB/wf//rPMFY93qRVWgyDqmAw3WdQEAAAAAAAAAAAD/5t5dwGbyn03+s92TRsn+CUbVUbuP/BnkP+vcXy19q6R/fc1Nyj9jXe/3VeRvX9d7PxLMqqOklyQY2fNaz92ppg756+Z+vQsSzMw/aq+ZSu537xvwbc8EKXXskvxvuoL8uWOFBwDGC/U=
   </data>
  </layer>
  <objectgroup name="Entities" width="64" height="64">
-  <object name="Player" type="Player" gid="33" x="64" y="4032"/>
+  <object name="Player" type="Player" gid="33" x="128" y="3968"/>
   <object name="Enemy" type="Enemy" gid="34" x="448" y="3968"/>
   <object name="Enemy" type="Enemy" gid="34" x="704" y="3968"/>
   <object name="Enemy" type="Enemy" gid="34" x="128" y="3712"/>
