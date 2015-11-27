@@ -3,6 +3,7 @@ package com.tealduck.game.engine;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Set;
 
 
 /**
@@ -73,7 +74,14 @@ public class EntityTagManager {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 
+	 * @return Set containing Tags
+	 */
+	public Set<String> getTags() {
+		return tags.keySet();
+	}
 
 	/**
 	 *
