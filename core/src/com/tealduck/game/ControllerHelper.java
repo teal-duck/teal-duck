@@ -89,7 +89,7 @@ public class ControllerHelper extends ControllerAdapter {
 		}
 
 		if (Controllers.getControllers().size == 0) {
-			System.out.println("No controllers attached");
+			System.out.println("Controllers: No controllers attached");
 		}
 	}
 

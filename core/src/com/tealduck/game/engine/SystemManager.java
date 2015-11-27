@@ -107,8 +107,24 @@ public class SystemManager implements Iterable<GameSystem> {
 	}
 
 
+	/**
+	 * Gets the system instance of the given type.
+	 *
+	 * @param systemType
+	 * @return the system or null if there is no system of this type
+	 * @throws IllegalArgumentException
+	 *                 if systemType is null
+	 */
+	@SuppressWarnings("unchecked")
 	public <T extends GameSystem> T getSystemOfType(Class<T> systemType) {
-		// TODO: getSystemOfType
+		if (systemType == null) {
+			throw new IllegalArgumentException("systemType is null");
+		}
+		for (SystemWithPriority<? extends GameSystem> systemWithPriority : systems) {
+			if (systemWithPriority.system.getClass().equals(systemType)) {
+				return (T) systemWithPriority.system;
+			}
+		}
 		return null;
 	}
 

@@ -20,6 +20,7 @@ import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
+import com.tealduck.game.world.World;
 
 
 public class WorldRenderSystem extends GameSystem {
@@ -34,12 +35,13 @@ public class WorldRenderSystem extends GameSystem {
 
 	private float unitScale;
 
+	private final int[] wallLayer = new int[] { 0 };
 
-	public WorldRenderSystem(EntityEngine entityEngine, TiledMap tiledMap, OrthographicCamera camera) { // OrthogonalTiledMapRenderer
-														// renderer,
-		// OrthographicCamera camera) {
+
+	public WorldRenderSystem(EntityEngine entityEngine, World world, OrthographicCamera camera) {
 		super(entityEngine);
 
+		TiledMap tiledMap = world.getTiledMap();
 		unitScale = 1 / 1;
 		renderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
 		this.camera = camera;
@@ -122,12 +124,14 @@ public class WorldRenderSystem extends GameSystem {
 		EntityManager entityManager = getEntityManager();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		centerCameraToEntity(getEntityTagManager().getEntity(Tag.PLAYER));
+		try {
+			centerCameraToEntity(getEntityTagManager().getEntity(Tag.PLAYER));
+		} catch (NullPointerException e) {
+		}
 		clampCamera();
 		camera.update();
 		renderer.setView(camera);
-		renderer.render();
+		renderer.render(wallLayer);
 
 		boolean useSortedRendering = false;
 		if (useSortedRendering) {

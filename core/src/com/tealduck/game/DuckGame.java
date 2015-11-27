@@ -16,7 +16,7 @@ import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.screen.AssetLoadingScreen;
 import com.tealduck.game.screen.DuckScreenBase;
-import com.tealduck.game.screen.MainMenuScreen;
+import com.tealduck.game.screen.GameScreen;
 
 
 public class DuckGame extends Game {
@@ -55,7 +55,8 @@ public class DuckGame extends Game {
 
 		setupControllers();
 
-		loadScreen(MainMenuScreen.class);
+		// loadScreen(MainMenuScreen.class);
+		loadScreen(GameScreen.class);
 	}
 
 

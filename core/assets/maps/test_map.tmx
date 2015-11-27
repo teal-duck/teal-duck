@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="64" tileheight="64" backgroundcolor="#000000">
  <tileset firstgid="1" name="map_tiles" tilewidth="64" tileheight="64">
   <image source="../textures/map_tiles.png" trans="ff00ff" width="256" height="256"/>
  </tileset>
- <layer name="Tile Layer 1" width="64" height="64">
+ <tileset firstgid="17" name="collision_tiles" tilewidth="64" tileheight="64">
+  <image source="../textures/collision_tiles.png" width="256" height="256"/>
+  <tile id="0">
+   <properties>
+    <property name="collidable" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="33" name="entity_tiles" tilewidth="64" tileheight="64">
+  <image source="../textures/entity_tiles.png" width="256" height="256"/>
+ </tileset>
+ <layer name="Walls" width="64" height="64">
   <data encoding="base64" compression="zlib">
    eJztm9EKwyAQBE3y//9c+hAQ0dwZtR7dGRAhkdLJ2iUJ9EgpHeJDFfzxx18X/PHHXxf88cdfF/zxx18X/PHHXxf88cdfF/zxx18X/PHHXxf88cdfF/zxx18X/PFf7X8Z805u/3PBuHlas/sa3P5WRp75rBxPxvrdzNz/vT6R8h+lzN+7fjet/Z8qx3r7y1oXKf/e3rL666qsrZ3fzcj+t76/53yU/N9Q63tvv/9L/t57gC/5tenty1WU/qOdl+Ppkt2U/iOd10vE/HNW37NFzN+iJzPPc0GU/D2/77yz3j4P5J8fKX+rl0afAWtEyl+Vln+EvfkLnvxnvBOYMa+k9X9wpfEBYZcC8w==
   </data>
  </layer>
+ <layer name="Collision" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt1zkKxDAQBEB/wf//rPMFY93qRVWgyDqmAw3WdQEAAAAAAAAAAAD/5t5dwGbyn03+s92TRsn+CUbVUbuP/BnkP+vcXy19q6R/fc1Nyj9jXe/3VeRvX9d7PxLMqqOklyQY2fNaz92ppg756+Z+vQsSzMw/aq+ZSu547xvw7dwEKXXskvxvuoL8uWOFB1S2DAY=
+  </data>
+ </layer>
+ <objectgroup name="Entities" width="64" height="64">
+  <object name="Player" type="Player" gid="33" x="64" y="4032"/>
+  <object name="Enemy" type="Enemy" gid="34" x="448" y="3968"/>
+  <object name="Enemy" type="Enemy" gid="34" x="704" y="3968"/>
+  <object name="Enemy" type="Enemy" gid="34" x="128" y="3712"/>
+  <object name="Enemy" type="Enemy" gid="34" x="448" y="3456"/>
+  <object name="Enemy" type="Enemy" gid="34" x="1216" y="3712"/>
+  <object name="Enemy" type="Enemy" gid="34" x="1792" y="3392"/>
+  <object name="Enemy" type="Enemy" gid="34" x="768" y="3136"/>
+ </objectgroup>
 </map>
