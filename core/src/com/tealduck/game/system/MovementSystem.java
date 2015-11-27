@@ -44,10 +44,10 @@ public class MovementSystem extends GameSystem {
 					MovementComponent.class);
 			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
 			Vector2 velocity = movementComponent.velocity;
-			Vector2 deltaVelocity = movementComponent.deltaVelocity;
+			Vector2 deltaVelocity = movementComponent.acceleration;
 			float friction = movementComponent.friction;
 
-			velocity.add(deltaVelocity);
+			velocity.mulAdd(deltaVelocity, deltaTime);
 			deltaVelocity.setZero();
 			// position.mulAdd(velocity, deltaTime);
 			//

@@ -33,5 +33,6 @@
   <object name="Enemy" type="Enemy" gid="34" x="1216" y="3712"/>
   <object name="Enemy" type="Enemy" gid="34" x="1792" y="3392"/>
   <object name="Enemy" type="Enemy" gid="34" x="768" y="3136"/>
+  <object name="Enemy" type="Enemy" gid="34" x="64" y="3328"/>
  </objectgroup>
 </map>

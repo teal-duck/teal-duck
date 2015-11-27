@@ -59,6 +59,11 @@ public class World {
 			if (object instanceof TiledMapTileMapObject) {
 				TiledMapTileMapObject t = (TiledMapTileMapObject) object;
 				String name = t.getName();
+				if (name == null) {
+					System.out.println("null name");
+					continue;
+				}
+
 				float x = t.getX();
 				float y = t.getY();
 
@@ -90,8 +95,8 @@ public class World {
 		entityManager.addComponent(playerId, new SpriteComponent(texture));
 		entityManager.addComponent(playerId, new PositionComponent(location));
 
-		float maxSpeed = 100f; // 200.0f;
-		float sprintScale = 1.5f;
+		float maxSpeed = 2000.0f; // 100f; // 200.0f;
+		float sprintScale = 2f;
 		float friction = 0.8f; // 0.5f;
 		entityManager.addComponent(playerId,
 				new MovementComponent(new Vector2(0, 0), maxSpeed, sprintScale, friction));

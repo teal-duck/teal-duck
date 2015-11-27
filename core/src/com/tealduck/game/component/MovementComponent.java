@@ -7,7 +7,7 @@ import com.tealduck.game.engine.Component;
 
 public class MovementComponent extends Component {
 	public Vector2 velocity;
-	public Vector2 deltaVelocity;
+	public Vector2 acceleration;
 	public float maxSpeed;
 	public float sprintScale;
 	public float friction;
@@ -24,13 +24,13 @@ public class MovementComponent extends Component {
 		this.sprintScale = sprintScale;
 		this.friction = friction;
 
-		deltaVelocity = new Vector2(0, 0);
+		acceleration = new Vector2(0, 0);
 	}
 
 
 	@Override
 	public String toString() {
-		return "MovementComponent(" + velocity.toString() + ", " + deltaVelocity + ", " + maxSpeed + ", "
+		return "MovementComponent(" + velocity.toString() + ", " + acceleration + ", " + maxSpeed + ", "
 				+ sprintScale + ", " + friction + ")";
 	}
 

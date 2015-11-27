@@ -47,7 +47,7 @@ public class PatrolLogicSystem extends GameSystem {
 
 				MovementComponent movementComponent = entityManager.getComponent(entity,
 						MovementComponent.class);
-				Vector2 deltaVelocity = movementComponent.deltaVelocity;
+				Vector2 deltaVelocity = movementComponent.acceleration;
 
 				deltaVelocity.set(targetPosition).sub(entityPosition);
 

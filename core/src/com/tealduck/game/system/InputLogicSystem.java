@@ -51,7 +51,7 @@ public class InputLogicSystem extends GameSystem {
 				shiftScale = movementComponent.sprintScale;
 			}
 
-			Vector2 deltaVelocity = movementComponent.deltaVelocity;
+			Vector2 deltaVelocity = movementComponent.acceleration;
 			deltaVelocity.set(dx, dy);
 			deltaVelocity.limit(velocityLimit);
 			deltaVelocity.scl(movementComponent.maxSpeed * shiftScale);
