@@ -15,6 +15,8 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.Tag;
+import com.tealduck.game.collision.Circle;
+import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
@@ -125,6 +127,11 @@ public class World {
 		UserInputComponent uic = new UserInputComponent(controls, ControllerHelper.getFirstControllerOrNull());
 		Gdx.app.log("Controls", uic.controls.toString());
 		entityManager.addComponent(playerId, uic);
+
+		float radius = 28;
+		Vector2 offsetFromPosition = new Vector2(32, 32);
+		Circle circle = new Circle(location.cpy().add(offsetFromPosition), radius);
+		entityManager.addComponent(playerId, new CollisionComponent(circle, offsetFromPosition));
 
 		return playerId;
 	}

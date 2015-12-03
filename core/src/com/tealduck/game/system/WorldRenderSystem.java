@@ -15,10 +15,14 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.Tag;
+import com.tealduck.game.collision.Circle;
+import com.tealduck.game.collision.CollisionShape;
+import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
@@ -26,6 +30,7 @@ import com.tealduck.game.engine.GameSystem;
 import com.tealduck.game.world.World;
 
 
+@SuppressWarnings("unused")
 public class WorldRenderSystem extends GameSystem {
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
@@ -136,6 +141,9 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
+	ShapeRenderer shapeRenderer = new ShapeRenderer();
+
+
 	/**
 	 * Redraws all entities with sprites to the screen.
 	 *
@@ -155,6 +163,7 @@ public class WorldRenderSystem extends GameSystem {
 		camera.update();
 		renderer.setView(camera);
 		renderer.render(wallLayer);
+		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		boolean useSortedRendering = false;
 		if (useSortedRendering) {
@@ -169,77 +178,33 @@ public class WorldRenderSystem extends GameSystem {
 			for (int entity : entities) {
 				Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
 				if (isSpriteOnScreen(sprite)) {
-					float x = sprite.getX();
-					float y = sprite.getY();
-					float w = sprite.getWidth();
-					float h = sprite.getHeight();
-					w -= 2;
-					h -= 2;
-
-					if (!printed) {
-						printed = true;
-						System.out.println("X: " + x + "; Y: " + y + "; W: " + w + "; H: " + h);
-					}
-
-					Vector2 bottomLeftTile = world.pixelToTile(x, y);
-					// Vector2 bottomRight = world.tileToPixel(world.pixelToTile(x + w, y));
-					// Vector2 topLeft = world.tileToPixel(world.pixelToTile(x, y + h));
-					Vector2 topRightTile = world.pixelToTile(x + w, y + h);
-
-					Vector2 bottomLeftPixel = world.tileToPixel(bottomLeftTile);
-					Vector2 topRightPixel = world.tileToPixel(topRightTile);
-
-					int leftTile = (int) bottomLeftTile.x;
-					int rightTile = (int) topRightTile.x;
-					int bottomTile = (int) bottomLeftTile.y;
-					int topTile = (int) topRightTile.y;
-
-					int leftPixel = (int) bottomLeftPixel.x;
-					int rightPixel = (int) topRightPixel.x;
-					int bottomPixel = (int) bottomLeftPixel.y;
-					int topPixel = (int) topRightPixel.y;
-
-					if (world.isTileCollidable(leftTile, bottomTile)) {
-						batch.draw(collideTileTexture, leftPixel, bottomPixel);
-					}
-					if (world.isTileCollidable(rightTile, bottomTile)) {
-						batch.draw(collideTileTexture, rightPixel, bottomPixel);
-					}
-					if (world.isTileCollidable(leftTile, topTile)) {
-						batch.draw(collideTileTexture, leftPixel, topPixel);
-					}
-					if (world.isTileCollidable(rightTile, topTile)) {
-						batch.draw(collideTileTexture, rightPixel, topPixel);
-					}
-
-					// sprite.draw(batch);
 					sprite.draw(batch);
-
-					batch.draw(cornerTexture, leftPixel - halfCornerSize,
-							bottomPixel - halfCornerSize);
-					batch.draw(cornerTexture, rightPixel - halfCornerSize,
-							bottomPixel - halfCornerSize);
-					batch.draw(cornerTexture, leftPixel - halfCornerSize,
-							topPixel - halfCornerSize);
-					batch.draw(cornerTexture, rightPixel - halfCornerSize,
-							topPixel - halfCornerSize);
-
-					// Texture texture = sprite.getTexture();
-					//
-					// if (Gdx.app.getInput().isKeyPressed(Keys.R)) {
-					// rotation += 10 * deltaTime;
-					// }
-					//
-					// rotation = sprite.getRotation();
-					//
-					//
-					// batch.draw(texture, x, y, w / 2, h / 2, w, h, 1, 1, rotation, 0, 0, (int) w,
-					// (int) h, false, false);
 
 				}
 			}
 
 			batch.end();
+
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			shapeRenderer.begin(ShapeType.Filled);
+
+			entities = entityManager.getEntitiesWithComponent(CollisionComponent.class);
+			for (int entity : entities) {
+				CollisionComponent collisionComponent = entityManager.getComponent(entity,
+						CollisionComponent.class);
+				CollisionShape shape = collisionComponent.collisionShape;
+
+				shapeRenderer.setColor(1, 0, 0, 0.5f);
+				if (shape instanceof Circle) {
+					Circle circle = (Circle) shape;
+					shapeRenderer.circle(circle.getCenterX(), circle.getCenterY(),
+							circle.getRadius());
+				}
+
+			}
+			shapeRenderer.end();
+			Gdx.gl.glDisable(GL20.GL_BLEND);
 		}
 	}
 
@@ -251,6 +216,70 @@ public class WorldRenderSystem extends GameSystem {
 	private boolean isSpriteOnScreen(Sprite sprite) {
 		return true;
 	}
+
+	// float x = sprite.getX();
+	// float y = sprite.getY();
+	// float w = sprite.getWidth();
+	// float h = sprite.getHeight();
+	// w -= 2;
+	// h -= 2;
+	//
+	// if (!printed) {
+	// printed = true;
+	// System.out.println("X: " + x + "; Y: " + y + "; W: " + w + "; H: " + h);
+	// }
+	//
+	// Vector2 bottomLeftTile = world.pixelToTile(x, y);
+	// // Vector2 bottomRight = world.tileToPixel(world.pixelToTile(x + w, y));
+	// // Vector2 topLeft = world.tileToPixel(world.pixelToTile(x, y + h));
+	// Vector2 topRightTile = world.pixelToTile(x + w, y + h);
+	//
+	// Vector2 bottomLeftPixel = world.tileToPixel(bottomLeftTile);
+	// Vector2 topRightPixel = world.tileToPixel(topRightTile);
+	//
+	// int leftTile = (int) bottomLeftTile.x;
+	// int rightTile = (int) topRightTile.x;
+	// int bottomTile = (int) bottomLeftTile.y;
+	// int topTile = (int) topRightTile.y;
+	//
+	// int leftPixel = (int) bottomLeftPixel.x;
+	// int rightPixel = (int) topRightPixel.x;
+	// int bottomPixel = (int) bottomLeftPixel.y;
+	// int topPixel = (int) topRightPixel.y;
+	//
+	// if (world.isTileCollidable(leftTile, bottomTile)) {
+	// batch.draw(collideTileTexture, leftPixel, bottomPixel);
+	// }
+	// if (world.isTileCollidable(rightTile, bottomTile)) {
+	// batch.draw(collideTileTexture, rightPixel, bottomPixel);
+	// }
+	// if (world.isTileCollidable(leftTile, topTile)) {
+	// batch.draw(collideTileTexture, leftPixel, topPixel);
+	// }
+	// if (world.isTileCollidable(rightTile, topTile)) {
+	// batch.draw(collideTileTexture, rightPixel, topPixel);
+	// }
+
+	// batch.draw(cornerTexture, leftPixel - halfCornerSize,
+	// bottomPixel - halfCornerSize);
+	// batch.draw(cornerTexture, rightPixel - halfCornerSize,
+	// bottomPixel - halfCornerSize);
+	// batch.draw(cornerTexture, leftPixel - halfCornerSize,
+	// topPixel - halfCornerSize);
+	// batch.draw(cornerTexture, rightPixel - halfCornerSize,
+	// topPixel - halfCornerSize);
+
+	// Texture texture = sprite.getTexture();
+	//
+	// if (Gdx.app.getInput().isKeyPressed(Keys.R)) {
+	// rotation += 10 * deltaTime;
+	// }
+	//
+	// rotation = sprite.getRotation();
+	//
+	//
+	// batch.draw(texture, x, y, w / 2, h / 2, w, h, 1, 1, rotation, 0, 0, (int) w,
+	// (int) h, false, false);
 
 
 	// Possibly sort all entities so that ones with the same texture get rendered together
