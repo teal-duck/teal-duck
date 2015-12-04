@@ -15,6 +15,22 @@ public class Circle extends CollisionShape {
 	}
 
 
+	@Override
+	public AABB getAABB() {
+		return new AABB(getBottomLeft(), getSize());
+	}
+
+
+	public Vector2 getBottomLeft() {
+		return position.cpy().sub(radius, radius);
+	}
+
+
+	public Vector2 getSize() {
+		return new Vector2(radius * 2, radius * 2);
+	}
+
+
 	public Vector2 getCenter() {
 		return position;
 	}

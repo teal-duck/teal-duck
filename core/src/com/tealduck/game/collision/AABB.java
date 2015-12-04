@@ -9,9 +9,30 @@ public class AABB extends CollisionShape {
 	private Vector2 size;
 
 
+	public AABB() {
+		this(new Vector2(0, 0), new Vector2(0, 0));
+	}
+
+
 	public AABB(Vector2 position, Vector2 size) {
 		this.position = position;
 		this.size = size;
+	}
+
+
+	@Override
+	public AABB getAABB() {
+		return this;
+	}
+
+
+	public float getWidth() {
+		return size.x;
+	}
+
+
+	public float getHeight() {
+		return size.y;
 	}
 
 
@@ -21,7 +42,7 @@ public class AABB extends CollisionShape {
 
 
 	public float getTop() {
-		return position.y;
+		return position.y + size.y;
 	}
 
 
@@ -31,7 +52,7 @@ public class AABB extends CollisionShape {
 
 
 	public float getBottom() {
-		return position.y + size.y;
+		return position.y;
 	}
 
 
@@ -50,5 +71,20 @@ public class AABB extends CollisionShape {
 	@Override
 	public String toString() {
 		return "AABB(" + position.toString() + ", " + size.toString() + ")";
+	}
+
+
+	public Vector2 getBottomLeft() {
+		return position.cpy();
+	}
+
+
+	public Vector2 getTopLeft() {
+		return new Vector2(getLeft(), getTop());
+	}
+
+
+	public Vector2 getCenter() {
+		return new Vector2(position.x + (size.x / 2), position.y + (size.y / 2));
 	}
 }

@@ -69,12 +69,12 @@ public class Collision {
 			further.x = x;
 		}
 
-		if (y < top) {
-			closer.y = top;
-			further.y = bottom;
-		} else if (y > bottom) {
+		if (y < bottom) {
 			closer.y = bottom;
 			further.y = top;
+		} else if (y > top) {
+			closer.y = top;
+			further.y = bottom;
 		} else {
 			closer.y = y;
 			further.y = y;
@@ -83,13 +83,21 @@ public class Collision {
 
 
 	/**
-	 * 0 if no collision, else the smallest overlap
+	 * Null if no intersection
 	 *
 	 * @param aabb
 	 * @param circle
 	 * @return
 	 */
-	public static float aabbToCircle(AABB aabb, Circle circle, Vector2 normal) {
+	public static Intersection aabbToCircle(AABB aabb, Circle circle) {
+		if ((circle.getCenterX() > aabb.getLeft()) && (circle.getCenterX() < aabb.getRight())
+				&& (circle.getCenterY() > aabb.getBottom()) && (circle.getCenterY() < aabb.getTop())) {
+			// projection = (circle.center - aabb.center).unit;
+			//
+			// lengthToEdgeInDirection = 0;
+			return new Intersection((circle.getCenter().cpy().sub(aabb.getCenter())).nor(), 32);
+		}
+
 		Vector2 closerPoint = new Vector2(0, 0);
 		Vector2 furtherPoint = new Vector2(0, 0);
 
@@ -108,11 +116,13 @@ public class Collision {
 				circleFurther);
 
 		if (overlap > 0) {
-			normal.set(projection);
+			return new Intersection(projection, overlap);
+			// normal.set(projection);
 		} else {
-			normal.setZero();
+			// normal.setZero();
+			return null;
 		}
 
-		return overlap;
+		// return overlap;
 	}
 }

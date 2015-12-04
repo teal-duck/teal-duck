@@ -19,7 +19,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.Tag;
+import com.tealduck.game.collision.AABB;
 import com.tealduck.game.collision.Circle;
 import com.tealduck.game.collision.CollisionShape;
 import com.tealduck.game.component.CollisionComponent;
@@ -195,11 +197,37 @@ public class WorldRenderSystem extends GameSystem {
 						CollisionComponent.class);
 				CollisionShape shape = collisionComponent.collisionShape;
 
+				shapeRenderer.setColor(0, 1, 0, 0.5f);
+				AABB aabb = shape.getAABB();
+				shapeRenderer.rect(aabb.getLeft(), aabb.getBottom(), aabb.getWidth(), aabb.getHeight());
+
 				shapeRenderer.setColor(1, 0, 0, 0.5f);
 				if (shape instanceof Circle) {
 					Circle circle = (Circle) shape;
 					shapeRenderer.circle(circle.getCenterX(), circle.getCenterY(),
 							circle.getRadius());
+				}
+
+				Vector2 bottomLeft = aabb.getBottomLeft();
+				int xTile = world.xPixelToTile(bottomLeft.x);
+				int yTile = world.yPixelToTile(bottomLeft.y);
+				float tileSize = 64;
+
+				if (world.isTileCollidable(xTile, yTile)) {
+					shapeRenderer.rect(world.xTileToPixel(xTile), world.yTileToPixel(yTile),
+							tileSize, tileSize);
+				}
+				if (world.isTileCollidable(xTile + 1, yTile)) {
+					shapeRenderer.rect(world.xTileToPixel(xTile + 1), world.yTileToPixel(yTile),
+							tileSize, tileSize);
+				}
+				if (world.isTileCollidable(xTile, yTile + 1)) {
+					shapeRenderer.rect(world.xTileToPixel(xTile), world.yTileToPixel(yTile + 1),
+							tileSize, tileSize);
+				}
+				if (world.isTileCollidable(xTile + 1, yTile + 1)) {
+					shapeRenderer.rect(world.xTileToPixel(xTile + 1), world.yTileToPixel(yTile + 1),
+							tileSize, tileSize);
 				}
 
 			}

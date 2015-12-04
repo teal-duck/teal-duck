@@ -9,4 +9,7 @@ public abstract class CollisionShape {
 
 
 	public abstract void setPosition(Vector2 newPosition);
+
+
+	public abstract AABB getAABB();
 }
