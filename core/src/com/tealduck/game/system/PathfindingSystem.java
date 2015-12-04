@@ -13,8 +13,8 @@ import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
 
 
-public class PatrolLogicSystem extends GameSystem {
-	public PatrolLogicSystem(EntityEngine entityEngine) {
+public class PathfindingSystem extends GameSystem {
+	public PathfindingSystem(EntityEngine entityEngine) {
 		super(entityEngine);
 	}
 

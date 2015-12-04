@@ -13,7 +13,7 @@ import com.tealduck.game.system.CollisionSystem;
 import com.tealduck.game.system.GuiRenderSystem;
 import com.tealduck.game.system.InputLogicSystem;
 import com.tealduck.game.system.MovementSystem;
-import com.tealduck.game.system.PatrolLogicSystem;
+import com.tealduck.game.system.PathfindingSystem;
 import com.tealduck.game.system.WorldRenderSystem;
 import com.tealduck.game.world.MapNames;
 import com.tealduck.game.world.World;
@@ -85,7 +85,7 @@ public class GameScreen extends DuckScreenBase {
 	@Override
 	protected void loadSystems(SystemManager systemManager) {
 		systemManager.addSystem(new InputLogicSystem(getEntityEngine()), 0);
-		systemManager.addSystem(new PatrolLogicSystem(getEntityEngine()), 1);
+		systemManager.addSystem(new PathfindingSystem(getEntityEngine()), 1);
 		systemManager.addSystem(new CollisionSystem(getEntityEngine()), 2);
 		systemManager.addSystem(new MovementSystem(getEntityEngine(), world), 3);
 		systemManager.addSystem(new WorldRenderSystem(getEntityEngine(), world, getCamera()), 4);
