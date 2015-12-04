@@ -1,6 +1,8 @@
 package com.tealduck.game.world;
 
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,16 +10,19 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.Tag;
 import com.tealduck.game.collision.Circle;
 import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.MovementComponent;
+import com.tealduck.game.component.PatrolRouteComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
@@ -57,6 +62,7 @@ public class World {
 
 		MapLayer entityLayer = tiledMap.getLayers().get("Entities");
 		MapObjects objects = entityLayer.getObjects();
+		
 		for (MapObject object : objects) {
 			// System.out.println(object.getName());
 
@@ -77,11 +83,39 @@ public class World {
 					}
 
 					playerId = createPlayer(entityEngine, duckTexture, new Vector2(x, y));
+				} else if (name.equals("Enemy") && t.getProperties().containsKey("patrolRoute")) {
+					String routeName = t.getProperties().get("patrolRoute", String.class);
+					PatrolRouteComponent patrolRouteComponent = findPatrolRoute(routeName);
+					createPatrollingEnemy(entityEngine, enemyTexture, new Vector2(x, y), patrolRouteComponent);
 				} else if (name.equals("Enemy")) {
 					createEnemy(entityEngine, enemyTexture, new Vector2(x, y));
-				}
+				} 
 			}
 		}
+	}
+	
+	public PatrolRouteComponent findPatrolRoute(String routeName) {
+		MapLayer lineLayer = tiledMap.getLayers().get("Lines");
+		MapObjects lineObjects = lineLayer.getObjects();
+		
+		for (MapObject object : lineObjects) {
+			assert (object instanceof PolylineMapObject);
+			PolylineMapObject polylineMapObject = (PolylineMapObject) object;
+			String name = polylineMapObject.getName();
+			
+			
+			if (name.equals(routeName)) {
+				Polyline polyline = polylineMapObject.getPolyline();
+				float[] polylineVertices = polyline.getTransformedVertices();
+				ArrayList<Vector2> worldVertices = new ArrayList<Vector2>();
+				for (int i=0; i< (polylineVertices.length / 2); i++) {
+					worldVertices.add(new Vector2(polylineVertices[i*2], polylineVertices[i*2 +1]));
+				}
+				System.out.println(worldVertices);
+				return new PatrolRouteComponent(worldVertices);
+			}
+		}
+		return null;
 	}
 
 
@@ -167,8 +201,15 @@ public class World {
 		// entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
 		return enemyId;
 	}
-
-
+	
+	private int createPatrollingEnemy(EntityEngine entityEngine, Texture texture, Vector2 location, PatrolRouteComponent patrolRouteComponent) {
+		EntityManager entityManager = entityEngine.getEntityManager();
+		int enemyId = createEnemy(entityEngine, texture, location);
+		entityManager.addComponent(enemyId, patrolRouteComponent);
+		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0,0), 200));
+		return enemyId;
+	}
+	
 	/**
 	 * If tile is out of bounds, returns true (assumes collidable).
 	 *

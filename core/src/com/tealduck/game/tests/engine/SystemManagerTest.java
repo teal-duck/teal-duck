@@ -12,7 +12,7 @@ import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.system.CollisionSystem;
 import com.tealduck.game.system.InputLogicSystem;
 import com.tealduck.game.system.MovementSystem;
-import com.tealduck.game.system.PatrolLogicSystem;
+import com.tealduck.game.system.PathfindingSystem;
 
 
 public class SystemManagerTest {
@@ -49,7 +49,7 @@ public class SystemManagerTest {
 		System.out.println(systemManager);
 		System.out.println("");
 
-		PatrolLogicSystem pls = new PatrolLogicSystem(entityEngine);
+		PathfindingSystem pls = new PathfindingSystem(entityEngine);
 		systemManager.addSystem(pls, 2);
 
 		System.out.println(systemManager);
@@ -68,7 +68,7 @@ public class SystemManagerTest {
 		System.out.println(systemManager);
 		System.out.println("");
 
-		systemManager.removeSystem(PatrolLogicSystem.class);
+		systemManager.removeSystem(PathfindingSystem.class);
 
 		System.out.println(systemManager);
 		System.out.println("");
