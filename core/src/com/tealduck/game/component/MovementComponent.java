@@ -14,7 +14,7 @@ public class MovementComponent extends Component {
 
 
 	public MovementComponent(Vector2 velocity, float maxSpeed) {
-		this(velocity, maxSpeed, 1, 0.1f);
+		this(velocity, maxSpeed, 1, 0.8f);
 	}
 
 
