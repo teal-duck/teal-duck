@@ -10,6 +10,7 @@ import sys;
 from aabb import AABB;
 from circle import Circle;
 from vector2 import Vector2;
+import math;
 
 
 
@@ -183,6 +184,46 @@ def getCloserAndFurtherPoints(aabb, circle):
 
 	return Vector2(closestX, closestY), Vector2(furthestX, furthestY);
 
+"""
+float abs_cos_angle= fabs(cos(angle));
+float abs_sin_angle= fabs(sin(angle));
+if (width/2/abs_cos_angle <= height/2/abs_sin_angle)
+{
+    magnitude= fabs(width/2/abs_cos_angle);
+}
+else
+{
+    magnitude= height/2/abs_sin_angle;
+}"""
+
+"""
+double magnitude;
+double abs_cos_angle= fabs(cos(angle));
+double abs_sin_angle= fabs(sin(angle));
+if (width/2*abs_sin_angle <= height/2*abs_cos_angle)
+{
+	magnitude= width/2/abs_cos_angle;
+}
+else
+{
+	magnitude= height/2/abs_sin_angle;
+}"""
+
+def vectorFromCenterOfAABBToEdge(aabb, pointInAABB):
+	vec = pointInAABB - aabb;
+	angle = math.atan2(vec.y, vec.x);
+
+	cosAngle = abs(math.cos(angle));
+	sinAngle = abs(math.sin(angle));
+
+	magnitude = 0;
+	if (aabb.width / 2.0 * sinAngle <= aabb.height / 2 * cosAngle):
+		magnitude = aabb.width / 2 / cosAngle;
+	else:
+		magnitude = aabb.height / 2 / sinAngle;
+
+	return vec.unit * magnitude;
+
 
 
 def aabbCircleCollision(aabb, circle):
@@ -190,15 +231,16 @@ def aabbCircleCollision(aabb, circle):
 	Returns (True, normal, smallestOverlap) if there is a collision, else (False, Vector2.(0, 0), 0)"""
 
 	if ((circle.centerX > aabb.left) and (circle.centerX < aabb.right) and (circle.centerY > aabb.top) and (circle.centerY < aabb.bottom)):
-		projection = (circle.center - aabb.center).unit;
+		# projection = (circle.center - aabb.center).unit;
 
 		lengthToEdgeInDirection = 0;
-
-		# Do this
+		vec = vectorFromCenterOfAABBToEdge(aabb, circle.center);
+		projection = vec.unit;
+		lengthToEdgeInDirection = vec.magnitude;
 
 		
 
-		return True, projection, lengthToEdgeInDirection + circle.radius;
+		return True, projection, lengthToEdgeInDirection; # + circle.radius;
 
 	else:
 		closerPoint, furtherPoint = getCloserAndFurtherPoints(aabb, circle);

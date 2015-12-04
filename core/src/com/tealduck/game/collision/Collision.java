@@ -1,6 +1,7 @@
 package com.tealduck.game.collision;
 
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 
@@ -82,6 +83,24 @@ public class Collision {
 	}
 
 
+	public static Vector2 vectorFromOfCenterOfAABBToEdge(AABB aabb, Vector2 pointInAABB) {
+		Vector2 vec = pointInAABB.cpy().sub(aabb.getCenter());
+		float angle = vec.angleRad();
+
+		float cosAngle = Math.abs(MathUtils.cos(angle));
+		float sinAngle = Math.abs(MathUtils.sin(angle));
+
+		float magnitude = 0;
+		if (((aabb.getWidth() / 2.0) * sinAngle) <= ((aabb.getHeight() / 2.0) * cosAngle)) {
+			magnitude = aabb.getWidth() / 2.0f / cosAngle;
+		} else {
+			magnitude = aabb.getHeight() / 2.0f / sinAngle;
+		}
+
+		return vec.cpy().nor().scl(magnitude);
+	}
+
+
 	/**
 	 * Null if no intersection
 	 *
@@ -95,7 +114,10 @@ public class Collision {
 			// projection = (circle.center - aabb.center).unit;
 			//
 			// lengthToEdgeInDirection = 0;
-			return new Intersection((circle.getCenter().cpy().sub(aabb.getCenter())).nor(), 32);
+			// TODO: Push circle out of rectangle when wholly contained
+			// return new Intersection((circle.getCenter().cpy().sub(aabb.getCenter())).nor(), 16);
+			Vector2 vec = Collision.vectorFromOfCenterOfAABBToEdge(aabb, circle.getCenter());
+			return new Intersection(vec.cpy().nor(), vec.len() + circle.getRadius());
 		}
 
 		Vector2 closerPoint = new Vector2(0, 0);
