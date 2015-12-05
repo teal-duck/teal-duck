@@ -175,6 +175,8 @@ public class MovementSystem extends GameSystem {
 						float distance = fixIntersection.distance;
 
 						position.add(normal.cpy().setLength(distance));
+// TODO: shouldn't the collision shape position get updated too?
+// Move the shape.setPosition etc line into the loop?
 					} else {
 						break;
 					}
