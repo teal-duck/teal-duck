@@ -57,7 +57,7 @@ public class MainMenuScreen extends DuckScreenBase {
 		SpriteBatch batch = getBatch();
 		BitmapFont font = getFont();
 
-		batch.setProjectionMatrix(getCamera().combined);
+		batch.setProjectionMatrix(getGuiCamera().combined);
 		batch.begin();
 		batch.enableBlending();
 		font.draw(batch, "Press enter to start!", (getWindowWidth() / 2) - 50, getWindowHeight() - 50);

@@ -2,6 +2,7 @@ package com.tealduck.game.world;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.Tag;
 import com.tealduck.game.collision.Circle;
 import com.tealduck.game.component.CollisionComponent;
+import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PatrolRouteComponent;
 import com.tealduck.game.component.PositionComponent;
@@ -44,9 +46,15 @@ public class World {
 	private final int tileWidth;
 	private final int tileHeight;
 
+	// TODO: Clean up constants in world
 	private float playerSpeed = 2500.0f;
 	private float playerSprint = 1.5f;
 	private float enemySpeed = 2000.0f;
+	private float playerRadius = 24; // 28;
+	private float enemyRadius = 30;
+	private int playerMaxHealth = 4;
+
+	private HashMap<String, ArrayList<Vector2>> patrolRoutes;
 
 
 	public World(EntityEngine entityEngine, TiledMap tiledMap) {
@@ -58,6 +66,8 @@ public class World {
 		mapHeight = prop.get("height", Integer.class);
 		tileWidth = prop.get("tilewidth", Integer.class);
 		tileHeight = prop.get("tileheight", Integer.class);
+
+		patrolRoutes = new HashMap<String, ArrayList<Vector2>>();
 	}
 
 
@@ -66,6 +76,7 @@ public class World {
 
 		MapLayer entityLayer = tiledMap.getLayers().get("Entities");
 		MapObjects objects = entityLayer.getObjects();
+		EntityManager entityManager = entityEngine.getEntityManager();
 
 		for (MapObject object : objects) {
 			// System.out.println(object.getName());
@@ -87,23 +98,36 @@ public class World {
 					}
 
 					playerId = createPlayer(entityEngine, duckTexture, new Vector2(x, y));
-
-				} else if (name.equals("Enemy") && t.getProperties().containsKey("patrolRoute")) {
-					String routeName = t.getProperties().get("patrolRoute", String.class);
-					PatrolRouteComponent patrolRouteComponent = new PatrolRouteComponent(
-							findPatrolRoute(routeName));
-					createPatrollingEnemy(entityEngine, enemyTexture, new Vector2(x, y),
-							patrolRouteComponent);
-
 				} else if (name.equals("Enemy")) {
-					createEnemy(entityEngine, enemyTexture, new Vector2(x, y));
+					int enemyId = createEnemy(entityEngine, enemyTexture, new Vector2(x, y));
+
+					if (t.getProperties().containsKey("patrolRoute")) {
+						String routeName = t.getProperties().get("patrolRoute", String.class);
+						ArrayList<Vector2> patrolRoute = findPatrolRoute(routeName);
+						if (patrolRoute.size() == 0) {
+							Gdx.app.log("Patrol", "Route " + routeName + " is empty");
+						}
+						PatrolRouteComponent patrolRouteComponent = new PatrolRouteComponent(
+								patrolRoute);
+						entityManager.addComponent(enemyId, patrolRouteComponent);
+					}
 				}
 			}
 		}
 	}
 
 
-	public ArrayList<Vector2> findPatrolRoute(String routeName) {
+	public HashMap<String, ArrayList<Vector2>> getPatrolRoutes() {
+		return patrolRoutes;
+	}
+
+
+	private ArrayList<Vector2> findPatrolRoute(String routeName) {
+		ArrayList<Vector2> preloadedRoute = patrolRoutes.get(routeName);
+		if (preloadedRoute != null) {
+			return preloadedRoute;
+		}
+
 		MapLayer lineLayer = tiledMap.getLayers().get("Lines");
 		MapObjects lineObjects = lineLayer.getObjects();
 		ArrayList<Vector2> worldVertices = new ArrayList<Vector2>();
@@ -116,16 +140,28 @@ public class World {
 			if (name.equals(routeName)) {
 				Polyline polyline = polylineMapObject.getPolyline();
 				float[] polylineVertices = polyline.getTransformedVertices();
-				for (int i = 0; i < (polylineVertices.length / 2); i++) {
+				int length = polylineVertices.length / 2;
+				for (int i = 0; i < length; i += 1) {
 					worldVertices.add(new Vector2(polylineVertices[i * 2],
 							polylineVertices[(i * 2) + 1]));
 				}
-				System.out.println(worldVertices);
-				return worldVertices;
+
+				patrolRoutes.put(routeName, worldVertices);
+				Gdx.app.log("Patrol", routeName + " = " + worldVertices.toString());
 			}
 		}
 
 		return worldVertices;
+	}
+
+
+	private CollisionComponent addEntityCollisionComponent(EntityManager entityManager, int entityId,
+			Vector2 entityPosition, float radius) {
+		Vector2 offsetFromPosition = new Vector2(32, 32);
+		Circle circle = new Circle(entityPosition.cpy().add(offsetFromPosition), radius);
+		CollisionComponent collisionComponent = new CollisionComponent(circle, offsetFromPosition);
+		entityManager.addComponent(entityId, collisionComponent);
+		return collisionComponent;
 	}
 
 
@@ -142,12 +178,8 @@ public class World {
 
 		entityManager.addComponent(playerId, new SpriteComponent(texture));
 		entityManager.addComponent(playerId, new PositionComponent(location));
-
-		// float maxSpeed = 2000.0f; // 100f; // 200.0f;
-		// float sprintScale = 2f;
-		// float friction = 0.8f; // 0.5f;
 		entityManager.addComponent(playerId,
-				new MovementComponent(new Vector2(0, 0), playerSpeed, playerSprint)); // , friction));
+				new MovementComponent(new Vector2(0, 0), playerSpeed, playerSprint));
 
 		ControlMap controls = new ControlMap();
 
@@ -172,10 +204,9 @@ public class World {
 		Gdx.app.log("Controls", uic.controls.toString());
 		entityManager.addComponent(playerId, uic);
 
-		float radius = 28;
-		Vector2 offsetFromPosition = new Vector2(32, 32);
-		Circle circle = new Circle(location.cpy().add(offsetFromPosition), radius);
-		entityManager.addComponent(playerId, new CollisionComponent(circle, offsetFromPosition));
+		addEntityCollisionComponent(entityManager, playerId, location, playerRadius);
+
+		entityManager.addComponent(playerId, new HealthComponent(playerMaxHealth));
 
 		return playerId;
 	}
@@ -192,33 +223,8 @@ public class World {
 		int enemyId = entityManager.createEntity();
 		entityManager.addComponent(enemyId, new SpriteComponent(texture));
 		entityManager.addComponent(enemyId, new PositionComponent(location));
-		return enemyId;
-	}
-
-
-	/**
-	 * @param entityManager
-	 * @param texture
-	 * @param location
-	 * @param targetId
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private int createPathfindingEnemy(EntityEngine entityEngine, Texture texture, Vector2 location) {
-		EntityManager entityManager = entityEngine.getEntityManager();
-		int enemyId = createEnemy(entityEngine, texture, location);
 		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), enemySpeed));
-		// entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
-		return enemyId;
-	}
-
-
-	private int createPatrollingEnemy(EntityEngine entityEngine, Texture texture, Vector2 location,
-			PatrolRouteComponent patrolRouteComponent) {
-		EntityManager entityManager = entityEngine.getEntityManager();
-		int enemyId = createEnemy(entityEngine, texture, location);
-		entityManager.addComponent(enemyId, patrolRouteComponent);
-		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), enemySpeed));
+		addEntityCollisionComponent(entityManager, enemyId, location, enemyRadius);
 		return enemyId;
 	}
 

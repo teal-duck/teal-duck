@@ -29,34 +29,34 @@ public class PatrolLogicSystem extends GameSystem {
 				MovementComponent.class, PatrolRouteComponent.class);
 
 		for (int entity : entities) {
-			PatrolRouteComponent patrolRouteComponent = entityManager.getComponent(entity,
-					PatrolRouteComponent.class);
+			PositionComponent positionComponent = entityManager.getComponent(entity,
+					PositionComponent.class);
 			MovementComponent movementComponent = entityManager.getComponent(entity,
 					MovementComponent.class);
+			PatrolRouteComponent patrolRouteComponent = entityManager.getComponent(entity,
+					PatrolRouteComponent.class);
+
 			float maxSpeed = movementComponent.maxSpeed;
 
-			Vector2 entityPosition = entityManager.getComponent(entity, PositionComponent.class).position;
+			Vector2 entityPosition = positionComponent.position;
 			Vector2 targetPosition = patrolRouteComponent.getTarget();
 
 			// use epsilonEquals to allow for float inaccuracies
 			if (entityPosition.epsilonEquals(targetPosition, 0.00001f)) {
 				targetPosition = patrolRouteComponent.getNextVertex();
-
 			}
 
 			Vector2 v = targetPosition.cpy().sub(entityPosition).setLength(maxSpeed);
 
 			movementComponent.acceleration.add(v);
 
-			Vector2 entityToTarget = new Vector2(targetPosition.cpy().sub(entityPosition));
-
-			Vector2 nextPosition = new Vector2(entityPosition.cpy().add(v.scl(deltaTime)));
-
-			Vector2 nextToTarget = new Vector2(targetPosition.cpy().sub(nextPosition));
+			Vector2 entityToTarget = targetPosition.cpy().sub(entityPosition);
+			Vector2 nextPosition = entityPosition.cpy().mulAdd(v, deltaTime);
+			Vector2 nextToTarget = targetPosition.cpy().sub(nextPosition);
 
 			// If we go past target in this frame, then dot product should be -1 as
 			// angle between vectors == 180deg.
-			if (entityToTarget.cpy().dot(nextToTarget) < 0) {
+			if (entityToTarget.dot(nextToTarget) < 0) {
 				targetPosition = patrolRouteComponent.getNextVertex();
 
 			}

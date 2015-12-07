@@ -92,8 +92,9 @@ public class GameScreen extends DuckScreenBase {
 		systemManager.addSystem(new MovementSystem(getEntityEngine()), 4);
 		systemManager.addSystem(new WorldCollisionSystem(getEntityEngine(), world), 5);
 		systemManager.addSystem(new EntityCollisionSystem(getEntityEngine()), 6);
-		systemManager.addSystem(new WorldRenderSystem(getEntityEngine(), world, getCamera()), 7);
-		systemManager.addSystem(new GuiRenderSystem(getEntityEngine()), 8);
+		systemManager.addSystem(new WorldRenderSystem(getEntityEngine(), world), 7); // , getGuiCamera()), 7);
+		systemManager.addSystem(new GuiRenderSystem(getEntityEngine(), getBatch(), getGuiCamera(), getFont()),
+				8);
 	}
 
 

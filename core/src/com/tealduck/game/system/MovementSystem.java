@@ -13,7 +13,8 @@ import com.tealduck.game.engine.GameSystem;
 
 public class MovementSystem extends GameSystem {
 	private float worldFriction = 0.8f;
-	
+
+
 	public MovementSystem(EntityEngine entityEngine) {
 		super(entityEngine);
 	}

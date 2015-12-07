@@ -100,8 +100,7 @@ public class EntityManagerTest {
 
 		entityManager.removeEntity(entity1);
 
-		@SuppressWarnings("unchecked")
-		Collection<PositionComponent> positionComponents = (Collection<PositionComponent>) entityManager
+		Collection<PositionComponent> positionComponents = entityManager
 				.getAllComponentsOfType(PositionComponent.class);
 		Collection<? extends Component> movementComponents = entityManager
 				.getAllComponentsOfType(MovementComponent.class);

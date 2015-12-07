@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="64" tileheight="64" backgroundcolor="#000000" nextobjectid="23">
+<map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="64" tileheight="64" backgroundcolor="#000000">
  <tileset firstgid="1" name="map_tiles" tilewidth="64" tileheight="64">
   <image source="../textures/map_tiles.png" trans="ff00ff" width="256" height="256"/>
  </tileset>
@@ -24,22 +24,22 @@
    eJzt1zkKxDAQBEB/wf//rPMFY93qRVWgyDqmAw3WdQEAAAAAAAAAAAD/5t5dwGbyn03+s92TRsn+CUbVUbuP/BnkP+vcXy19q6R/fc1Nyj9jXe/3VeRvX9d7PxLMqqOklyQY2fNaz92ppg756+Z+vQsSzMw/aq+ZSu537xvwbc8EKXXskvxvuoL8uWOFBwDGC/U=
   </data>
  </layer>
- <objectgroup name="Lines">
-  <object id="21" name="test_line" type="test_line" x="320" y="3840">
+ <objectgroup name="Lines" width="0" height="0">
+  <object name="test_line" type="test_line" x="320" y="3840">
    <polyline points="0,0 0,-128 192,-128 192,0 0,0"/>
   </object>
  </objectgroup>
- <objectgroup name="Entities">
-  <object id="1" name="Player" type="Player" gid="33" x="128" y="3968" width="64" height="64"/>
-  <object id="2" name="Enemy" type="Enemy" gid="34" x="448" y="3968" width="64" height="64"/>
-  <object id="3" name="Enemy" type="Enemy" gid="34" x="704" y="3968" width="64" height="64"/>
-  <object id="4" name="Enemy" type="Enemy" gid="34" x="128" y="3712" width="64" height="64"/>
-  <object id="5" name="Enemy" type="Enemy" gid="34" x="448" y="3456" width="64" height="64"/>
-  <object id="6" name="Enemy" type="Enemy" gid="34" x="1216" y="3712" width="64" height="64"/>
-  <object id="7" name="Enemy" type="Enemy" gid="34" x="1792" y="3392" width="64" height="64"/>
-  <object id="8" name="Enemy" type="Enemy" gid="34" x="768" y="3136" width="64" height="64"/>
-  <object id="9" name="Enemy" type="Enemy" gid="34" x="64" y="3328" width="64" height="64"/>
-  <object id="15" name="Enemy" type="Enemy" gid="34" x="320" y="3840" width="64" height="64">
+ <objectgroup name="Entities" width="0" height="0">
+  <object name="Player" type="Player" gid="33" x="128" y="3968" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="34" x="448" y="3968" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="34" x="704" y="3968" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="34" x="128" y="3712" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="34" x="448" y="3456" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="34" x="1216" y="3712" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="34" x="1792" y="3392" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="34" x="768" y="3136" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="34" x="64" y="3328" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="34" x="384" y="3840" width="64" height="64">
    <properties>
     <property name="patrolRoute" value="test_line"/>
    </properties>

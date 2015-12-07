@@ -25,7 +25,7 @@ public class DuckGame extends Game {
 	private AssetManager assetManager;
 	private SystemManager systemManager;
 	private EntityEngine entityEngine;
-	private OrthographicCamera camera;
+	private OrthographicCamera guiCamera;
 
 	private BitmapFont font;
 
@@ -50,9 +50,11 @@ public class DuckGame extends Game {
 		systemManager = new SystemManager();
 		entityEngine = new EntityEngine();
 
-		camera = new OrthographicCamera();
+		guiCamera = new OrthographicCamera();
 
+		// TODO: Font size
 		font = new BitmapFont();
+		font.getData().setScale(1.5f);
 
 		setupControllers();
 
@@ -148,8 +150,8 @@ public class DuckGame extends Game {
 	}
 
 
-	public OrthographicCamera getCamera() {
-		return camera;
+	public OrthographicCamera getGuiCamera() {
+		return guiCamera;
 	}
 
 

@@ -323,7 +323,8 @@ public class EntityManager {
 	 * @throws IllegalArgumentException
 	 *                 if componentType is null
 	 */
-	public <T extends Component> Collection<? extends Component> getAllComponentsOfType(Class<T> componentType) {
+	@SuppressWarnings("unchecked")
+	public <T extends Component> Collection<T> getAllComponentsOfType(Class<T> componentType) {
 		if (componentType == null) {
 			throw new IllegalArgumentException("componentType is null");
 		}
@@ -333,7 +334,7 @@ public class EntityManager {
 			map = new HashMap<Integer, T>();
 		}
 
-		return map.values();
+		return (Collection<T>) map.values();
 	}
 
 

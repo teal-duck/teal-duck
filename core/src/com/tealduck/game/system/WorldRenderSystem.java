@@ -10,8 +10,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -34,7 +32,6 @@ import com.tealduck.game.engine.GameSystem;
 import com.tealduck.game.world.World;
 
 
-@SuppressWarnings("unused")
 public class WorldRenderSystem extends GameSystem {
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
@@ -51,22 +48,17 @@ public class WorldRenderSystem extends GameSystem {
 
 	private final int[] wallLayer = new int[] { 0 };
 
-	private int cornerSize;
-	private int halfCornerSize;
-	private Pixmap cornerPixmap;
-	private Pixmap collideTilePixmap;
-	private Texture cornerTexture;
-	private Texture collideTileTexture;
+	private ShapeRenderer shapeRenderer;
 
 
-	public WorldRenderSystem(EntityEngine entityEngine, World world, OrthographicCamera camera) {
+	public WorldRenderSystem(EntityEngine entityEngine, World world) { // , OrthographicCamera camera) {
 		super(entityEngine);
 
 		this.world = world;
 		TiledMap tiledMap = world.getTiledMap();
 		unitScale = 1 / 1;
 		renderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
-		this.camera = camera;
+		camera = new OrthographicCamera(); // camera;
 
 		batch = renderer.getBatch();
 		batch.disableBlending();
@@ -76,19 +68,7 @@ public class WorldRenderSystem extends GameSystem {
 		tileWidth = world.getTileWidth();
 		tileHeight = world.getTileHeight();
 
-		cornerSize = 8;
-		halfCornerSize = cornerSize / 2;
-
-		cornerPixmap = new Pixmap(cornerSize, cornerSize, Format.RGBA8888);
-		cornerPixmap.setColor(Color.RED);
-		cornerPixmap.fill();
-		cornerTexture = new Texture(cornerPixmap);
-
-		collideTilePixmap = new Pixmap(tileWidth, tileHeight, Format.RGBA8888);
-		collideTilePixmap.setColor(new Color(1f, 0, 0, 0.5f));
-		collideTilePixmap.fill();
-		collideTileTexture = new Texture(collideTilePixmap);
-
+		shapeRenderer = new ShapeRenderer();
 	}
 
 
@@ -175,9 +155,6 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
-	ShapeRenderer shapeRenderer = new ShapeRenderer();
-
-
 	/**
 	 * Redraws all entities with sprites to the screen.
 	 *
@@ -187,8 +164,6 @@ public class WorldRenderSystem extends GameSystem {
 	@Override
 	public void update(float deltaTime) {
 		updateSprites();
-
-		EntityManager entityManager = getEntityManager();
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -208,68 +183,98 @@ public class WorldRenderSystem extends GameSystem {
 		if (useSortedRendering) {
 			renderEntitiesSorted();
 		} else {
-			batch.begin();
-			batch.enableBlending();
-
-			Set<Integer> entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
-
-			for (int entity : entities) {
-				Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
-				if (isSpriteOnScreen(sprite)) {
-					sprite.draw(batch);
-
-				}
-			}
-
-			batch.end();
-
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-			shapeRenderer.begin(ShapeType.Filled);
-
-			entities = entityManager.getEntitiesWithComponent(CollisionComponent.class);
-			for (int entity : entities) {
-				CollisionComponent collisionComponent = entityManager.getComponent(entity,
-						CollisionComponent.class);
-				CollisionShape shape = collisionComponent.collisionShape;
-
-				shapeRenderer.setColor(0, 1, 0, 0.5f);
-				AABB aabb = shape.getAABB();
-				shapeRenderer.rect(aabb.getLeft(), aabb.getBottom(), aabb.getWidth(), aabb.getHeight());
-
-				shapeRenderer.setColor(1, 0, 0, 0.5f);
-				if (shape instanceof Circle) {
-					Circle circle = (Circle) shape;
-					shapeRenderer.circle(circle.getCenterX(), circle.getCenterY(),
-							circle.getRadius());
-				}
-
-				Vector2 bottomLeft = aabb.getBottomLeft();
-				int xTile = world.xPixelToTile(bottomLeft.x);
-				int yTile = world.yPixelToTile(bottomLeft.y);
-				float tileSize = 64;
-
-				if (world.isTileCollidable(xTile, yTile)) {
-					shapeRenderer.rect(world.xTileToPixel(xTile), world.yTileToPixel(yTile),
-							tileSize, tileSize);
-				}
-				if (world.isTileCollidable(xTile + 1, yTile)) {
-					shapeRenderer.rect(world.xTileToPixel(xTile + 1), world.yTileToPixel(yTile),
-							tileSize, tileSize);
-				}
-				if (world.isTileCollidable(xTile, yTile + 1)) {
-					shapeRenderer.rect(world.xTileToPixel(xTile), world.yTileToPixel(yTile + 1),
-							tileSize, tileSize);
-				}
-				if (world.isTileCollidable(xTile + 1, yTile + 1)) {
-					shapeRenderer.rect(world.xTileToPixel(xTile + 1), world.yTileToPixel(yTile + 1),
-							tileSize, tileSize);
-				}
-			}
-
-			shapeRenderer.end();
-			Gdx.gl.glDisable(GL20.GL_BLEND);
+			renderPatrolRoutes();
+			renderEntities();
+			renderCollisionOverlay();
 		}
+	}
+
+
+	private void renderPatrolRoutes() {
+		HashMap<String, ArrayList<Vector2>> patrolRoutes = world.getPatrolRoutes();
+		for (ArrayList<Vector2> patrolRoute : patrolRoutes.values()) {
+			shapeRenderer.begin(ShapeType.Line);
+			shapeRenderer.setColor(Color.GRAY);
+
+			int routeLength = patrolRoute.size();
+			for (int i = 0; i < routeLength; i += 1) {
+				Vector2 p0 = patrolRoute.get(i);
+				Vector2 p1 = patrolRoute.get((i + 1) % routeLength);
+				shapeRenderer.line(p0, p1);
+			}
+			shapeRenderer.end();
+
+		}
+	}
+
+
+	private void renderEntities() {
+		EntityManager entityManager = getEntityManager();
+
+		batch.begin();
+		batch.enableBlending();
+
+		Set<Integer> entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
+		for (int entity : entities) {
+			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
+			if (isSpriteOnScreen(sprite)) {
+				sprite.draw(batch);
+
+			}
+		}
+
+		batch.end();
+	}
+
+
+	private void renderCollisionOverlay() {
+		EntityManager entityManager = getEntityManager();
+
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		shapeRenderer.begin(ShapeType.Filled);
+
+		Set<Integer> entities = entityManager.getEntitiesWithComponent(CollisionComponent.class);
+		for (int entity : entities) {
+			CollisionComponent collisionComponent = entityManager.getComponent(entity,
+					CollisionComponent.class);
+			CollisionShape shape = collisionComponent.collisionShape;
+
+			shapeRenderer.setColor(0, 1, 0, 0.5f);
+			AABB aabb = shape.getAABB();
+			shapeRenderer.rect(aabb.getLeft(), aabb.getBottom(), aabb.getWidth(), aabb.getHeight());
+
+			shapeRenderer.setColor(1, 0, 0, 0.5f);
+			if (shape instanceof Circle) {
+				Circle circle = (Circle) shape;
+				shapeRenderer.circle(circle.getCenterX(), circle.getCenterY(), circle.getRadius());
+			}
+
+			Vector2 bottomLeft = aabb.getBottomLeft();
+			int xTile = world.xPixelToTile(bottomLeft.x);
+			int yTile = world.yPixelToTile(bottomLeft.y);
+			float tileSize = 64;
+
+			if (world.isTileCollidable(xTile, yTile)) {
+				shapeRenderer.rect(world.xTileToPixel(xTile), world.yTileToPixel(yTile), tileSize,
+						tileSize);
+			}
+			if (world.isTileCollidable(xTile + 1, yTile)) {
+				shapeRenderer.rect(world.xTileToPixel(xTile + 1), world.yTileToPixel(yTile), tileSize,
+						tileSize);
+			}
+			if (world.isTileCollidable(xTile, yTile + 1)) {
+				shapeRenderer.rect(world.xTileToPixel(xTile), world.yTileToPixel(yTile + 1), tileSize,
+						tileSize);
+			}
+			if (world.isTileCollidable(xTile + 1, yTile + 1)) {
+				shapeRenderer.rect(world.xTileToPixel(xTile + 1), world.yTileToPixel(yTile + 1),
+						tileSize, tileSize);
+			}
+		}
+
+		shapeRenderer.end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 

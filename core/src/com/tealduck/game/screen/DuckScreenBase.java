@@ -65,8 +65,8 @@ public abstract class DuckScreenBase implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		getCamera().setToOrtho(false, width, height);
-		getCamera().update();
+		getGuiCamera().setToOrtho(false, width, height);
+		getGuiCamera().update();
 	}
 
 
@@ -90,8 +90,8 @@ public abstract class DuckScreenBase implements Screen {
 	}
 
 
-	public OrthographicCamera getCamera() {
-		return game.getCamera();
+	public OrthographicCamera getGuiCamera() {
+		return game.getGuiCamera();
 	}
 
 
