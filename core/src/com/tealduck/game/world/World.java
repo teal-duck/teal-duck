@@ -44,6 +44,10 @@ public class World {
 	private final int tileWidth;
 	private final int tileHeight;
 
+	private float playerSpeed = 2500.0f;
+	private float playerSprint = 1.5f;
+	private float enemySpeed = 2000.0f;
+
 
 	public World(EntityEngine entityEngine, TiledMap tiledMap) {
 		this.entityEngine = entityEngine;
@@ -83,11 +87,14 @@ public class World {
 					}
 
 					playerId = createPlayer(entityEngine, duckTexture, new Vector2(x, y));
+
 				} else if (name.equals("Enemy") && t.getProperties().containsKey("patrolRoute")) {
 					String routeName = t.getProperties().get("patrolRoute", String.class);
-					PatrolRouteComponent patrolRouteComponent = findPatrolRoute(routeName);
+					PatrolRouteComponent patrolRouteComponent = new PatrolRouteComponent(
+							findPatrolRoute(routeName));
 					createPatrollingEnemy(entityEngine, enemyTexture, new Vector2(x, y),
 							patrolRouteComponent);
+
 				} else if (name.equals("Enemy")) {
 					createEnemy(entityEngine, enemyTexture, new Vector2(x, y));
 				}
@@ -96,9 +103,10 @@ public class World {
 	}
 
 
-	public PatrolRouteComponent findPatrolRoute(String routeName) {
+	public ArrayList<Vector2> findPatrolRoute(String routeName) {
 		MapLayer lineLayer = tiledMap.getLayers().get("Lines");
 		MapObjects lineObjects = lineLayer.getObjects();
+		ArrayList<Vector2> worldVertices = new ArrayList<Vector2>();
 
 		for (MapObject object : lineObjects) {
 			assert (object instanceof PolylineMapObject);
@@ -108,16 +116,16 @@ public class World {
 			if (name.equals(routeName)) {
 				Polyline polyline = polylineMapObject.getPolyline();
 				float[] polylineVertices = polyline.getTransformedVertices();
-				ArrayList<Vector2> worldVertices = new ArrayList<Vector2>();
 				for (int i = 0; i < (polylineVertices.length / 2); i++) {
 					worldVertices.add(new Vector2(polylineVertices[i * 2],
 							polylineVertices[(i * 2) + 1]));
 				}
 				System.out.println(worldVertices);
-				return new PatrolRouteComponent(worldVertices);
+				return worldVertices;
 			}
 		}
-		return null;
+
+		return worldVertices;
 	}
 
 
@@ -135,11 +143,11 @@ public class World {
 		entityManager.addComponent(playerId, new SpriteComponent(texture));
 		entityManager.addComponent(playerId, new PositionComponent(location));
 
-		float maxSpeed = 2000.0f; // 100f; // 200.0f;
-		float sprintScale = 2f;
-		float friction = 0.8f; // 0.5f;
+		// float maxSpeed = 2000.0f; // 100f; // 200.0f;
+		// float sprintScale = 2f;
+		// float friction = 0.8f; // 0.5f;
 		entityManager.addComponent(playerId,
-				new MovementComponent(new Vector2(0, 0), maxSpeed, sprintScale, friction));
+				new MovementComponent(new Vector2(0, 0), playerSpeed, playerSprint)); // , friction));
 
 		ControlMap controls = new ControlMap();
 
@@ -199,7 +207,7 @@ public class World {
 	private int createPathfindingEnemy(EntityEngine entityEngine, Texture texture, Vector2 location) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int enemyId = createEnemy(entityEngine, texture, location);
-		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), 80));
+		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), enemySpeed));
 		// entityManager.addComponent(enemyId, new PathfindingComponent(targetId));
 		return enemyId;
 	}
@@ -210,7 +218,7 @@ public class World {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int enemyId = createEnemy(entityEngine, texture, location);
 		entityManager.addComponent(enemyId, patrolRouteComponent);
-		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), 200));
+		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), enemySpeed));
 		return enemyId;
 	}
 

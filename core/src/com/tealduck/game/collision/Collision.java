@@ -83,7 +83,14 @@ public class Collision {
 	}
 
 
-	public static Vector2 vectorFromOfCenterOfAABBToEdge(AABB aabb, Vector2 pointInAABB) {
+	/**
+	 * @param aabb
+	 * @param pointInAABB
+	 * @return
+	 */
+	public static Vector2 vectorFromCenterOfAABBToEdge(AABB aabb, Vector2 pointInAABB) {
+		// TODO: vectorFromCenterOfAABBToEdge
+		// http://stackoverflow.com/questions/3180000/calculate-a-vector-from-a-point-in-a-rectangle-to-edge-based-on-angle
 		Vector2 vec = pointInAABB.cpy().sub(aabb.getCenter());
 		float angle = vec.angleRad();
 
@@ -91,7 +98,7 @@ public class Collision {
 		float sinAngle = Math.abs(MathUtils.sin(angle));
 
 		float magnitude = 0;
-		if (((aabb.getWidth() / 2.0) * sinAngle) <= ((aabb.getHeight() / 2.0) * cosAngle)) {
+		if (((aabb.getWidth() / 2.0f) * sinAngle) <= ((aabb.getHeight() / 2.0f) * cosAngle)) {
 			magnitude = aabb.getWidth() / 2.0f / cosAngle;
 		} else {
 			magnitude = aabb.getHeight() / 2.0f / sinAngle;
@@ -111,12 +118,8 @@ public class Collision {
 	public static Intersection aabbToCircle(AABB aabb, Circle circle) {
 		if ((circle.getCenterX() > aabb.getLeft()) && (circle.getCenterX() < aabb.getRight())
 				&& (circle.getCenterY() > aabb.getBottom()) && (circle.getCenterY() < aabb.getTop())) {
-			// projection = (circle.center - aabb.center).unit;
-			//
-			// lengthToEdgeInDirection = 0;
 			// TODO: Push circle out of rectangle when wholly contained
-			// return new Intersection((circle.getCenter().cpy().sub(aabb.getCenter())).nor(), 16);
-			Vector2 vec = Collision.vectorFromOfCenterOfAABBToEdge(aabb, circle.getCenter());
+			Vector2 vec = Collision.vectorFromCenterOfAABBToEdge(aabb, circle.getCenter());
 			return new Intersection(vec.cpy().nor(), vec.len() + circle.getRadius());
 		}
 

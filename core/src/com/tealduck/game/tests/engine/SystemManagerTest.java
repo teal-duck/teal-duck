@@ -9,10 +9,10 @@ import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.SystemManager;
-import com.tealduck.game.system.CollisionSystem;
 import com.tealduck.game.system.InputLogicSystem;
 import com.tealduck.game.system.MovementSystem;
 import com.tealduck.game.system.PathfindingSystem;
+import com.tealduck.game.system.WorldCollisionSystem;
 
 
 public class SystemManagerTest {
@@ -43,7 +43,7 @@ public class SystemManagerTest {
 		System.out.println(systemManager);
 		System.out.println("");
 
-		MovementSystem ms = new MovementSystem(entityEngine, null);
+		MovementSystem ms = new MovementSystem(entityEngine);
 		systemManager.addSystem(ms, 4);
 
 		System.out.println(systemManager);
@@ -55,14 +55,14 @@ public class SystemManagerTest {
 		System.out.println(systemManager);
 		System.out.println("");
 
-		CollisionSystem cs = new CollisionSystem(entityEngine);
+		WorldCollisionSystem cs = new WorldCollisionSystem(entityEngine, null);
 		systemManager.addSystem(cs, 3);
 
 		System.out.println(systemManager);
 		System.out.println("");
 
 		// Test adding a duplicate
-		CollisionSystem cs2 = new CollisionSystem(entityEngine);
+		WorldCollisionSystem cs2 = new WorldCollisionSystem(entityEngine, null);
 		systemManager.addSystem(cs2, 1);
 
 		System.out.println(systemManager);

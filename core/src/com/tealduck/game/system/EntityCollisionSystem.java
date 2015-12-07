@@ -5,8 +5,8 @@ import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.GameSystem;
 
 
-public class CollisionSystem extends GameSystem {
-	public CollisionSystem(EntityEngine entityEngine) {
+public class EntityCollisionSystem extends GameSystem {
+	public EntityCollisionSystem(EntityEngine entityEngine) {
 		super(entityEngine);
 	}
 

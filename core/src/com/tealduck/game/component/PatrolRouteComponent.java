@@ -8,6 +8,7 @@ import com.tealduck.game.engine.Component;
 
 
 public class PatrolRouteComponent extends Component {
+	// TODO: Maybe separate PatrolRouteComponent into 2 objects
 	private ArrayList<Vector2> route;
 	private int lastVertex;
 

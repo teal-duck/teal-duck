@@ -46,7 +46,7 @@ public class PatrolLogicSystem extends GameSystem {
 
 			Vector2 v = targetPosition.cpy().sub(entityPosition).setLength(maxSpeed);
 
-			movementComponent.velocity.set(v);
+			movementComponent.acceleration.add(v);
 
 			Vector2 entityToTarget = new Vector2(targetPosition.cpy().sub(entityPosition));
 

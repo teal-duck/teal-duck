@@ -9,12 +9,13 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.TextureNames;
 import com.tealduck.game.engine.SystemManager;
-import com.tealduck.game.system.CollisionSystem;
+import com.tealduck.game.system.EntityCollisionSystem;
 import com.tealduck.game.system.GuiRenderSystem;
 import com.tealduck.game.system.InputLogicSystem;
 import com.tealduck.game.system.MovementSystem;
 import com.tealduck.game.system.PathfindingSystem;
 import com.tealduck.game.system.PatrolLogicSystem;
+import com.tealduck.game.system.WorldCollisionSystem;
 import com.tealduck.game.system.WorldRenderSystem;
 import com.tealduck.game.world.MapNames;
 import com.tealduck.game.world.World;
@@ -88,10 +89,11 @@ public class GameScreen extends DuckScreenBase {
 		systemManager.addSystem(new InputLogicSystem(getEntityEngine()), 0);
 		systemManager.addSystem(new PathfindingSystem(getEntityEngine()), 1);
 		systemManager.addSystem(new PatrolLogicSystem(getEntityEngine()), 2);
-		systemManager.addSystem(new CollisionSystem(getEntityEngine()), 3);
-		systemManager.addSystem(new MovementSystem(getEntityEngine(), world), 4);
-		systemManager.addSystem(new WorldRenderSystem(getEntityEngine(), world, getCamera()), 5);
-		systemManager.addSystem(new GuiRenderSystem(getEntityEngine()), 6);
+		systemManager.addSystem(new MovementSystem(getEntityEngine()), 4);
+		systemManager.addSystem(new WorldCollisionSystem(getEntityEngine(), world), 5);
+		systemManager.addSystem(new EntityCollisionSystem(getEntityEngine()), 6);
+		systemManager.addSystem(new WorldRenderSystem(getEntityEngine(), world, getCamera()), 7);
+		systemManager.addSystem(new GuiRenderSystem(getEntityEngine()), 8);
 	}
 
 
