@@ -67,4 +67,11 @@ public class Circle extends CollisionShape {
 	public String toString() {
 		return "Circle(" + position.toString() + ", " + radius + ")";
 	}
+
+
+	@Override
+	public boolean containsPoint(Vector2 point) {
+		// TODO Circle contains point
+		return false;
+	}
 }

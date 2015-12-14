@@ -4,8 +4,8 @@ package com.tealduck.game.tests.engine;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
-import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.IEvent;
 
@@ -15,30 +15,36 @@ import junit.framework.Assert;
 @SuppressWarnings("deprecation")
 public class EventManagerTest {
 	// TODO: EventManager tests
-	private EntityManager entityManager;
-	private EventManager eventManager;
+	// private EntityManager entityManager;
+	// private EventManager eventManager;
+	private EntityEngine entityEngine;
 
 
 	@Before
 	public void setup() {
-		entityManager = new EntityManager();
-		eventManager = new EventManager(entityManager, null);
+		entityEngine = new EntityEngine();
+		// entityManager = new EntityManager();
+		// eventManager = new EventManager(entityManager, null);
 	}
 
 
 	@Test
 	public void testAddAndTriggerEvent() {
+		EntityManager entityManager = entityEngine.getEntityManager();
+		EventManager eventManager = entityEngine.getEventManager();
+
 		int entity1 = entityManager.createEntity();
 		int entity2 = entityManager.createEntity();
 
 		String testEvent1Name = "TEST_EVENT_1";
 		IEvent testEvent1 = new IEvent() {
 			@Override
-			public boolean fire(EntityManager entityManager, EntityTagManager entityTagManager, int sender,
-					int receiver) {
+			// public boolean fire(EntityManager entityManager, EntityTagManager entityTagManager, int
+			// sender, int receiver) {
+			public boolean fire(EntityEngine entityEngine, int sender, int receiver) {
 				System.out.println("[Test event 1] Receiver " + receiver + " got event from sender "
 						+ sender);
-				return true;
+				return false;
 			}
 		};
 		eventManager.addEvent(entity1, testEvent1Name, testEvent1);
@@ -46,11 +52,10 @@ public class EventManagerTest {
 		String testEvent2Name = "TEST_EVENT_2";
 		IEvent testEvent2 = new IEvent() {
 			@Override
-			public boolean fire(EntityManager entityManager, EntityTagManager entityTagManager, int sender,
-					int receiver) {
+			public boolean fire(EntityEngine entityEngine, int sender, int receiver) {
 				System.out.println("[Test event 2] Receiver " + receiver + " got event from sender "
 						+ sender);
-				return true;
+				return false;
 
 			}
 		};

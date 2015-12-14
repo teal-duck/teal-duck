@@ -34,6 +34,7 @@ public class DuckGame extends Game {
 
 	private float time = 0;
 	private int frames = 0;
+	private boolean logFPS = false;
 
 
 	@Override
@@ -119,7 +120,9 @@ public class DuckGame extends Game {
 		while (time >= 1) {
 			String fpsText = "Calculated FPS: " + frames + "; Libgdx FPS: "
 					+ Gdx.graphics.getFramesPerSecond();
-			Gdx.app.log("FPS", fpsText);
+			if (logFPS) {
+				Gdx.app.log("FPS", fpsText);
+			}
 			frames = 0;
 			time -= 1;
 		}

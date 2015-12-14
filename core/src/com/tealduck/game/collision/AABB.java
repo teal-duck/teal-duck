@@ -87,4 +87,11 @@ public class AABB extends CollisionShape {
 	public Vector2 getCenter() {
 		return new Vector2(position.x + (size.x / 2), position.y + (size.y / 2));
 	}
+
+
+	@Override
+	public boolean containsPoint(Vector2 point) {
+		return (point.x > getLeft()) && (point.x < getRight()) && (point.y > getBottom())
+				&& (point.y < getTop());
+	}
 }

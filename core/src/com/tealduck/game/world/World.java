@@ -19,6 +19,7 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
+import com.tealduck.game.EventName;
 import com.tealduck.game.Tag;
 import com.tealduck.game.collision.Circle;
 import com.tealduck.game.component.CollisionComponent;
@@ -30,6 +31,8 @@ import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
+import com.tealduck.game.engine.EventManager;
+import com.tealduck.game.engine.IEvent;
 import com.tealduck.game.input.Action;
 import com.tealduck.game.input.ControlMap;
 import com.tealduck.game.input.ControllerBindingType;
@@ -48,7 +51,7 @@ public class World {
 
 	// TODO: Clean up constants in world
 	private float playerSpeed = 2500.0f;
-	private float playerSprint = 1.5f;
+	private float playerSprint = 1.8f;
 	private float enemySpeed = 2000.0f;
 	private float playerRadius = 24; // 28;
 	private float enemyRadius = 30;
@@ -207,6 +210,16 @@ public class World {
 		addEntityCollisionComponent(entityManager, playerId, location, playerRadius);
 
 		entityManager.addComponent(playerId, new HealthComponent(playerMaxHealth));
+
+		EventManager eventManager = entityEngine.getEventManager();
+		eventManager.addEvent(playerId, EventName.COLLISION, new IEvent() {
+			@Override
+			public boolean fire(EntityEngine entityEngine, int sender, int receiver) {
+				System.out.println("Received event");
+				return false;
+			}
+
+		});
 
 		return playerId;
 	}

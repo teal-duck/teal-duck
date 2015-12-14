@@ -14,7 +14,7 @@ public class EntityEngine {
 	public EntityEngine() {
 		entityManager = new EntityManager();
 		entityTagManager = new EntityTagManager();
-		eventManager = new EventManager(entityManager, entityTagManager);
+		eventManager = new EventManager(this);
 	}
 
 
@@ -22,6 +22,13 @@ public class EntityEngine {
 		this.entityManager = entityManager;
 		this.entityTagManager = entityTagManager;
 		this.eventManager = eventManager;
+	}
+
+
+	public void removeEntity(int entity) {
+		entityManager.removeEntity(entity);
+		entityTagManager.removeTagsAssociatedWithEntity(entity);
+		eventManager.removeEntity(entity);
 	}
 
 

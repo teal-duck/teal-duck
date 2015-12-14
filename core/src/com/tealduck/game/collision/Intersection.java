@@ -13,4 +13,15 @@ public class Intersection {
 		this.normal = normal;
 		this.distance = distance;
 	}
+
+
+	public Vector2 getResolveVector() {
+		return normal.cpy().setLength(distance);
+	}
+
+
+	@Override
+	public String toString() {
+		return "Intersection(" + normal.toString() + ", " + distance + ")";
+	}
 }

@@ -12,4 +12,7 @@ public abstract class CollisionShape {
 
 
 	public abstract AABB getAABB();
+
+
+	public abstract boolean containsPoint(Vector2 point);
 }

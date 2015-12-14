@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 
 
 public class Collision {
+	// TODO: Test collision detection
+
 	/**
 	 * @param min1
 	 * @param max1
@@ -109,16 +111,14 @@ public class Collision {
 
 
 	/**
-	 * Null if no intersection
+	 * Normal returned is to push circle out of aabb. Null if no intersection.
 	 *
 	 * @param aabb
 	 * @param circle
 	 * @return
 	 */
 	public static Intersection aabbToCircle(AABB aabb, Circle circle) {
-		if ((circle.getCenterX() > aabb.getLeft()) && (circle.getCenterX() < aabb.getRight())
-				&& (circle.getCenterY() > aabb.getBottom()) && (circle.getCenterY() < aabb.getTop())) {
-			// TODO: Push circle out of rectangle when wholly contained
+		if (aabb.containsPoint(circle.getCenter())) {
 			Vector2 vec = Collision.vectorFromCenterOfAABBToEdge(aabb, circle.getCenter());
 			return new Intersection(vec.cpy().nor(), vec.len() + circle.getRadius());
 		}
@@ -142,12 +142,44 @@ public class Collision {
 
 		if (overlap > 0) {
 			return new Intersection(projection, overlap);
-			// normal.set(projection);
 		} else {
-			// normal.setZero();
 			return null;
 		}
+	}
 
-		// return overlap;
+
+	/**
+	 * @param b0
+	 * @param b1
+	 * @return
+	 */
+	public static Intersection aabbToAabb(AABB b0, AABB b1) {
+		// TODO: Collision.aabbToAabb
+		return null;
+	}
+
+
+	/**
+	 * Normal returned is for pushing c0 out of c1. Null if no intersection.
+	 *
+	 * @param c0
+	 * @param c1
+	 * @return
+	 */
+	public static Intersection circleToCircle(Circle c0, Circle c1) {
+		float r0 = c0.getRadius();
+		float r1 = c1.getRadius();
+		float radiusSum = r0 + r1;
+		float radiusSumSquared = radiusSum * radiusSum;
+
+		Vector2 diff = c0.getCenter().cpy().sub(c1.getCenter());
+		float distanceSquared = diff.len2();
+
+		if (distanceSquared < radiusSumSquared) {
+			float distance = diff.len();
+			return new Intersection(diff.nor(), (radiusSum - distance));
+		} else {
+			return null;
+		}
 	}
 }

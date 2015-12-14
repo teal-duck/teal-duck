@@ -63,6 +63,8 @@ public class EntityTagManager {
 
 
 	/**
+	 * Null if no tag.
+	 *
 	 * @param entity
 	 * @return
 	 */

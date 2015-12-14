@@ -106,10 +106,13 @@ public class WorldCollisionSystem extends GameSystem {
 					}
 
 					if (fixIntersection != null) {
-						Vector2 normal = fixIntersection.normal;
-						float distance = fixIntersection.distance;
+						// Vector2 normal = fixIntersection.normal;
+						// float distance = fixIntersection.distance;
 
-						shape.getPosition().add(normal.cpy().setLength(distance));
+						Vector2 fixVector = fixIntersection.getResolveVector();
+
+						shape.getPosition().add(fixVector);
+						// normal.cpy().setLength(distance));
 					} else {
 						break;
 					}

@@ -10,14 +10,17 @@ import java.util.HashMap;
 public class EventManager {
 	// Map from entities to (map from event names to functions)
 	private HashMap<Integer, HashMap<String, IEvent>> events;
-	private EntityManager entityManager;
-	private EntityTagManager entityTagManager;
+	// private EntityManager entityManager;
+	// private EntityTagManager entityTagManager;
+	private EntityEngine entityEngine;
 
 
-	public EventManager(EntityManager entityManager, EntityTagManager entityTagManager) {
+	public EventManager(EntityEngine entityEngine) { // EntityManager entityManager, EntityTagManager
+								// entityTagManager) {
 		events = new HashMap<Integer, HashMap<String, IEvent>>();
-		this.entityManager = entityManager;
-		this.entityTagManager = entityTagManager;
+		// this.entityManager = entityManager;
+		// this.entityTagManager = entityTagManager;
+		this.entityEngine = entityEngine;
 	}
 
 
@@ -68,14 +71,17 @@ public class EventManager {
 					"Receiver entity " + receiverEntity + " can't respond to " + name);
 		}
 
-		boolean keepEntityAlive = function.fire(entityManager, entityTagManager, senderEntity, receiverEntity);
-		if (!keepEntityAlive) {
-			removeEntity(receiverEntity);
-			entityManager.removeEntity(receiverEntity);
-			entityTagManager.removeTagsAssociatedWithEntity(receiverEntity);
+		boolean killEntity = function.fire(entityEngine, senderEntity, receiverEntity);
+		// boolean keepEntityAlive = function.fire(entityManager, entityTagManager, senderEntity,
+		// receiverEntity);
+		if (killEntity) {
+			entityEngine.removeEntity(receiverEntity);
+			// removeEntity(receiverEntity);
+			// entityManager.removeEntity(receiverEntity);
+			// entityTagManager.removeTagsAssociatedWithEntity(receiverEntity);
 		}
 
-		return keepEntityAlive;
+		return killEntity;
 	}
 
 

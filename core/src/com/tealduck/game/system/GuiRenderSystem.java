@@ -84,23 +84,26 @@ public class GuiRenderSystem extends GameSystem {
 		try {
 			int playerId = entityTagManager.getEntity(Tag.PLAYER);
 			HealthComponent healthComponent = entityManager.getComponent(playerId, HealthComponent.class);
-
-			while (time >= dieTime) {
-				time -= dieTime;
-
-				int newHealth = healthComponent.health - 1;
-				if (newHealth < 0) {
-					newHealth = 0;
-				}
-				healthComponent.health = newHealth;
-			}
-
+			decreaseHealthForTesting(healthComponent);
 			renderHealthBar(healthComponent.health);
 		} catch (NullPointerException e) {
 		} catch (IllegalArgumentException e) {
 		}
 
 		batch.end();
+	}
+
+
+	private void decreaseHealthForTesting(HealthComponent healthComponent) {
+		while (time >= dieTime) {
+			time -= dieTime;
+
+			int newHealth = healthComponent.health - 1;
+			if (newHealth < 0) {
+				newHealth = 0;
+			}
+			healthComponent.health = newHealth;
+		}
 	}
 
 
