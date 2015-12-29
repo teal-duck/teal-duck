@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.tealduck.game.AssetLocations;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.engine.SystemManager;
 
@@ -53,7 +54,7 @@ public class AssetLoadingScreen extends DuckScreenBase {
 		progressBarHeight = 16;
 		progressBarPixmap = new Pixmap(progressBarWidth, progressBarHeight, Format.RGBA8888);
 		progressBarTexture = new Texture(progressBarPixmap);
-		loadingText = new Texture("textures/loading_text.png");
+		loadingText = new Texture(AssetLocations.LOADING_TEXT); // "textures/loading_text.png");
 	}
 
 

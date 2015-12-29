@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="64" tileheight="64" backgroundcolor="#000000">
  <tileset firstgid="1" name="map_tiles" tilewidth="64" tileheight="64">
-  <image source="../textures/map_tiles.png" trans="ff00ff" width="256" height="256"/>
+  <image source="../textures/world/inside_map_tiles.png" trans="ff00ff" width="512" height="512"/>
  </tileset>
- <tileset firstgid="17" name="collision_tiles" tilewidth="64" tileheight="64">
-  <image source="../textures/collision_tiles.png" width="256" height="256"/>
+ <tileset firstgid="65" name="collision_tiles" tilewidth="64" tileheight="64">
+  <image source="../textures/world/collision_tiles.png" width="256" height="256"/>
   <tile id="0">
    <properties>
     <property name="collidable" value="true"/>
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="33" name="entity_tiles" tilewidth="64" tileheight="64">
-  <image source="../textures/entity_tiles.png" width="256" height="256"/>
+ <tileset firstgid="81" name="entity_tiles" tilewidth="64" tileheight="64">
+  <image source="../textures/world/entity_tiles.png" width="256" height="256"/>
  </tileset>
  <layer name="Walls" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJztm9EKwyAQBE3y//9c+hAQ0dwZtR7dGRAhkdDJ2iUp9EgpHeJDFfzxx18X/PHHXxf88cdfF/zxx18X/PHHXxf88cdfF/zxx18X/PHHXxf88cdfF/zxx18X/PFf7X8Z805u/3PBuHlas/se3P5WRp75rBxPxvrdzNz/vT6R8h+lzN+7fjet/Z8qx3r7y1oXKf/e3rL666qsrZ3fzcj+tz6/53yU/N9Q63tvv/9L/t5ngC/5venty1WU/qOdl+Ppkt2U/iOd10vE/HNWP7NFzN+iJzPPe0GU/D3f77yz3r4P5NePlL/VSaPvgK1rRslflZZ/hL35C578Z/wmMGNeSev/4ErjA1e3AvE=
+   eJztmusOgjAMhasiRiPqX9+eR9UmLmmWXQoMNuw5yVIiY/PjbN2yMBDR0Wh5fEtHdtUR+MFvV+AHP/jtCvzgB79dgR/84Lcr8IMf/HYFfvCD367AD37w2xX4wQ9+uwI/+MFvV+AHP/jtCvzgL8V/LtTOlirJH2vnnYk1xf/5SmW+Jb6I65Po4xCpz98e134Hzv+cR5oYaocy9Wtri/Gfqt+K/0vFHD3peVrzPzRutWM/ply9VvyX+U+TtzT5i38fIu26+y35P/fZpfdb8H8Jf249iOkf/H9Sen7cvPry3fjrZS35/Ak/Rxk16sV1KJf476eGfH5lzhtL9d2a/1K+5xxLztk9zv+fZ6Omrlz/QutgS/5r5rfzn2NobPgxtT64vmsrtf+RcnnhTun8IMsr0/eU/fJawvlPmH+PZzlzFOMvdSZQIq4p5gzt46bM8z0XzlEflsoXeg==
   </data>
  </layer>
- <layer name="Collision" width="64" height="64">
+ <layer name="Collision" width="64" height="64" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzt1zkKxDAQBEB/wf//rPMFY93qRVWgyDqmAw3WdQEAAAAAAAAAAAD/5t5dwGbyn03+s92TRsn+CUbVUbuP/BnkP+vcXy19q6R/fc1Nyj9jXe/3VeRvX9d7PxLMqqOklyQY2fNaz92ppg756+Z+vQsSzMw/aq+ZSu537xvwbc8EKXXskvxvuoL8uWOFBwDGC/U=
+   eJzt1zkKxDAQBEB/zf//lPMFY93qRVWgyDqmAw3WdQEAAAAAAAAAAAD/5t5dwGbyn03+s92TRsn+CUbVUbuP/BnkP+vcXy19q6R/fc1Nyj9jXe/3VeRvX9d7PxLMqqOklyQY2fNaz92ppg756+Z+vQsSzMw/aq+ZSu537xvwbc8EKXXskvxvuoL8uWOFBzAVLbU=
   </data>
  </layer>
- <objectgroup name="Lines" width="0" height="0">
+ <objectgroup name="Lines" width="0" height="0" visible="0">
   <object name="test_line" type="test_line" x="320" y="3840">
    <polyline points="0,0 0,-128 192,-128 192,0 0,0"/>
   </object>
  </objectgroup>
- <objectgroup name="Entities" width="0" height="0">
-  <object name="Player" type="Player" gid="33" x="128" y="3968" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="34" x="448" y="3968" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="34" x="704" y="3968" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="34" x="128" y="3712" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="34" x="448" y="3456" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="34" x="1216" y="3712" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="34" x="1792" y="3392" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="34" x="768" y="3136" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="34" x="64" y="3328" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="34" x="384" y="3840" width="64" height="64">
+ <objectgroup name="Entities" width="0" height="0" visible="0">
+  <object name="Player" type="Player" gid="81" x="128" y="3968" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="82" x="448" y="3968" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="82" x="704" y="3968" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="82" x="128" y="3712" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="82" x="448" y="3456" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="82" x="1216" y="3712" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="82" x="1792" y="3392" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="82" x="768" y="3136" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="82" x="64" y="3328" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="82" x="384" y="3840" width="64" height="64">
    <properties>
     <property name="patrolRoute" value="test_line"/>
    </properties>

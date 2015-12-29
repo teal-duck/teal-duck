@@ -7,6 +7,8 @@ import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -54,7 +56,7 @@ public class World {
 	private float playerSprint = 1.8f;
 	private float enemySpeed = 2000.0f;
 	private float playerRadius = 24; // 28;
-	private float enemyRadius = 30;
+	private float enemyRadius = 24; // 30;
 	private int playerMaxHealth = 4;
 
 	private HashMap<String, ArrayList<Vector2>> patrolRoutes;
@@ -168,6 +170,32 @@ public class World {
 	}
 
 
+	private Animation animationFromTexture(Texture texture, int frameWidth, int frameHeight, float frameDuration) {
+		int textureWidth = texture.getWidth();
+		int textureHeight = texture.getHeight();
+
+		if ((textureWidth % frameWidth != 0) || (textureHeight % frameHeight != 0)) {
+			throw new IllegalArgumentException("Texture size isn't exactly divisible into frames");
+		}
+
+		int columns = textureWidth / frameWidth;
+		int rows = textureHeight / frameHeight;
+
+		TextureRegion[][] textureFrames = TextureRegion.split(texture, frameWidth, frameHeight);
+		TextureRegion[] animationFrames = new TextureRegion[columns * rows];
+
+		int frame = 0;
+		for (int r = 0; r < rows; r += 1) {
+			for (int c = 0; c < columns; c += 1) {
+				animationFrames[frame] = textureFrames[r][c];
+				frame += 1;
+			}
+		}
+
+		return new Animation(frameDuration, animationFrames);
+	}
+
+
 	/**
 	 * @param entityManager
 	 * @param entityTagManager
@@ -179,7 +207,8 @@ public class World {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int playerId = entityManager.createEntityWithTag(entityEngine.getEntityTagManager(), Tag.PLAYER);
 
-		entityManager.addComponent(playerId, new SpriteComponent(texture));
+		entityManager.addComponent(playerId,
+				new SpriteComponent(texture, animationFromTexture(texture, 64, 64, 0.2f)));
 		entityManager.addComponent(playerId, new PositionComponent(location));
 		entityManager.addComponent(playerId,
 				new MovementComponent(new Vector2(0, 0), playerSpeed, playerSprint));
@@ -234,7 +263,8 @@ public class World {
 	private int createEnemy(EntityEngine entityEngine, Texture texture, Vector2 location) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int enemyId = entityManager.createEntity();
-		entityManager.addComponent(enemyId, new SpriteComponent(texture));
+		entityManager.addComponent(enemyId,
+				new SpriteComponent(texture, animationFromTexture(texture, 64, 64, 0.2f)));
 		entityManager.addComponent(enemyId, new PositionComponent(location));
 		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), enemySpeed));
 		addEntityCollisionComponent(entityManager, enemyId, location, enemyRadius);

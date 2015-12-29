@@ -67,7 +67,7 @@ public class GuiRenderSystem extends GameSystem {
 
 
 	float time = 0;
-	float dieTime = 2f;
+	float dieTime = 3.5f;
 
 
 	@Override

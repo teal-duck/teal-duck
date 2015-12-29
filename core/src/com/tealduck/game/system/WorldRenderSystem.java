@@ -180,12 +180,20 @@ public class WorldRenderSystem extends GameSystem {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		boolean useSortedRendering = false;
+		boolean debugRender = false;
+
 		if (useSortedRendering) {
 			renderEntitiesSorted();
 		} else {
-			renderPatrolRoutes();
-			renderEntities();
-			renderCollisionOverlay();
+			if (debugRender) {
+				renderPatrolRoutes();
+			}
+
+			renderEntities(deltaTime);
+
+			if (debugRender) {
+				renderCollisionOverlay();
+			}
 		}
 	}
 
@@ -208,7 +216,7 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
-	private void renderEntities() {
+	private void renderEntities(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
 
 		batch.begin();
@@ -216,7 +224,12 @@ public class WorldRenderSystem extends GameSystem {
 
 		Set<Integer> entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
 		for (int entity : entities) {
-			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
+			SpriteComponent spriteComponent = entityManager.getComponent(entity, SpriteComponent.class);
+
+			spriteComponent.stateTime += deltaTime;
+			spriteComponent.setSpriteToAnimationFrame();
+
+			Sprite sprite = spriteComponent.sprite;
 			if (isSpriteOnScreen(sprite)) {
 				sprite.draw(batch);
 

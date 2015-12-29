@@ -217,7 +217,7 @@ def vectorFromCenterOfAABBToEdge(aabb, pointInAABB):
 	sinAngle = abs(math.sin(angle));
 
 	magnitude = 0;
-	if (aabb.width / 2.0 * sinAngle <= aabb.height / 2 * cosAngle):
+	if (aabb.width / 2.0 * sinAngle <= aabb.height / 2.0 * cosAngle):
 		magnitude = aabb.width / 2 / cosAngle;
 	else:
 		magnitude = aabb.height / 2 / sinAngle;

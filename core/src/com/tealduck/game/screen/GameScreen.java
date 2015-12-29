@@ -6,8 +6,8 @@ import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.tealduck.game.AssetLocations;
 import com.tealduck.game.DuckGame;
-import com.tealduck.game.TextureNames;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.system.EntityCollisionSystem;
 import com.tealduck.game.system.GuiRenderSystem;
@@ -51,8 +51,8 @@ public class GameScreen extends DuckScreenBase {
 		textureParameter.minFilter = TextureFilter.Nearest;
 		textureParameter.magFilter = TextureFilter.Nearest;
 
-		assetManager.load(TextureNames.DUCK, Texture.class, textureParameter);
-		assetManager.load(TextureNames.ENEMY, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.DUCK, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.ENEMY, Texture.class, textureParameter);
 
 		assetManager.load(MapNames.TEST_MAP, TiledMap.class);
 
@@ -69,8 +69,8 @@ public class GameScreen extends DuckScreenBase {
 	protected void load() {
 		AssetManager assetManager = getAssetManager();
 
-		duckTexture = assetManager.get(TextureNames.DUCK);
-		enemyTexture = assetManager.get(TextureNames.ENEMY);
+		duckTexture = assetManager.get(AssetLocations.DUCK);
+		enemyTexture = assetManager.get(AssetLocations.ENEMY);
 
 		TiledMap tiledMap = assetManager.get(MapNames.TEST_MAP);
 		world = new World(getEntityEngine(), tiledMap);
