@@ -20,6 +20,16 @@ public class Intersection {
 	}
 
 
+	public Intersection copy() {
+		return new Intersection(normal.cpy(), distance);
+	}
+
+
+	public Intersection flippedCopy() {
+		return new Intersection(normal.cpy().scl(-1), distance);
+	}
+
+
 	@Override
 	public String toString() {
 		return "Intersection(" + normal.toString() + ", " + distance + ")";

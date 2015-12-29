@@ -10,8 +10,6 @@ import com.tealduck.game.collision.Circle;
 import com.tealduck.game.collision.Collision;
 import com.tealduck.game.collision.Intersection;
 import com.tealduck.game.component.CollisionComponent;
-import com.tealduck.game.component.MovementComponent;
-import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EventManager;
@@ -62,31 +60,9 @@ public class EntityCollisionSystem extends GameSystem {
 					continue;
 				}
 
-				// System.out.println("Collide: " + intersection.toString());
-				// TODO: Send entity collisions to events
-				// TODO: Clean up keeping position and collision in sync
-				// TODO: Move collision bouncing into events
-				PositionComponent p = null;
-				CollisionComponent cc = null;
-				if (entityManager.entityHasComponent(entity, PositionComponent.class)) {
-					p = entityManager.getComponent(entity, PositionComponent.class);
-					cc = cc0;
-				} else if (entityManager.entityHasComponent(other, PositionComponent.class)) {
-					p = entityManager.getComponent(other, PositionComponent.class);
-					cc = cc1;
-					intersection.normal.scl(-1);
-				}
-
-				if (p != null) {
-					cc.collisionShape.getPosition().add(intersection.getResolveVector());
-					p.position.set(cc.collisionShape.getPosition().cpy()
-							.sub(cc.offsetFromPosition));
-				}
-
-				entityManager.getComponent(entity, MovementComponent.class).acceleration
-						.add(intersection.normal.cpy().scl(80000));
-
-				eventManager.triggerEvent(other, entity, EventName.COLLISION);
+				eventManager.triggerEvent(other, entity, EventName.COLLISION, intersection);
+				eventManager.triggerEvent(entity, other, EventName.COLLISION,
+						intersection.flippedCopy());
 			}
 		}
 	}

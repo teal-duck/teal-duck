@@ -24,7 +24,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.EventName;
 import com.tealduck.game.Tag;
 import com.tealduck.game.collision.Circle;
+import com.tealduck.game.collision.Intersection;
 import com.tealduck.game.component.CollisionComponent;
+import com.tealduck.game.component.DamageComponent;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PatrolRouteComponent;
@@ -52,12 +54,14 @@ public class World {
 	private final int tileHeight;
 
 	// TODO: Clean up constants in world
-	private float playerSpeed = 2500.0f;
-	private float playerSprint = 1.8f;
-	private float enemySpeed = 2000.0f;
-	private float playerRadius = 24; // 28;
-	private float enemyRadius = 24; // 30;
-	private int playerMaxHealth = 4;
+	private final float playerSpeed = 2500.0f;
+	private final float playerSprint = 1.8f;
+	private final float enemySpeed = 2000.0f;
+	private final float playerRadius = 20; // 28;
+	private final float enemyRadius = 20; // 30;
+	private final float playerBounce = 60000;
+	private final int enemyDamage = 1;
+	public static final int playerMaxHealth = 10;
 
 	private HashMap<String, ArrayList<Vector2>> patrolRoutes;
 
@@ -174,7 +178,7 @@ public class World {
 		int textureWidth = texture.getWidth();
 		int textureHeight = texture.getHeight();
 
-		if ((textureWidth % frameWidth != 0) || (textureHeight % frameHeight != 0)) {
+		if (((textureWidth % frameWidth) != 0) || ((textureHeight % frameHeight) != 0)) {
 			throw new IllegalArgumentException("Texture size isn't exactly divisible into frames");
 		}
 
@@ -238,13 +242,37 @@ public class World {
 
 		addEntityCollisionComponent(entityManager, playerId, location, playerRadius);
 
-		entityManager.addComponent(playerId, new HealthComponent(playerMaxHealth));
+		entityManager.addComponent(playerId, new HealthComponent(World.playerMaxHealth));
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(playerId, EventName.COLLISION, new IEvent() {
 			@Override
-			public boolean fire(EntityEngine entityEngine, int sender, int receiver) {
-				System.out.println("Received event");
+			public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
+				// TODO: Maybe change how data is passed to events
+				if (!(data instanceof Intersection)) {
+					return false;
+				}
+				Intersection intersection = (Intersection) data;
+
+				EntityManager entityManager = entityEngine.getEntityManager();
+
+				// TODO: Test if the player should bounce
+				MovementComponent movementComponent = entityManager.getComponent(receiver,
+						MovementComponent.class);
+				movementComponent.acceleration.add(intersection.normal.cpy().scl(playerBounce));
+
+				if (entityManager.entityHasComponent(sender, DamageComponent.class)) {
+					DamageComponent damageComponent = entityManager.getComponent(sender,
+							DamageComponent.class);
+					HealthComponent healthComponent = entityManager.getComponent(receiver,
+							HealthComponent.class);
+
+					healthComponent.health -= damageComponent.damage;
+					if (healthComponent.health < 0) {
+						healthComponent.health = 0;
+					}
+				}
+
 				return false;
 			}
 
@@ -267,6 +295,7 @@ public class World {
 				new SpriteComponent(texture, animationFromTexture(texture, 64, 64, 0.2f)));
 		entityManager.addComponent(enemyId, new PositionComponent(location));
 		entityManager.addComponent(enemyId, new MovementComponent(new Vector2(0, 0), enemySpeed));
+		entityManager.addComponent(enemyId, new DamageComponent(enemyDamage));
 		addEntityCollisionComponent(entityManager, enemyId, location, enemyRadius);
 		return enemyId;
 	}

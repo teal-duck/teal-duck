@@ -48,37 +48,39 @@ public class EventManager {
 	}
 
 
+	public boolean triggerEvent(int senderEntity, int receiverEntity, String name) {
+		return triggerEvent(senderEntity, receiverEntity, name, null);
+	}
+
+
 	/**
 	 * @param senderEntity
 	 * @param receiverEntity
 	 * @param name
 	 * @return
 	 */
-	public boolean triggerEvent(int senderEntity, int receiverEntity, String name) {
+	public boolean triggerEvent(int senderEntity, int receiverEntity, String name, Object data) {
 		if (name == null) {
 			throw new IllegalArgumentException("name is null");
 		}
 
 		HashMap<String, IEvent> receiverEvents = events.get(receiverEntity);
 		if (receiverEvents == null) {
-			throw new IllegalArgumentException(
-					"Receiver entity " + receiverEntity + " doesn't have any events");
+			return false;
+			// throw new IllegalArgumentException(
+			// "Receiver entity " + receiverEntity + " doesn't have any events");
 		}
 
 		IEvent function = receiverEvents.get(name);
 		if (function == null) {
-			throw new IllegalArgumentException(
-					"Receiver entity " + receiverEntity + " can't respond to " + name);
+			return false;
+			// throw new IllegalArgumentException(
+			// "Receiver entity " + receiverEntity + " can't respond to " + name);
 		}
 
-		boolean killEntity = function.fire(entityEngine, senderEntity, receiverEntity);
-		// boolean keepEntityAlive = function.fire(entityManager, entityTagManager, senderEntity,
-		// receiverEntity);
+		boolean killEntity = function.fire(entityEngine, senderEntity, receiverEntity, data);
 		if (killEntity) {
 			entityEngine.removeEntity(receiverEntity);
-			// removeEntity(receiverEntity);
-			// entityManager.removeEntity(receiverEntity);
-			// entityTagManager.removeTagsAssociatedWithEntity(receiverEntity);
 		}
 
 		return killEntity;

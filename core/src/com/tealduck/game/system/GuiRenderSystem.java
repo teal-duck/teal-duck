@@ -15,6 +15,7 @@ import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.GameSystem;
+import com.tealduck.game.world.World;
 
 
 public class GuiRenderSystem extends GameSystem {
@@ -47,7 +48,7 @@ public class GuiRenderSystem extends GameSystem {
 		healthTexture = new Texture(healthPixmap);
 
 		// TODO: Replace healthBackground with 9-patch
-		int maxHealth = 4;
+		int maxHealth = World.playerMaxHealth;
 		Pixmap healthBackgroundPixmap = new Pixmap(
 				(int) (healthTextX + healthText.width + (maxHealth * (healthSize + healthOffset))
 						+ healthOffset),
@@ -81,10 +82,16 @@ public class GuiRenderSystem extends GameSystem {
 		batch.begin();
 		batch.enableBlending();
 
+		boolean shouldTestHealth = false;
+
 		try {
 			int playerId = entityTagManager.getEntity(Tag.PLAYER);
 			HealthComponent healthComponent = entityManager.getComponent(playerId, HealthComponent.class);
-			decreaseHealthForTesting(healthComponent);
+
+			if (shouldTestHealth) {
+				decreaseHealthForTesting(healthComponent);
+			}
+
 			renderHealthBar(healthComponent.health);
 		} catch (NullPointerException e) {
 		} catch (IllegalArgumentException e) {
