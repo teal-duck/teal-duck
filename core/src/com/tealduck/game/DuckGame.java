@@ -55,7 +55,7 @@ public class DuckGame extends Game {
 
 		// TODO: Font size
 		font = new BitmapFont();
-		font.getData().setScale(1.5f);
+		// font.getData().setScale(1.5f);
 
 		setupControllers();
 

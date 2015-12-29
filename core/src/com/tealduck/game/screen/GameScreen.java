@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.tealduck.game.AssetLocations;
 import com.tealduck.game.DuckGame;
+import com.tealduck.game.Tag;
+import com.tealduck.game.component.HealthComponent;
+import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.system.EntityCollisionSystem;
 import com.tealduck.game.system.GuiRenderSystem;
@@ -105,6 +108,28 @@ public class GameScreen extends DuckScreenBase {
 		WorldRenderSystem worldRenderSystem = getSystemManager().getSystemOfType(WorldRenderSystem.class);
 		if (worldRenderSystem != null) {
 			worldRenderSystem.resizeCamera(width, height);
+		}
+	}
+
+
+	@Override
+	public void render(float deltaTime) {
+		super.render(deltaTime);
+
+		EntityManager entityManager = getEntityManager();
+		try {
+			int playerId = getEntityTagManager().getEntity(Tag.PLAYER);
+			if (entityManager.entityHasComponent(playerId, HealthComponent.class)) {
+				HealthComponent healthComponent = entityManager.getComponent(playerId,
+						HealthComponent.class);
+				int health = healthComponent.health;
+
+				if (health <= 0) {
+					this.loadScreen(GameOverScreen.class);
+				}
+			}
+		} catch (NullPointerException e) {
+
 		}
 	}
 }

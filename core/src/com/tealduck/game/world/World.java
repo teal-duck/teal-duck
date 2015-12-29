@@ -61,7 +61,7 @@ public class World {
 	private final float enemyRadius = 20; // 30;
 	private final float playerBounce = 60000;
 	private final int enemyDamage = 1;
-	public static final int playerMaxHealth = 10;
+	public static final int playerMaxHealth = 2; // 10;
 
 	private HashMap<String, ArrayList<Vector2>> patrolRoutes;
 
@@ -257,16 +257,19 @@ public class World {
 				EntityManager entityManager = entityEngine.getEntityManager();
 
 				// TODO: Test if the player should bounce
+				// TODO: Calculate bounce from mass
 				MovementComponent movementComponent = entityManager.getComponent(receiver,
 						MovementComponent.class);
 				movementComponent.acceleration.add(intersection.normal.cpy().scl(playerBounce));
 
+				// TODO: Defence component
 				if (entityManager.entityHasComponent(sender, DamageComponent.class)) {
 					DamageComponent damageComponent = entityManager.getComponent(sender,
 							DamageComponent.class);
 					HealthComponent healthComponent = entityManager.getComponent(receiver,
 							HealthComponent.class);
 
+					// TODO: Maybe have invulnerability for a second after taking damage
 					healthComponent.health -= damageComponent.damage;
 					if (healthComponent.health < 0) {
 						healthComponent.health = 0;
@@ -275,7 +278,6 @@ public class World {
 
 				return false;
 			}
-
 		});
 
 		return playerId;
