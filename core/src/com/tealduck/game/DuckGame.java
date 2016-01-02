@@ -67,6 +67,11 @@ public class DuckGame extends Game {
 	@SuppressWarnings("unchecked")
 	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass) {
 		Gdx.app.log("Screen", "Changing screen to " + screenClass.getSimpleName());
+
+		getEntityEngine().clear();
+		getSystemManager().clear();
+		getAssetManager().clear();
+
 		DuckScreenBase screen = null;
 		try {
 			screen = screenClass.getConstructor(DuckGame.class).newInstance(this);
@@ -171,20 +176,6 @@ public class DuckGame extends Game {
 	public EntityEngine getEntityEngine() {
 		return entityEngine;
 	}
-
-	// public EntityManager getEntityManager() {
-	// return entityManager;
-	// }
-	//
-	//
-	// public EntityTagManager getEntityTagManager() {
-	// return entityTagManager;
-	// }
-	//
-	//
-	// public EventManager getEventManager() {
-	// return eventManager;
-	// }
 
 
 	public BitmapFont getFont() {

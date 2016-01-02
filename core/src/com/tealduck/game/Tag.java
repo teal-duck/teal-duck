@@ -6,6 +6,7 @@ package com.tealduck.game;
  */
 public class Tag {
 	public static final String PLAYER = "PLAYER";
+	public static final String GOAL = "GOAL";
 
 
 	private Tag() {

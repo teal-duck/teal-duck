@@ -15,7 +15,7 @@ import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.GameSystem;
-import com.tealduck.game.world.World;
+import com.tealduck.game.world.EntityConstants;
 
 
 public class GuiRenderSystem extends GameSystem {
@@ -48,7 +48,7 @@ public class GuiRenderSystem extends GameSystem {
 		healthTexture = new Texture(healthPixmap);
 
 		// TODO: Replace healthBackground with 9-patch
-		int maxHealth = World.playerMaxHealth;
+		int maxHealth = EntityConstants.PLAYER_MAX_HEALTH;
 		Pixmap healthBackgroundPixmap = new Pixmap(
 				(int) (healthTextX + healthText.width + (maxHealth * (healthSize + healthOffset))
 						+ healthOffset),

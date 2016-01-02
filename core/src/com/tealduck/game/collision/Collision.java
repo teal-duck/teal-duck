@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Collision {
 	// TODO: Test collision detection
+	// TODO: Write detection functions that return bool instead of calculating resolution vectors
 
 	/**
 	 * @param min1
@@ -117,7 +118,7 @@ public class Collision {
 	 * @param circle
 	 * @return
 	 */
-	public static Intersection aabbToCircle(AABB aabb, Circle circle) {
+	public static Intersection circleToAabb(Circle circle, AABB aabb) {
 		if (aabb.containsPoint(circle.getCenter())) {
 			Vector2 vec = Collision.vectorFromCenterOfAABBToEdge(aabb, circle.getCenter());
 			return new Intersection(vec.cpy().nor(), vec.len() + circle.getRadius());
@@ -149,12 +150,31 @@ public class Collision {
 
 
 	/**
+	 * Normal returned is for pushing b0 out of b1. Null if no intersection.
+	 *
 	 * @param b0
 	 * @param b1
 	 * @return
 	 */
 	public static Intersection aabbToAabb(AABB b0, AABB b1) {
-		// TODO: Collision.aabbToAabb
+		// https://gitlab.labcomp.cl/mijara/jmoka-engine/raw/0786b26b4f9302228af8bca827369f319f58c03c/src/com/moka/physics/Collider.java
+		if (!((b0.getBottom() >= b1.getTop()) || (b0.getTop() <= b1.getBottom())
+				|| (b0.getLeft() >= b1.getRight()) || (b0.getRight() <= b1.getLeft()))) {
+			float top = b1.getTop() - b0.getBottom();
+			float bot = b0.getTop() - b1.getBottom();
+			float left = b0.getRight() - b1.getLeft();
+			float right = b1.getRight() - b0.getLeft();
+
+			float y = (top < bot) ? top : 0 - bot;
+			float x = (right < left) ? right : 0 - left;
+
+			if (Math.abs(y) < Math.abs(x)) {
+				return new Intersection(new Vector2(0, Math.signum(y)), y);
+			} else {
+				return new Intersection(new Vector2(Math.signum(x), 0), x);
+			}
+		}
+
 		return null;
 	}
 
@@ -178,6 +198,31 @@ public class Collision {
 		if (distanceSquared < radiusSumSquared) {
 			float distance = diff.len();
 			return new Intersection(diff.nor(), (radiusSum - distance));
+		} else {
+			return null;
+		}
+	}
+
+
+	public static Intersection shapeToShape(CollisionShape s0, CollisionShape s1) {
+		if ((s0 instanceof Circle) && (s1 instanceof Circle)) {
+			return Collision.circleToCircle((Circle) s0, (Circle) s1);
+
+		} else if ((s0 instanceof Circle) && (s1 instanceof AABB)) {
+			return Collision.circleToAabb((Circle) s0, (AABB) s1);
+
+		} else if ((s0 instanceof AABB) && (s1 instanceof Circle)) {
+			Intersection intersection = Collision.circleToAabb((Circle) s1, (AABB) s0);
+			// Need to flip because aabbToCircle resolution vector is in opposite direction
+			if (intersection != null) {
+				intersection = intersection.flippedCopy();
+			}
+
+			return intersection;
+
+		} else if ((s0 instanceof AABB) && (s1 instanceof AABB)) {
+			return Collision.aabbToAabb((AABB) s0, (AABB) s1);
+
 		} else {
 			return null;
 		}

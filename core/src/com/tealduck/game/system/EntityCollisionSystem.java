@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.tealduck.game.EventName;
-import com.tealduck.game.collision.Circle;
 import com.tealduck.game.collision.Collision;
+import com.tealduck.game.collision.CollisionShape;
 import com.tealduck.game.collision.Intersection;
 import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.engine.EntityEngine;
@@ -37,24 +37,13 @@ public class EntityCollisionSystem extends GameSystem {
 			entities.remove(0);
 
 			CollisionComponent cc0 = entityManager.getComponent(entity, CollisionComponent.class);
-			if (!(cc0.collisionShape instanceof Circle)) {
-				System.out.println("TODO: aabb collision");
-				continue;
-			}
-
-			Circle c0 = (Circle) cc0.collisionShape;
+			CollisionShape s0 = cc0.collisionShape;
 
 			for (int other : entities) {
 				CollisionComponent cc1 = entityManager.getComponent(other, CollisionComponent.class);
+				CollisionShape s1 = cc1.collisionShape;
 
-				if (!(cc1.collisionShape instanceof Circle)) {
-					System.out.println("TODO: aabb collision");
-					continue;
-				}
-
-				Circle c1 = (Circle) cc1.collisionShape;
-
-				Intersection intersection = Collision.circleToCircle(c0, c1);
+				Intersection intersection = Collision.shapeToShape(s0, s1);
 
 				if (intersection == null) {
 					continue;

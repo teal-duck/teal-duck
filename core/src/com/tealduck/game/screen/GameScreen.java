@@ -9,6 +9,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.tealduck.game.AssetLocations;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.Tag;
+import com.tealduck.game.TextureMap;
+import com.tealduck.game.collision.Collision;
+import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.SystemManager;
@@ -20,22 +23,19 @@ import com.tealduck.game.system.PathfindingSystem;
 import com.tealduck.game.system.PatrolLogicSystem;
 import com.tealduck.game.system.WorldCollisionSystem;
 import com.tealduck.game.system.WorldRenderSystem;
+import com.tealduck.game.world.EntityLoader;
 import com.tealduck.game.world.MapNames;
 import com.tealduck.game.world.World;
 
 
 public class GameScreen extends DuckScreenBase {
-	// TODO: Split game screen into multiple smaller classes
-	// private final DuckGame game;
+	// TODO: Move loaded textures into a map from name to texture instance
+	// private Texture duckTexture;
+	// private Texture enemyTexture;
+	// private Texture goalTexture;
 
-	private Texture duckTexture;
-	private Texture enemyTexture;
-
+	private TextureMap textureMap;
 	private World world;
-
-	// private TiledMap tiledMap;
-
-	// private WorldRenderSystem worldRenderSystem;
 
 
 	public GameScreen(DuckGame game) {
@@ -56,6 +56,7 @@ public class GameScreen extends DuckScreenBase {
 
 		assetManager.load(AssetLocations.DUCK, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.ENEMY, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.GOAL, Texture.class, textureParameter);
 
 		assetManager.load(MapNames.TEST_MAP, TiledMap.class);
 
@@ -71,14 +72,23 @@ public class GameScreen extends DuckScreenBase {
 	@Override
 	protected void load() {
 		AssetManager assetManager = getAssetManager();
+		textureMap = new TextureMap();
 
-		duckTexture = assetManager.get(AssetLocations.DUCK);
-		enemyTexture = assetManager.get(AssetLocations.ENEMY);
+		textureMap.putTextureFromAssetManager(AssetLocations.DUCK, assetManager);
+		textureMap.putTextureFromAssetManager(AssetLocations.ENEMY, assetManager);
+		textureMap.putTextureFromAssetManager(AssetLocations.GOAL, assetManager);
+
+		// duckTexture = assetManager.get(AssetLocations.DUCK);
+		// enemyTexture = assetManager.get(AssetLocations.ENEMY);
+		// goalTexture = assetManager.get(AssetLocations.GOAL);
 
 		TiledMap tiledMap = assetManager.get(MapNames.TEST_MAP);
 		world = new World(getEntityEngine(), tiledMap);
+		world.addPatrolRoutes(EntityLoader.loadPatrolRoutes(tiledMap));
 
-		world.loadEntities(duckTexture, enemyTexture);
+		EntityLoader.loadEntities(world, textureMap);
+
+		// world.loadEntities(duckTexture, enemyTexture, goalTexture);
 	}
 
 
@@ -128,6 +138,19 @@ public class GameScreen extends DuckScreenBase {
 					this.loadScreen(GameOverScreen.class);
 				}
 			}
+
+			int goalId = getEntityTagManager().getEntity(Tag.GOAL);
+			if (entityManager.entityHasComponent(playerId, CollisionComponent.class)
+					&& entityManager.entityHasComponent(goalId, CollisionComponent.class)) {
+				CollisionComponent cc0 = entityManager.getComponent(playerId, CollisionComponent.class);
+				CollisionComponent cc1 = entityManager.getComponent(goalId, CollisionComponent.class);
+
+				if (Collision.shapeToShape(cc0.collisionShape, cc1.collisionShape) != null) {
+					this.loadScreen(WinScreen.class);
+				}
+
+			}
+
 		} catch (NullPointerException e) {
 
 		}
