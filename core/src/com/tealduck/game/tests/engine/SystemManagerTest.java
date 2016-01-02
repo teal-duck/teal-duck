@@ -6,9 +6,9 @@ import org.junit.Test;
 
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.SystemManager;
+import com.tealduck.game.system.ChaseSystem;
 import com.tealduck.game.system.InputLogicSystem;
 import com.tealduck.game.system.MovementSystem;
-import com.tealduck.game.system.PathfindingSystem;
 import com.tealduck.game.system.WorldCollisionSystem;
 
 
@@ -48,7 +48,7 @@ public class SystemManagerTest {
 		System.out.println(systemManager);
 		System.out.println("");
 
-		PathfindingSystem pls = new PathfindingSystem(entityEngine);
+		ChaseSystem pls = new ChaseSystem(entityEngine);
 		systemManager.addSystem(pls, 2);
 
 		System.out.println(systemManager);
@@ -67,7 +67,7 @@ public class SystemManagerTest {
 		System.out.println(systemManager);
 		System.out.println("");
 
-		systemManager.removeSystem(PathfindingSystem.class);
+		systemManager.removeSystem(ChaseSystem.class);
 
 		System.out.println(systemManager);
 		System.out.println("");

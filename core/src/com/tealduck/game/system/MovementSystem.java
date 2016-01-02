@@ -31,7 +31,9 @@ public class MovementSystem extends GameSystem {
 		for (int entity : entities) {
 			MovementComponent movementComponent = entityManager.getComponent(entity,
 					MovementComponent.class);
-			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
+			PositionComponent positionComponent = entityManager.getComponent(entity,
+					PositionComponent.class);
+			Vector2 position = positionComponent.position;
 			Vector2 velocity = movementComponent.velocity;
 			Vector2 acceleration = movementComponent.acceleration;
 			// TODO: Calculate friction based on surface (and mass?)

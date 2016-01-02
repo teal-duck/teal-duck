@@ -35,6 +35,7 @@ import com.tealduck.game.component.UserInputComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EventManager;
+import com.tealduck.game.event.EnemyCollision;
 import com.tealduck.game.event.GoalCollision;
 import com.tealduck.game.event.PlayerCollision;
 import com.tealduck.game.input.Action;
@@ -133,14 +134,8 @@ public class EntityLoader {
 
 					if (t.getProperties().containsKey("patrolRoute")) {
 						String routeName = t.getProperties().get("patrolRoute", String.class);
-						ArrayList<Vector2> patrolRoute = world.getPatrolRoute(routeName);
-						if (patrolRoute == null) {
-							Gdx.app.log("Load", "Unknown route: " + routeName);
-						} else {
-							PatrolRouteComponent patrolRouteComponent = new PatrolRouteComponent(
-									patrolRoute);
-							entityManager.addComponent(enemyId, patrolRouteComponent);
-						}
+						EntityLoader.addPatrolRouteToEnemy(entityManager, world, routeName,
+								enemyId);
 					}
 				} else if (name.equals("Goal")) {
 					if (loadedGoal) {
@@ -255,6 +250,8 @@ public class EntityLoader {
 
 		entityManager.addComponent(playerId, new HealthComponent(EntityConstants.PLAYER_MAX_HEALTH));
 
+		entityManager.addComponent(playerId, new KnockbackComponent(EntityConstants.PLAYER_KNOCKBACK_FORCE));
+
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(playerId, EventName.COLLISION, PlayerCollision.instance);
 
@@ -280,7 +277,25 @@ public class EntityLoader {
 		entityManager.addComponent(enemyId, new KnockbackComponent(EntityConstants.ENEMY_KNOCKBACK_FORCE));
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, enemyId, location,
 				EntityConstants.ENEMY_RADIUS);
+
+		EventManager eventManager = entityEngine.getEventManager();
+		eventManager.addEvent(enemyId, EventName.COLLISION, EnemyCollision.instance);
+
 		return enemyId;
+	}
+
+
+	private static void addPatrolRouteToEnemy(EntityManager entityManager, World world, String routeName,
+			int enemyId) {
+		ArrayList<Vector2> patrolRoute = world.getPatrolRoute(routeName);
+
+		if (patrolRoute == null) {
+			Gdx.app.log("Load", "Unknown route: " + routeName);
+		} else {
+			PatrolRouteComponent patrolRouteComponent = new PatrolRouteComponent(patrolRoute,
+					EntityConstants.PAUSE_TIME);
+			entityManager.addComponent(enemyId, patrolRouteComponent);
+		}
 	}
 
 

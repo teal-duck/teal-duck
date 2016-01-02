@@ -15,11 +15,11 @@ import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.SystemManager;
+import com.tealduck.game.system.ChaseSystem;
 import com.tealduck.game.system.EntityCollisionSystem;
 import com.tealduck.game.system.GuiRenderSystem;
 import com.tealduck.game.system.InputLogicSystem;
 import com.tealduck.game.system.MovementSystem;
-import com.tealduck.game.system.PathfindingSystem;
 import com.tealduck.game.system.PatrolLogicSystem;
 import com.tealduck.game.system.WorldCollisionSystem;
 import com.tealduck.game.system.WorldRenderSystem;
@@ -100,7 +100,7 @@ public class GameScreen extends DuckScreenBase {
 	@Override
 	protected void loadSystems(SystemManager systemManager) {
 		systemManager.addSystem(new InputLogicSystem(getEntityEngine()), 0);
-		systemManager.addSystem(new PathfindingSystem(getEntityEngine()), 1);
+		systemManager.addSystem(new ChaseSystem(getEntityEngine()), 1);
 		systemManager.addSystem(new PatrolLogicSystem(getEntityEngine()), 2);
 		systemManager.addSystem(new MovementSystem(getEntityEngine()), 4);
 		systemManager.addSystem(new WorldCollisionSystem(getEntityEngine(), world), 5);

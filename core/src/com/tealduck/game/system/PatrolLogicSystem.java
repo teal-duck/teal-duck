@@ -13,15 +13,28 @@ import com.tealduck.game.engine.GameSystem;
 
 
 public class PatrolLogicSystem extends GameSystem {
-
 	public PatrolLogicSystem(EntityEngine entityEngine) {
 		super(entityEngine);
 	}
 
 
+	private float calculateDifferenceBetweenAngles(float firstAngle, float secondAngle) {
+		// TODO: Stop geese spinning 360
+		// float difference = secondAngle - firstAngle;
+		// while (difference < 0) {
+		// difference += 360;
+		// }
+		// while (difference > 360) {
+		// difference -= 360;
+		// }
+		// return difference;
+		// return ((((secondAngle - firstAngle) % 360) + 540) % 360) - 180;
+		return (((secondAngle - firstAngle) + 180) % 360) - 180;
+	}
+
+
 	@Override
 	public void update(float deltaTime) {
-
 		EntityManager entityManager = getEntityManager();
 
 		@SuppressWarnings("unchecked")
@@ -36,31 +49,54 @@ public class PatrolLogicSystem extends GameSystem {
 			PatrolRouteComponent patrolRouteComponent = entityManager.getComponent(entity,
 					PatrolRouteComponent.class);
 
-			float maxSpeed = movementComponent.maxSpeed;
+			if (patrolRouteComponent.pauseTime > 0) {
+				patrolRouteComponent.pauseTime -= deltaTime;
+				positionComponent.lookAt.rotate(patrolRouteComponent.rotPerSecond * deltaTime);
 
-			Vector2 entityPosition = positionComponent.position;
-			Vector2 targetPosition = patrolRouteComponent.getTarget();
+			} else {
+				float maxSpeed = movementComponent.maxSpeed;
 
-			// use epsilonEquals to allow for float inaccuracies
-			if (entityPosition.epsilonEquals(targetPosition, 0.00001f)) {
-				targetPosition = patrolRouteComponent.getNextVertex();
-			}
+				Vector2 entityPosition = positionComponent.position;
+				Vector2 targetPosition = patrolRouteComponent.getTarget();
 
-			Vector2 v = targetPosition.cpy().sub(entityPosition).setLength(maxSpeed);
+				if (patrolRouteComponent.previousPosition == null) {
+					patrolRouteComponent.previousPosition = entityPosition.cpy();
+				}
 
-			movementComponent.acceleration.add(v);
+				Vector2 previousPosition = patrolRouteComponent.previousPosition;
 
-			Vector2 entityToTarget = targetPosition.cpy().sub(entityPosition);
-			Vector2 nextPosition = entityPosition.cpy().mulAdd(v, deltaTime);
-			Vector2 nextToTarget = targetPosition.cpy().sub(nextPosition);
+				Vector2 previousVecToTarget = targetPosition.cpy().sub(previousPosition).nor();
+				Vector2 vecToTarget = targetPosition.cpy().sub(entityPosition);
 
-			// If we go past target in this frame, then dot product should be -1 as
-			// angle between vectors == 180deg.
-			if (entityToTarget.dot(nextToTarget) < 0) {
-				targetPosition = patrolRouteComponent.getNextVertex();
+				float distanceToTarget = vecToTarget.len();
+				vecToTarget.nor();
 
+				float dot = vecToTarget.dot(previousVecToTarget);
+				if (dot <= 0) {
+					targetPosition = patrolRouteComponent.advanceTarget();
+					patrolRouteComponent.pauseTime = patrolRouteComponent.maxPauseTime;
+					patrolRouteComponent.startRotation = positionComponent.lookAt.angle();
+
+					vecToTarget = targetPosition.cpy().sub(entityPosition);
+					patrolRouteComponent.endRotation = vecToTarget.angle();
+
+					float rotChange = calculateDifferenceBetweenAngles(
+							patrolRouteComponent.startRotation,
+							patrolRouteComponent.endRotation);
+
+					patrolRouteComponent.rotPerSecond = rotChange / patrolRouteComponent.pauseTime;
+
+				} else {
+					if (distanceToTarget < (maxSpeed * deltaTime)) {
+						maxSpeed = distanceToTarget / deltaTime;
+					}
+
+					Vector2 v = vecToTarget.setLength(maxSpeed);
+					movementComponent.acceleration.add(v);
+					positionComponent.lookAt = patrolRouteComponent.getTarget().cpy()
+							.sub(entityPosition).nor();
+				}
 			}
 		}
 	}
-
 }

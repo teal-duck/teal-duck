@@ -137,20 +137,24 @@ public class WorldRenderSystem extends GameSystem {
 				SpriteComponent.class);
 
 		for (int entity : entities) {
+			PositionComponent positionComponent = entityManager.getComponent(entity,
+					PositionComponent.class);
 			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
-			Vector2 position = entityManager.getComponent(entity, PositionComponent.class).position;
+			Vector2 position = positionComponent.position;
+			Vector2 lookAt = positionComponent.lookAt;
 
 			sprite.setPosition(position.x, position.y);
+			sprite.setRotation(lookAt.angle());
 		}
 
 		entities = entityManager.getEntitiesWithComponents(SpriteComponent.class, MovementComponent.class);
 
 		for (int entity : entities) {
 			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
-			Vector2 velocity = entityManager.getComponent(entity, MovementComponent.class).velocity;
+			// Vector2 velocity = entityManager.getComponent(entity, MovementComponent.class).velocity;
 
 			sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-			sprite.setRotation(velocity.angle());
+			// sprite.setRotation(velocity.angle());
 		}
 	}
 
@@ -180,18 +184,19 @@ public class WorldRenderSystem extends GameSystem {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		boolean useSortedRendering = false;
-		boolean debugRender = false;
+		boolean debugPatrol = true;
+		boolean debugCollision = false;
 
 		if (useSortedRendering) {
 			renderEntitiesSorted();
 		} else {
-			if (debugRender) {
+			if (debugPatrol) {
 				renderPatrolRoutes();
 			}
 
 			renderEntities(deltaTime);
 
-			if (debugRender) {
+			if (debugCollision) {
 				renderCollisionOverlay();
 			}
 		}

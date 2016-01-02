@@ -25,8 +25,8 @@
   </data>
  </layer>
  <objectgroup name="Lines" width="0" height="0">
-  <object name="test_line" type="test_line" x="320" y="3840">
-   <polyline points="0,0 0,-128 192,-128 192,0 0,0"/>
+  <object name="testRoute" type="PatrolRoute" x="256" y="3904">
+   <polyline points="0,0 0,-192 256,-192 256,0 0,0"/>
   </object>
  </objectgroup>
  <objectgroup name="Entities" width="0" height="0">
@@ -41,7 +41,7 @@
   <object name="Enemy" type="Enemy" gid="82" x="64" y="3328" width="64" height="64"/>
   <object name="Enemy" type="Enemy" gid="82" x="384" y="3840" width="64" height="64">
    <properties>
-    <property name="patrolRoute" value="test_line"/>
+    <property name="patrolRoute" value="testRoute"/>
    </properties>
   </object>
   <object name="Goal" type="Goal" gid="83" x="1792" y="3072"/>

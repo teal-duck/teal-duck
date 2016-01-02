@@ -4,16 +4,16 @@ package com.tealduck.game.component;
 import com.tealduck.game.engine.Component;
 
 
-public class PathfindingComponent extends Component {
+public class ChaseComponent extends Component {
 	public int targetEntityId;
 
 
-	public PathfindingComponent() {
+	public ChaseComponent() {
 		this(-1);
 	}
 
 
-	public PathfindingComponent(int targetEntityId) {
+	public ChaseComponent(int targetEntityId) {
 		this.targetEntityId = targetEntityId;
 	}
 

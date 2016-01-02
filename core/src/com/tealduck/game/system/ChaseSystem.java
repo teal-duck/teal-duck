@@ -5,16 +5,16 @@ import java.util.Set;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.tealduck.game.component.ChaseComponent;
 import com.tealduck.game.component.MovementComponent;
-import com.tealduck.game.component.PathfindingComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
 
 
-public class PathfindingSystem extends GameSystem {
-	public PathfindingSystem(EntityEngine entityEngine) {
+public class ChaseSystem extends GameSystem {
+	public ChaseSystem(EntityEngine entityEngine) {
 		super(entityEngine);
 	}
 
@@ -25,11 +25,10 @@ public class PathfindingSystem extends GameSystem {
 
 		@SuppressWarnings("unchecked")
 		Set<Integer> entities = getEntityManager().getEntitiesWithComponents(PositionComponent.class,
-				MovementComponent.class, PathfindingComponent.class);
+				MovementComponent.class, ChaseComponent.class);
 
 		for (int entity : entities) {
-			PathfindingComponent pathfindingComponent = entityManager.getComponent(entity,
-					PathfindingComponent.class);
+			ChaseComponent pathfindingComponent = entityManager.getComponent(entity, ChaseComponent.class);
 
 			int targetEntityId = pathfindingComponent.targetEntityId;
 			if (entityManager.entityExists(targetEntityId)
