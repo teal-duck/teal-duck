@@ -2,10 +2,10 @@ package com.tealduck.game.world;
 
 
 public class EntityConstants {
-	// TODO: Clean up constants in world
-	public static final float PLAYER_SPEED = 2500.0f;
+	// TODO: Clean up constants
+	public static final float PLAYER_SPEED = 2400.0f;
 	public static final float PLAYER_SPRINT = 1.8f;
-	public static final float ENEMY_SPEED = 2000.0f;
+	public static final float ENEMY_SPEED = 1800.0f;
 	public static final float PLAYER_RADIUS = 20;
 	public static final float ENEMY_RADIUS = 20;
 	public static final float ENEMY_KNOCKBACK_FORCE = 60000;

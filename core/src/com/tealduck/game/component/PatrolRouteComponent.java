@@ -9,9 +9,10 @@ import com.tealduck.game.engine.Component;
 
 public class PatrolRouteComponent extends Component {
 	// TODO: Maybe separate PatrolRouteComponent into 2 objects
-	private ArrayList<Vector2> route;
-	private int targetVertex;
+	public ArrayList<Vector2> route;
+	public int targetVertex;
 	public Vector2 previousPosition = null;
+	public Vector2 previousTarget = null;
 
 	public float pauseTime = 0f;
 	public float maxPauseTime = 0f;
@@ -33,7 +34,14 @@ public class PatrolRouteComponent extends Component {
 	}
 
 
+	public Vector2 peekNextTarget() {
+		int index = (targetVertex + 1) % route.size();
+		return route.get(index);
+	}
+
+
 	public Vector2 advanceTarget() {
+		previousTarget = route.get(targetVertex);
 		targetVertex = (targetVertex + 1) % route.size();
 		return route.get(targetVertex);
 	}

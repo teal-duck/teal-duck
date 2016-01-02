@@ -65,14 +65,27 @@ public class PatrolLogicSystem extends GameSystem {
 
 				Vector2 previousPosition = patrolRouteComponent.previousPosition;
 
-				Vector2 previousVecToTarget = targetPosition.cpy().sub(previousPosition).nor();
+				Vector2 previousVecToTarget = targetPosition.cpy().sub(previousPosition);
 				Vector2 vecToTarget = targetPosition.cpy().sub(entityPosition);
 
+				Vector2 vecToPreviousTarget;
+				if (patrolRouteComponent.previousTarget != null) {
+					vecToPreviousTarget = patrolRouteComponent.previousTarget.cpy()
+							.sub(entityPosition);
+				} else {
+					vecToPreviousTarget = new Vector2(1000, 1000);
+				}
+
 				float distanceToTarget = vecToTarget.len();
+				float distanceToPreviousTarget = vecToPreviousTarget.len();
+
+				previousVecToTarget.nor();
 				vecToTarget.nor();
+				vecToPreviousTarget.nor();
 
 				float dot = vecToTarget.dot(previousVecToTarget);
-				if (dot <= 0) {
+				if ((dot <= 0) && (distanceToTarget < (maxSpeed * deltaTime * 0.5f))
+						&& (distanceToPreviousTarget > (maxSpeed * deltaTime))) {
 					targetPosition = patrolRouteComponent.advanceTarget();
 					patrolRouteComponent.pauseTime = patrolRouteComponent.maxPauseTime;
 					patrolRouteComponent.startRotation = positionComponent.lookAt.angle();

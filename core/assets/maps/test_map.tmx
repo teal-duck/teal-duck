@@ -28,6 +28,9 @@
   <object name="testRoute" type="PatrolRoute" x="256" y="3904">
    <polyline points="0,0 0,-192 256,-192 256,0 0,0"/>
   </object>
+  <object name="route2" type="PatrolRoute" x="256" y="3072">
+   <polyline points="0,0 0,320 576,320 576,576 1280,576 1280,320 1472,320 1472,64 1024,64 1024,256 768,256 768,0 0,0"/>
+  </object>
  </objectgroup>
  <objectgroup name="Entities" width="0" height="0">
   <object name="Player" type="Player" gid="81" x="128" y="3968" width="64" height="64"/>
@@ -37,9 +40,13 @@
   <object name="Enemy" type="Enemy" gid="82" x="448" y="3456" width="64" height="64"/>
   <object name="Enemy" type="Enemy" gid="82" x="1216" y="3712" width="64" height="64"/>
   <object name="Enemy" type="Enemy" gid="82" x="1792" y="3392" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="82" x="768" y="3136" width="64" height="64"/>
+  <object name="Enemy" type="Enemy" gid="82" x="256" y="3072" width="64" height="64">
+   <properties>
+    <property name="patrolRoute" value="route2"/>
+   </properties>
+  </object>
   <object name="Enemy" type="Enemy" gid="82" x="64" y="3328" width="64" height="64"/>
-  <object name="Enemy" type="Enemy" gid="82" x="384" y="3840" width="64" height="64">
+  <object name="Enemy" type="Enemy" gid="82" x="256" y="3904" width="64" height="64">
    <properties>
     <property name="patrolRoute" value="testRoute"/>
    </properties>

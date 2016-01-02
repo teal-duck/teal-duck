@@ -61,6 +61,12 @@ public class EntityLoader {
 			routeVertices.add(new Vector2(polylineVertices[i * 2], polylineVertices[(i * 2) + 1]));
 		}
 
+		if (routeVertices.size() > 2) {
+			if (routeVertices.get(0).epsilonEquals(routeVertices.get(routeVertices.size() - 1), 0.1f)) {
+				routeVertices.remove(routeVertices.size() - 1);
+			}
+		}
+
 		return routeVertices;
 	}
 
