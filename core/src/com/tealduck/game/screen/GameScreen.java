@@ -57,6 +57,8 @@ public class GameScreen extends DuckScreenBase {
 		assetManager.load(AssetLocations.DUCK, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.ENEMY, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.GOAL, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.SPOTLIGHT, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.CONE_LIGHT, Texture.class, textureParameter);
 
 		assetManager.load(MapNames.TEST_MAP, TiledMap.class);
 
@@ -99,13 +101,15 @@ public class GameScreen extends DuckScreenBase {
 	 */
 	@Override
 	protected void loadSystems(SystemManager systemManager) {
+		AssetManager assetManager = getAssetManager();
 		systemManager.addSystem(new InputLogicSystem(getEntityEngine()), 0);
 		systemManager.addSystem(new ChaseSystem(getEntityEngine()), 1);
 		systemManager.addSystem(new PatrolLogicSystem(getEntityEngine()), 2);
 		systemManager.addSystem(new MovementSystem(getEntityEngine()), 4);
 		systemManager.addSystem(new WorldCollisionSystem(getEntityEngine(), world), 5);
 		systemManager.addSystem(new EntityCollisionSystem(getEntityEngine()), 6);
-		systemManager.addSystem(new WorldRenderSystem(getEntityEngine(), world), 7); // , getGuiCamera()), 7);
+		systemManager.addSystem(new WorldRenderSystem(getEntityEngine(), world,
+				(Texture) assetManager.get(AssetLocations.SPOTLIGHT)), 7); // , getGuiCamera()), 7);
 		systemManager.addSystem(new GuiRenderSystem(getEntityEngine(), getBatch(), getGuiCamera(), getFont()),
 				8);
 	}

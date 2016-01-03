@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -34,7 +35,7 @@ public class DuckGame extends Game {
 
 	private float time = 0;
 	private int frames = 0;
-	private boolean logFPS = false;
+	private boolean logFPS = true;
 
 
 	@Override
@@ -42,7 +43,7 @@ public class DuckGame extends Game {
 		Gdx.app.log("Game", "Starting game");
 
 		batch = new SpriteBatch(100);
-		batch.disableBlending();
+		// batch.disableBlending();
 
 		assetManager = new AssetManager();
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
@@ -55,7 +56,8 @@ public class DuckGame extends Game {
 
 		// TODO: Font size
 		font = new BitmapFont();
-		// font.getData().setScale(1.5f);
+		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		font.getData().setScale(1.5f);
 
 		setupControllers();
 

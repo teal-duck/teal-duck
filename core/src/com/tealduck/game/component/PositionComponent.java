@@ -11,7 +11,7 @@ public class PositionComponent extends Component {
 
 
 	public PositionComponent(Vector2 position) {
-		this(position, new Vector2(0, 1));
+		this(position, new Vector2(1, 0));
 	}
 
 

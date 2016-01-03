@@ -12,6 +12,9 @@ public class AssetLocations {
 	public static final String GRID = AssetLocations.WORLD + "grid_64x64.png";
 	public static final String GOAL = AssetLocations.ENTITIES + "goal_64x64.png";
 
+	public static final String SPOTLIGHT = AssetLocations.TEXTURES + "spotlight_512x512.png";
+	public static final String CONE_LIGHT = AssetLocations.TEXTURES + "cone_light_512x512.png";
+
 	public static final String LOADING_TEXT = AssetLocations.GUI + "loading_text.png";
 
 

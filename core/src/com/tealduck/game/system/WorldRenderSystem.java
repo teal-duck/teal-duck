@@ -10,14 +10,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.tealduck.game.Tag;
 import com.tealduck.game.collision.AABB;
 import com.tealduck.game.collision.Circle;
@@ -33,9 +37,35 @@ import com.tealduck.game.world.World;
 
 
 public class WorldRenderSystem extends GameSystem {
+	// TODO: Lighting
+	// http://www.alcove-games.com/opengl-es-2-tutorials/lightmap-shader-fire-effect-glsl/
+	// http://gamedev.stackexchange.com/questions/104785/2d-smooth-lighting-with-shadows-for-a-tile-based-game
+	// http://ncase.me/sight-and-light/
+	// http://www.gamedev.net/page/reference/index.html/_/technical/graphics-programming-and-theory/dynamic-2d-soft-shadows-r2032
+	//
+	// https://www.filterforge.com/filters/2312.jpg
+
+	// TODO: Tidy up lighting code and textures
+	// TODO: Shadows
+	// TODO: Attach lights to entities with viewcones, scale lights to viewcone FOV
+
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
 	private Batch batch;
+
+	private Texture light;
+	private FrameBuffer fbo;
+	private ShaderProgram defaultShader;
+	private ShaderProgram finalShader;
+
+	private final String vertexShader = Gdx.files.internal("shaders/vertexShader.glsl").readString();
+	private final String defaultPixelShader = Gdx.files.internal("shaders/defaultPixelShader.glsl").readString();
+	private final String finalPixelShader = Gdx.files.internal("shaders/pixelShader.glsl").readString();
+
+	public static final float ambientIntensity = 0.1f;
+	private static final float colour = 0.7f;
+	public static final Vector3 ambientColour = new Vector3(WorldRenderSystem.colour, WorldRenderSystem.colour,
+			WorldRenderSystem.colour);
 
 	private World world;
 
@@ -46,12 +76,12 @@ public class WorldRenderSystem extends GameSystem {
 
 	private float unitScale;
 
-	private final int[] wallLayer = new int[] { 0 };
+	private final int[] wallLayer = new int[] { 0, 1 };
 
 	private ShapeRenderer shapeRenderer;
 
 
-	public WorldRenderSystem(EntityEngine entityEngine, World world) { // , OrthographicCamera camera) {
+	public WorldRenderSystem(EntityEngine entityEngine, World world, Texture lightTexture) {
 		super(entityEngine);
 
 		this.world = world;
@@ -61,7 +91,7 @@ public class WorldRenderSystem extends GameSystem {
 		camera = new OrthographicCamera(); // camera;
 
 		batch = renderer.getBatch();
-		batch.disableBlending();
+		batch.enableBlending();
 
 		mapWidth = world.getMapWidth();
 		mapHeight = world.getMapHeight();
@@ -69,12 +99,31 @@ public class WorldRenderSystem extends GameSystem {
 		tileHeight = world.getTileHeight();
 
 		shapeRenderer = new ShapeRenderer();
+
+		light = lightTexture;
+
+		ShaderProgram.pedantic = false;
+		defaultShader = new ShaderProgram(vertexShader, defaultPixelShader);
+		finalShader = new ShaderProgram(vertexShader, finalPixelShader);
+
+		finalShader.begin();
+		finalShader.setUniformi("u_lightmap", 1);
+		finalShader.setUniformf("ambientColor", WorldRenderSystem.ambientColour.x,
+				WorldRenderSystem.ambientColour.y, WorldRenderSystem.ambientColour.z,
+				WorldRenderSystem.ambientIntensity);
+		finalShader.end();
 	}
 
 
 	public void resizeCamera(int windowWidth, int windowHeight) {
 		camera.setToOrtho(false, windowWidth * renderer.getUnitScale(), windowHeight * renderer.getUnitScale());
 		camera.update();
+
+		fbo = new FrameBuffer(Format.RGBA8888, windowWidth, windowHeight, false);
+
+		finalShader.begin();
+		finalShader.setUniformf("resolution", windowWidth, windowHeight);
+		finalShader.end();
 	}
 
 
@@ -159,19 +208,65 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
-	/**
-	 * Redraws all entities with sprites to the screen.
-	 *
-	 * @param deltaTime
-	 *                time elapsed since last update
-	 */
-	@Override
-	public void update(float deltaTime) {
-		updateSprites();
+	private void renderLightsToFrameBuffer() {
+		fbo.begin();
+		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		clearScreen();
+		batch.setProjectionMatrix(camera.combined);
+		batch.setShader(defaultShader);
+		batch.begin();
+		batch.setColor(1f, 1f, 1f, 1f);
 
+		// batch.setBlendFunction(GL20.GL_SRC_COLOR, GL20.GL_DST_ALPHA);
+		// batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		// batch.setColor(Color.GREEN);
+		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+
+		boolean cone = false;
+		int lightSize = 512;
+		int halfLightSize = lightSize / 2;
+		float scale = 0.5f;
+
+		float coneOriginX = halfLightSize;
+		float coneOriginY = lightSize;
+
+		float circleOriginX = halfLightSize;
+		float circleOriginY = halfLightSize;
+
+		for (int entity : getEntityManager().getEntitiesWithComponent(PositionComponent.class)) {
+			// TODO: Test if entity is on/near screen before rendering light
+			PositionComponent positionComponent = getEntityManager().getComponent(entity,
+					PositionComponent.class);
+			Vector2 position = positionComponent.position;
+			Vector2 lookAt = positionComponent.lookAt;
+			float x = position.x;
+			float y = position.y;
+			float angle = lookAt.angle();
+
+			if (cone) {
+				batch.draw(light, (x + 32f) - halfLightSize, (y + 32f) - lightSize, coneOriginX,
+						coneOriginY, lightSize, lightSize, scale, scale, angle + 90f, 0, 0,
+						lightSize, lightSize, false, false);
+			} else {
+				batch.draw(light, (x + 32f) - halfLightSize, (y + 32f) - halfLightSize, circleOriginX,
+						circleOriginY, lightSize, lightSize, scale, scale, 0f, 0, 0, lightSize,
+						lightSize, false, false);
+			}
+		}
+		// batch.draw(light, x + 32f - 256f, y + 32f - 512f);
+		batch.end();
+		batch.setColor(Color.WHITE);
+		fbo.end();
+	}
+
+
+	private void clearScreen() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	}
 
+
+	private void updateCamera() {
 		try {
 			centerCameraToEntity(getEntityTagManager().getEntity(Tag.PLAYER));
 		} catch (NullPointerException e) {
@@ -179,12 +274,24 @@ public class WorldRenderSystem extends GameSystem {
 
 		clampCamera();
 		camera.update();
+	}
+
+
+	private void renderWorld() {
+		batch.setShader(finalShader);
+		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
 		renderer.setView(camera);
+		fbo.getColorBufferTexture().bind(1);
+		light.bind(0);
 		renderer.render(wallLayer);
 		shapeRenderer.setProjectionMatrix(camera.combined);
+	}
 
+
+	private void renderEntities(float deltaTime) {
 		boolean useSortedRendering = false;
-		boolean debugPatrol = true;
+		boolean debugPatrol = false;
 		boolean debugCollision = false;
 
 		if (useSortedRendering) {
@@ -194,12 +301,29 @@ public class WorldRenderSystem extends GameSystem {
 				renderPatrolRoutes();
 			}
 
-			renderEntities(deltaTime);
+			renderAllEntities(deltaTime);
 
 			if (debugCollision) {
 				renderCollisionOverlay();
 			}
 		}
+	}
+
+
+	/**
+	 * Redraws all entities with sprites to the screen.
+	 *
+	 * @param deltaTime
+	 *                time elapsed since last update
+	 */
+	@Override
+	public void update(float deltaTime) {
+		updateSprites();
+		renderLightsToFrameBuffer();
+		clearScreen();
+		updateCamera();
+		renderWorld();
+		renderEntities(deltaTime);
 	}
 
 
@@ -221,7 +345,7 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
-	private void renderEntities(float deltaTime) {
+	private void renderAllEntities(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
 
 		batch.begin();

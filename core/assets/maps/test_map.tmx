@@ -14,6 +14,11 @@
  <tileset firstgid="81" name="entity_tiles" tilewidth="64" tileheight="64">
   <image source="../textures/world/entity_tiles.png" width="256" height="256"/>
  </tileset>
+ <layer name="Floor" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt1EEKAyEMBdBcyftfrtuh0KmmDsb6HsgsFIdvohEAAAAAAAAAAAAAnKZdxona23c3bcLI7vOvevJVyb+i/hHyy1/DjPzZ86pm5F3+lu9ubXxYt8IT/d47X4H8ufy/7Buxd/6R/rj7bwWzapo5nwpm3Xn5+3r+lPy71P9qpJaZvSrmn3Wns+/Aak++c/LXz3+yF7ahWuw=
+  </data>
+ </layer>
  <layer name="Walls" width="64" height="64">
   <data encoding="base64" compression="zlib">
    eJztmusOgjAMhasiRiPqX9+eR9UmLmmWXQoMNuw5yVIiY/PjbN2yMBDR0Wh5fEtHdtUR+MFvV+AHP/jtCvzgB79dgR/84Lcr8IMf/HYFfvCD367AD37w2xX4wQ9+uwI/+MFvV+AHP/jtCvzgL8V/LtTOlirJH2vnnYk1xf/5SmW+Jb6I65Po4xCpz98e134Hzv+cR5oYaocy9Wtri/Gfqt+K/0vFHD3peVrzPzRutWM/ply9VvyX+U+TtzT5i38fIu26+y35P/fZpfdb8H8Jf249iOkf/H9Sen7cvPry3fjrZS35/Ak/Rxk16sV1KJf476eGfH5lzhtL9d2a/1K+5xxLztk9zv+fZ6Omrlz/QutgS/5r5rfzn2NobPgxtT64vmsrtf+RcnnhTun8IMsr0/eU/fJawvlPmH+PZzlzFOMvdSZQIq4p5gzt46bM8z0XzlEflsoXeg==
