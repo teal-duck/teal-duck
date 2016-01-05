@@ -16,4 +16,7 @@ public abstract class Weapon {
 	public String toString() {
 		return "Weapon()";
 	}
+
+
+	public abstract int getClipSize();
 }

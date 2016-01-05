@@ -223,6 +223,9 @@ public class EntityLoader {
 		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
 		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
 		controls.addKeyForAction(Action.FIRE, Keys.SPACE);
+		// TODO: Add mouse click for firing
+
+		controls.addKeyForAction(Action.RELOAD, Keys.R);
 
 		float deadzone = 0.2f;
 		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_X,
@@ -245,6 +248,7 @@ public class EntityLoader {
 				deadzone);
 		controls.addControllerForAction(Action.FIRE, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_R2,
 				deadzone);
+		controls.addControllerForAction(Action.RELOAD, ControllerBindingType.BUTTON, PS4.BUTTON_L1);
 
 		return controls;
 	}
@@ -281,8 +285,10 @@ public class EntityLoader {
 
 		entityManager.addComponent(playerId, new KnockbackComponent(EntityConstants.PLAYER_KNOCKBACK_FORCE));
 
-		entityManager.addComponent(playerId, new WeaponComponent(new MachineGun(bulletTexture),
-				EntityConstants.START_AMMO, EntityConstants.COOLDOWN_TIME));
+		entityManager.addComponent(playerId,
+				new WeaponComponent(new MachineGun(bulletTexture),
+						EntityConstants.MACHINE_GUN_CLIP_SIZE, EntityConstants.START_EXTRA_AMMO,
+						EntityConstants.COOLDOWN_TIME, EntityConstants.RELOAD_TIME));
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(playerId, EventName.COLLISION, PlayerCollision.instance);

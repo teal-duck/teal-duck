@@ -7,12 +7,8 @@ From assessment doc:
 
 
 Required to do for assessment 2:
-- Player shooting
-	- Points toward mouse on screen or in direction of right stick on controller
-	- Click/right trigger to shoot
-	- Just implement 1 weapon for assessment 2, but don't hardcode it so more can be added in assessment 4
-	- Starts with little bit of ammo cause it's a stealth game
-	- Needs to show ammo on screen
+- Needs to show ammo on screen
+- Health bar for enemies
 	
 - Ammo + health pickups
 	- Easy to code (just got a position, sprite and collision component)

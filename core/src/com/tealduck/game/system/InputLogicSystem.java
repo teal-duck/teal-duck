@@ -105,23 +105,27 @@ public class InputLogicSystem extends GameSystem {
 
 			positionComponent.lookAt.nor();
 
+			// TODO: Move weapon logic into its own system
 			if (entityManager.entityHasComponent(entity, WeaponComponent.class)) {
 				WeaponComponent weaponComponent = entityManager.getComponent(entity,
 						WeaponComponent.class);
-				weaponComponent.cooldownTime -= deltaTime;
-				if (weaponComponent.cooldownTime < 0) {
-					weaponComponent.cooldownTime = 0;
-				}
+				weaponComponent.doCooldown(deltaTime);
+				weaponComponent.doReload(deltaTime);
 
 				float fireState = controls.getStateForAction(Action.FIRE, controller);
 
-				if (fireState != 0) {
+				if ((fireState != 0) || Gdx.input.isButtonPressed(0)) {
 					// TODO: Calculate position to shoot from
 					Vector2 shootPosition = positionComponent.position.cpy();
 					Vector2 shootDirection = positionComponent.lookAt.cpy().nor();
 					shootPosition.mulAdd(shootDirection, 20f);
 					weaponComponent.fireWeapon(getEntityEngine(), entity, shootPosition,
 							shootDirection);
+				}
+
+				float reloadState = controls.getStateForAction(Action.RELOAD, controller);
+				if (reloadState != 0) {
+					weaponComponent.startReloading();
 				}
 			}
 		}

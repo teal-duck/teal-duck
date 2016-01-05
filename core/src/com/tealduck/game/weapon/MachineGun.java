@@ -39,34 +39,47 @@ public class MachineGun extends Weapon {
 
 		EntityManager entityManager = entityEngine.getEntityManager();
 
-		int bulletId = entityManager.createEntity();
+		int bulletsFired = 0;
 
-		entityManager.addComponent(bulletId, new PositionComponent(position, direction));
+		while (bulletsFired < ammoRequiredToFire()) {
+			int bulletId = entityManager.createEntity();
 
-		float bulletSpeed = EntityConstants.BULLET_SPEED;
-		entityManager.addComponent(bulletId,
-				new MovementComponent(direction.cpy().scl(bulletSpeed), bulletSpeed, 0, 1));
+			entityManager.addComponent(bulletId, new PositionComponent(position, direction));
 
-		entityManager.addComponent(bulletId, new SpriteComponent(bulletTexture));
+			float bulletSpeed = EntityConstants.BULLET_SPEED;
+			entityManager.addComponent(bulletId,
+					new MovementComponent(direction.cpy().scl(bulletSpeed), bulletSpeed, 0, 1));
 
-		int bulletRadius = EntityConstants.BULLET_RADIUS;
-		EntityLoader.addEntityCircleCollisionComponent(entityManager, bulletId, position, bulletRadius);
+			entityManager.addComponent(bulletId, new SpriteComponent(bulletTexture));
 
-		entityManager.addComponent(bulletId, new BulletComponent(shooterId));
+			int bulletRadius = EntityConstants.BULLET_RADIUS;
+			EntityLoader.addEntityCircleCollisionComponent(entityManager, bulletId, position, bulletRadius);
 
-		entityManager.addComponent(bulletId, new KnockbackComponent(EntityConstants.BULLET_KNOCKBACK_FORCE));
+			entityManager.addComponent(bulletId, new BulletComponent(shooterId));
 
-		entityManager.addComponent(bulletId, new DamageComponent(1));
+			entityManager.addComponent(bulletId,
+					new KnockbackComponent(EntityConstants.BULLET_KNOCKBACK_FORCE));
 
-		EventManager eventManager = entityEngine.getEventManager();
-		eventManager.addEvent(bulletId, EventName.COLLISION, BulletCollision.instance);
+			entityManager.addComponent(bulletId, new DamageComponent(1));
 
-		return 1;
+			EventManager eventManager = entityEngine.getEventManager();
+			eventManager.addEvent(bulletId, EventName.COLLISION, BulletCollision.instance);
+
+			bulletsFired += 1;
+		}
+
+		return bulletsFired;
 	}
 
 
 	@Override
 	public String toString() {
 		return "MachineGun()";
+	}
+
+
+	@Override
+	public int getClipSize() {
+		return EntityConstants.MACHINE_GUN_CLIP_SIZE;
 	}
 }
