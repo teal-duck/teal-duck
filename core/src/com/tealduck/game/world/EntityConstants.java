@@ -1,6 +1,9 @@
 package com.tealduck.game.world;
 
 
+import com.badlogic.gdx.math.Vector3;
+
+
 public class EntityConstants {
 	// TODO: Clean up constants
 	public static final float PLAYER_SPEED = 2400.0f;
@@ -15,10 +18,15 @@ public class EntityConstants {
 	public static final float PAUSE_TIME = 0.5f;
 
 	public static final int START_AMMO = 10000;
-	public static final float COOLDOWN_TIME = 0.1f;
-	public static final float BULLET_SPEED = 1000f; // 3000f;
+	public static final float COOLDOWN_TIME = 0.15f;
+	public static final float BULLET_SPEED = 900f; // 3000f;
 	public static final int BULLET_RADIUS = 12;
 	public static final float BULLET_KNOCKBACK_FORCE = 20000;
 
 	public static final boolean USE_CONE_LIGHTS = true;
+
+	public static final float AMBIENT_INTENSITY = 0.1f;
+	private static final float colour = 0.8f;
+	public static final Vector3 AMBIENT_COLOUR = new Vector3(EntityConstants.colour, EntityConstants.colour,
+			EntityConstants.colour);
 }

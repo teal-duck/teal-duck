@@ -118,12 +118,13 @@ public class InputLogicSystem extends GameSystem {
 				if (fireState != 0) {
 					// TODO: Calculate position to shoot from
 					Vector2 shootPosition = positionComponent.position.cpy();
-					// shootPosition.add(32, 32);
-
+					Vector2 shootDirection = positionComponent.lookAt.cpy().nor();
+					shootPosition.mulAdd(shootDirection, 20f);
 					weaponComponent.fireWeapon(getEntityEngine(), entity, shootPosition,
-							positionComponent.lookAt.cpy());
+							shootDirection);
 				}
 			}
 		}
 	}
+
 }

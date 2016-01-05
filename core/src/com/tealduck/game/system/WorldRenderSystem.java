@@ -21,8 +21,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+import com.tealduck.game.AssetLocations;
 import com.tealduck.game.Tag;
+import com.tealduck.game.TextureMap;
 import com.tealduck.game.collision.AABB;
 import com.tealduck.game.collision.Circle;
 import com.tealduck.game.collision.CollisionShape;
@@ -31,6 +32,7 @@ import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.ViewconeComponent;
+import com.tealduck.game.component.WeaponComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
@@ -55,7 +57,9 @@ public class WorldRenderSystem extends GameSystem {
 	private OrthographicCamera camera;
 	private Batch batch;
 
-	private Texture lightTexture;
+	// private Texture lightTexture;
+	private Texture coneTexture;
+	private Texture pointTexture;
 	private FrameBuffer fbo;
 	private ShaderProgram defaultShader;
 	private ShaderProgram lightShader;
@@ -63,11 +67,6 @@ public class WorldRenderSystem extends GameSystem {
 	private final String vertexShader = Gdx.files.internal("shaders/vertexShader.glsl").readString();
 	private final String defaultPixelShader = Gdx.files.internal("shaders/defaultPixelShader.glsl").readString();
 	private final String finalPixelShader = Gdx.files.internal("shaders/pixelShader.glsl").readString();
-
-	private static final float ambientIntensity = 0.1f;
-	private static final float colour = 0.7f;
-	private static final Vector3 ambientColour = new Vector3(WorldRenderSystem.colour, WorldRenderSystem.colour,
-			WorldRenderSystem.colour);
 
 	private boolean debugPatrol = false;
 	private boolean debugCollision = false;
@@ -81,19 +80,19 @@ public class WorldRenderSystem extends GameSystem {
 
 	private float unitScale;
 
-	private final int[] wallLayer = new int[] { 0, 1 };
+	private final int[] mapRenderLayers = new int[] { 0, 1 };
 
 	private ShapeRenderer shapeRenderer;
 
 
-	public WorldRenderSystem(EntityEngine entityEngine, World world, Texture lightTexture) {
+	public WorldRenderSystem(EntityEngine entityEngine, World world, TextureMap textureMap) {
 		super(entityEngine);
 
 		this.world = world;
 		TiledMap tiledMap = world.getTiledMap();
 		unitScale = 1 / 1;
 		renderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
-		camera = new OrthographicCamera(); // camera;
+		camera = new OrthographicCamera();
 
 		batch = renderer.getBatch();
 		batch.enableBlending();
@@ -105,7 +104,8 @@ public class WorldRenderSystem extends GameSystem {
 
 		shapeRenderer = new ShapeRenderer();
 
-		this.lightTexture = lightTexture;
+		coneTexture = textureMap.getTexture(AssetLocations.CONE_LIGHT);
+		pointTexture = textureMap.getTexture(AssetLocations.POINT_LIGHT);
 
 		ShaderProgram.pedantic = false;
 		defaultShader = new ShaderProgram(vertexShader, defaultPixelShader);
@@ -113,9 +113,9 @@ public class WorldRenderSystem extends GameSystem {
 
 		lightShader.begin();
 		lightShader.setUniformi("u_lightmap", 1);
-		lightShader.setUniformf("ambientColor", WorldRenderSystem.ambientColour.x,
-				WorldRenderSystem.ambientColour.y, WorldRenderSystem.ambientColour.z,
-				WorldRenderSystem.ambientIntensity);
+		lightShader.setUniformf("ambientColor", EntityConstants.AMBIENT_COLOUR.x,
+				EntityConstants.AMBIENT_COLOUR.y, EntityConstants.AMBIENT_COLOUR.z,
+				EntityConstants.AMBIENT_INTENSITY);
 		lightShader.end();
 	}
 
@@ -218,13 +218,15 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
-	private void renderLightsToFrameBuffer() {
+	@SuppressWarnings("unchecked")
+	private void renderLightsToFrameBuffer(float deltaTime) {
 		fbo.begin();
 		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		clearScreen();
 		batch.setProjectionMatrix(camera.combined);
 		batch.setShader(defaultShader);
 		batch.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setColor(1f, 1f, 1f, 1f);
 
 		// batch.setBlendFunction(GL20.GL_SRC_COLOR, GL20.GL_DST_ALPHA);
@@ -235,7 +237,7 @@ public class WorldRenderSystem extends GameSystem {
 		boolean cone = EntityConstants.USE_CONE_LIGHTS;
 		int lightSize = 512;
 		int halfLightSize = lightSize / 2;
-		float scale = 0.5f;
+		float lightScale = 0.5f;
 
 		float coneOriginX = halfLightSize;
 		float coneOriginY = lightSize;
@@ -243,7 +245,6 @@ public class WorldRenderSystem extends GameSystem {
 		float circleOriginX = halfLightSize;
 		float circleOriginY = halfLightSize;
 
-		@SuppressWarnings("unchecked")
 		Set<Integer> entities = getEntityManager().getEntitiesWithComponents(PositionComponent.class,
 				ViewconeComponent.class);
 		for (int entity : entities) {
@@ -257,13 +258,36 @@ public class WorldRenderSystem extends GameSystem {
 			float angle = lookAt.angle();
 
 			if (cone) {
-				batch.draw(lightTexture, (x + 32f) - halfLightSize, (y + 32f) - lightSize, coneOriginX,
-						coneOriginY, lightSize, lightSize, scale, scale, angle + 90f, 0, 0,
-						lightSize, lightSize, false, false);
+				batch.draw(coneTexture, (x + 32f) - halfLightSize, (y + 32f) - lightSize, coneOriginX,
+						coneOriginY, lightSize, lightSize, lightScale, lightScale, angle + 90f,
+						0, 0, lightSize, lightSize, false, false);
 			} else {
-				batch.draw(lightTexture, (x + 32f) - halfLightSize, (y + 32f) - halfLightSize,
-						circleOriginX, circleOriginY, lightSize, lightSize, scale, scale, 0f, 0,
-						0, lightSize, lightSize, false, false);
+				batch.draw(pointTexture, (x + 32f) - halfLightSize, (y + 32f) - halfLightSize,
+						circleOriginX, circleOriginY, lightSize, lightSize, lightScale,
+						lightScale, 0f, 0, 0, lightSize, lightSize, false, false);
+			}
+		}
+
+		lightScale = 0.1f;
+		entities = getEntityManager().getEntitiesWithComponents(PositionComponent.class, WeaponComponent.class);
+		for (int entity : entities) {
+			WeaponComponent weaponComponent = getEntityManager().getComponent(entity,
+					WeaponComponent.class);
+			if (weaponComponent.justFired) {
+				weaponComponent.justFired = false;
+				Vector2 position = weaponComponent.fireLocation;
+				Vector2 direction = weaponComponent.fireDirection;
+
+				float x = position.x;
+				float y = position.y;
+				float angle = direction.angle();
+
+				batch.draw(coneTexture, (x + 32f) - halfLightSize, (y + 32f) - lightSize, coneOriginX,
+						coneOriginY, lightSize, lightSize, lightScale, lightScale, angle + 90f,
+						0, 0, lightSize, lightSize, false, false);
+				// batch.draw(pointTexture, (x + 32f) - halfLightSize, (y + 32f) - halfLightSize,
+				// circleOriginX, circleOriginY, lightSize, lightSize, lightScale,
+				// lightScale, 0f, 0, 0, lightSize, lightSize, false, false);
 			}
 		}
 		// batch.draw(light, x + 32f - 256f, y + 32f - 512f);
@@ -296,8 +320,9 @@ public class WorldRenderSystem extends GameSystem {
 
 		renderer.setView(camera);
 		fbo.getColorBufferTexture().bind(1);
-		lightTexture.bind(0);
-		renderer.render(wallLayer);
+		// Gdx.gl.glActiveTexture(1);
+		pointTexture.bind(0);
+		renderer.render(mapRenderLayers);
 		shapeRenderer.setProjectionMatrix(camera.combined);
 	}
 
@@ -330,7 +355,7 @@ public class WorldRenderSystem extends GameSystem {
 	@Override
 	public void update(float deltaTime) {
 		updateSprites();
-		renderLightsToFrameBuffer();
+		renderLightsToFrameBuffer(deltaTime);
 		clearScreen();
 		updateCamera();
 		renderWorld();

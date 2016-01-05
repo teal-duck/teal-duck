@@ -1,7 +1,7 @@
 package com.tealduck.game.engine;
 
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 
 /**
@@ -13,7 +13,7 @@ public class EntityEngine {
 	private EntityTagManager entityTagManager;
 	private EventManager eventManager;
 
-	private ArrayList<Integer> entitiesToRemove;
+	private HashSet<Integer> entitiesToRemove;
 
 
 	public EntityEngine() {
@@ -21,7 +21,7 @@ public class EntityEngine {
 		entityTagManager = new EntityTagManager();
 		eventManager = new EventManager(this);
 
-		entitiesToRemove = new ArrayList<Integer>();
+		entitiesToRemove = new HashSet<Integer>();
 	}
 
 

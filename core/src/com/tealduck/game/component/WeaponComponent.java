@@ -15,11 +15,19 @@ public class WeaponComponent extends Component {
 	public float maxCooldownTime;
 	public float cooldownTime = 0;
 
+	// TODO: Improve muzzle flash handling
+	public boolean justFired = false;
+	public Vector2 fireLocation;
+	public Vector2 fireDirection;
+
 
 	public WeaponComponent(Weapon weapon, int ammo, float maxCooldownTime) {
 		this.weapon = weapon;
 		this.ammo = ammo;
 		this.maxCooldownTime = maxCooldownTime;
+
+		fireLocation = new Vector2(0, 0);
+		fireDirection = new Vector2(0, 0);
 	}
 
 
@@ -34,6 +42,10 @@ public class WeaponComponent extends Component {
 		cooldownTime = maxCooldownTime;
 		int ammoUsed = weapon.fire(entityEngine, shooterId, position, direction);
 		ammo -= ammoUsed;
+
+		justFired = true;
+		fireLocation.set(position);
+		fireDirection.set(direction);
 	}
 
 

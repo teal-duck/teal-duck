@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.EventName;
 import com.tealduck.game.component.BulletComponent;
+import com.tealduck.game.component.DamageComponent;
 import com.tealduck.game.component.KnockbackComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
@@ -54,6 +55,8 @@ public class MachineGun extends Weapon {
 		entityManager.addComponent(bulletId, new BulletComponent(shooterId));
 
 		entityManager.addComponent(bulletId, new KnockbackComponent(EntityConstants.BULLET_KNOCKBACK_FORCE));
+
+		entityManager.addComponent(bulletId, new DamageComponent(1));
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(bulletId, EventName.COLLISION, BulletCollision.instance);

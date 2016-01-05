@@ -3,8 +3,6 @@ package com.tealduck.game.event;
 
 import com.badlogic.gdx.Gdx;
 import com.tealduck.game.collision.Intersection;
-import com.tealduck.game.component.KnockbackComponent;
-import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.IEvent;
@@ -29,17 +27,9 @@ public class EnemyCollision implements IEvent {
 
 		EntityManager entityManager = entityEngine.getEntityManager();
 
-		if (entityManager.entityHasComponent(sender, KnockbackComponent.class)
-				&& entityManager.entityHasComponent(receiver, MovementComponent.class)) {
-			KnockbackComponent knockbackComponent = entityManager.getComponent(sender,
-					KnockbackComponent.class);
-			MovementComponent movementComponent = entityManager.getComponent(receiver,
-					MovementComponent.class);
+		CollisionEvents.doKnockback(entityManager, sender, receiver, intersection);
 
-			// TODO: Calculate knockback from mass
-			float knockbackAmount = knockbackComponent.knockbackForce;
-			movementComponent.acceleration.add(intersection.normal.cpy().scl(knockbackAmount));
-		}
+		CollisionEvents.doDamage(entityManager, sender, receiver);
 
 		return false;
 	}

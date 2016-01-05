@@ -312,6 +312,8 @@ public class EntityLoader {
 
 		entityManager.addComponent(enemyId, new ViewconeComponent());
 
+		entityManager.addComponent(enemyId, new HealthComponent(3));
+
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(enemyId, EventName.COLLISION, EnemyCollision.instance);
 
