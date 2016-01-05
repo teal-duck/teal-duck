@@ -210,6 +210,42 @@ public class EntityLoader {
 	}
 
 
+	private static ControlMap loadPlayerControls() {
+		ControlMap controls = new ControlMap();
+
+		controls.addKeyForAction(Action.RIGHT, Keys.D, Keys.RIGHT);
+		controls.addKeyForAction(Action.LEFT, Keys.A, Keys.LEFT);
+		controls.addKeyForAction(Action.UP, Keys.W, Keys.UP);
+		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
+		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
+		controls.addKeyForAction(Action.FIRE, Keys.SPACE);
+
+		float deadzone = 0.2f;
+		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_X,
+				deadzone);
+		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_X,
+				deadzone);
+		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_Y,
+				deadzone);
+		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_Y,
+				deadzone);
+		controls.addControllerForAction(Action.SPRINT, ControllerBindingType.BUTTON, PS4.BUTTON_R1);
+
+		controls.addControllerForAction(Action.LOOK_RIGHT, ControllerBindingType.AXIS_POSITIVE,
+				PS4.AXIS_RIGHT_X, deadzone);
+		controls.addControllerForAction(Action.LOOK_LEFT, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_RIGHT_X,
+				deadzone);
+		controls.addControllerForAction(Action.LOOK_UP, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_RIGHT_Y,
+				deadzone);
+		controls.addControllerForAction(Action.LOOK_DOWN, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_RIGHT_Y,
+				deadzone);
+		controls.addControllerForAction(Action.FIRE, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_R2,
+				deadzone);
+
+		return controls;
+	}
+
+
 	/**
 	 * @param entityManager
 	 * @param entityTagManager
@@ -227,25 +263,7 @@ public class EntityLoader {
 		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0),
 				EntityConstants.PLAYER_SPEED, EntityConstants.PLAYER_SPRINT));
 
-		ControlMap controls = new ControlMap();
-
-		controls.addKeyForAction(Action.RIGHT, Keys.D, Keys.RIGHT);
-		controls.addKeyForAction(Action.LEFT, Keys.A, Keys.LEFT);
-		controls.addKeyForAction(Action.UP, Keys.W, Keys.UP);
-		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
-		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
-
-		float deadzone = 0.2f;
-		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_X,
-				deadzone);
-		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_X,
-				deadzone);
-		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_Y,
-				deadzone);
-		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_Y,
-				deadzone);
-		controls.addControllerForAction(Action.SPRINT, ControllerBindingType.BUTTON, PS4.BUTTON_R1);
-
+		ControlMap controls = EntityLoader.loadPlayerControls();
 		UserInputComponent uic = new UserInputComponent(controls, ControllerHelper.getFirstControllerOrNull());
 		Gdx.app.log("Controls", uic.controls.toString());
 		entityManager.addComponent(playerId, uic);

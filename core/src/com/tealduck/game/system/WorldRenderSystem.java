@@ -53,18 +53,18 @@ public class WorldRenderSystem extends GameSystem {
 	private OrthographicCamera camera;
 	private Batch batch;
 
-	private Texture light;
+	private Texture lightTexture;
 	private FrameBuffer fbo;
 	private ShaderProgram defaultShader;
-	private ShaderProgram finalShader;
+	private ShaderProgram lightShader;
 
 	private final String vertexShader = Gdx.files.internal("shaders/vertexShader.glsl").readString();
 	private final String defaultPixelShader = Gdx.files.internal("shaders/defaultPixelShader.glsl").readString();
 	private final String finalPixelShader = Gdx.files.internal("shaders/pixelShader.glsl").readString();
 
-	public static final float ambientIntensity = 0.1f;
+	private static final float ambientIntensity = 0.1f;
 	private static final float colour = 0.7f;
-	public static final Vector3 ambientColour = new Vector3(WorldRenderSystem.colour, WorldRenderSystem.colour,
+	private static final Vector3 ambientColour = new Vector3(WorldRenderSystem.colour, WorldRenderSystem.colour,
 			WorldRenderSystem.colour);
 
 	private World world;
@@ -100,18 +100,23 @@ public class WorldRenderSystem extends GameSystem {
 
 		shapeRenderer = new ShapeRenderer();
 
-		light = lightTexture;
+		this.lightTexture = lightTexture;
 
 		ShaderProgram.pedantic = false;
 		defaultShader = new ShaderProgram(vertexShader, defaultPixelShader);
-		finalShader = new ShaderProgram(vertexShader, finalPixelShader);
+		lightShader = new ShaderProgram(vertexShader, finalPixelShader);
 
-		finalShader.begin();
-		finalShader.setUniformi("u_lightmap", 1);
-		finalShader.setUniformf("ambientColor", WorldRenderSystem.ambientColour.x,
+		lightShader.begin();
+		lightShader.setUniformi("u_lightmap", 1);
+		lightShader.setUniformf("ambientColor", WorldRenderSystem.ambientColour.x,
 				WorldRenderSystem.ambientColour.y, WorldRenderSystem.ambientColour.z,
 				WorldRenderSystem.ambientIntensity);
-		finalShader.end();
+		lightShader.end();
+	}
+
+
+	public OrthographicCamera getCamera() {
+		return camera;
 	}
 
 
@@ -121,9 +126,9 @@ public class WorldRenderSystem extends GameSystem {
 
 		fbo = new FrameBuffer(Format.RGBA8888, windowWidth, windowHeight, false);
 
-		finalShader.begin();
-		finalShader.setUniformf("resolution", windowWidth, windowHeight);
-		finalShader.end();
+		lightShader.begin();
+		lightShader.setUniformf("resolution", windowWidth, windowHeight);
+		lightShader.end();
 	}
 
 
@@ -244,13 +249,13 @@ public class WorldRenderSystem extends GameSystem {
 			float angle = lookAt.angle();
 
 			if (cone) {
-				batch.draw(light, (x + 32f) - halfLightSize, (y + 32f) - lightSize, coneOriginX,
+				batch.draw(lightTexture, (x + 32f) - halfLightSize, (y + 32f) - lightSize, coneOriginX,
 						coneOriginY, lightSize, lightSize, scale, scale, angle + 90f, 0, 0,
 						lightSize, lightSize, false, false);
 			} else {
-				batch.draw(light, (x + 32f) - halfLightSize, (y + 32f) - halfLightSize, circleOriginX,
-						circleOriginY, lightSize, lightSize, scale, scale, 0f, 0, 0, lightSize,
-						lightSize, false, false);
+				batch.draw(lightTexture, (x + 32f) - halfLightSize, (y + 32f) - halfLightSize,
+						circleOriginX, circleOriginY, lightSize, lightSize, scale, scale, 0f, 0,
+						0, lightSize, lightSize, false, false);
 			}
 		}
 		// batch.draw(light, x + 32f - 256f, y + 32f - 512f);
@@ -278,12 +283,12 @@ public class WorldRenderSystem extends GameSystem {
 
 
 	private void renderWorld() {
-		batch.setShader(finalShader);
+		batch.setShader(lightShader);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		renderer.setView(camera);
 		fbo.getColorBufferTexture().bind(1);
-		light.bind(0);
+		lightTexture.bind(0);
 		renderer.render(wallLayer);
 		shapeRenderer.setProjectionMatrix(camera.combined);
 	}

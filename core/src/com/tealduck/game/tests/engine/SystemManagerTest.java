@@ -36,7 +36,7 @@ public class SystemManagerTest {
 	public void testAddSystem() {
 		// EntityEngine entityEngine = new EntityEngine(entityManager, entityTagManager, eventManager);
 
-		InputLogicSystem ils = new InputLogicSystem(entityEngine);
+		InputLogicSystem ils = new InputLogicSystem(entityEngine, null);
 		systemManager.addSystem(ils, 0);
 
 		System.out.println(systemManager);
