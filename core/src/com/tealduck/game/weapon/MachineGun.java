@@ -4,6 +4,8 @@ package com.tealduck.game.weapon;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.EventName;
+import com.tealduck.game.component.BulletComponent;
+import com.tealduck.game.component.KnockbackComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
@@ -31,7 +33,7 @@ public class MachineGun extends Weapon {
 
 
 	@Override
-	public int fire(EntityEngine entityEngine, Vector2 position, Vector2 direction) {
+	public int fire(EntityEngine entityEngine, int shooterId, Vector2 position, Vector2 direction) {
 		direction.nor();
 
 		EntityManager entityManager = entityEngine.getEntityManager();
@@ -49,9 +51,19 @@ public class MachineGun extends Weapon {
 		int bulletRadius = EntityConstants.BULLET_RADIUS;
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, bulletId, position, bulletRadius);
 
+		entityManager.addComponent(bulletId, new BulletComponent(shooterId));
+
+		entityManager.addComponent(bulletId, new KnockbackComponent(EntityConstants.BULLET_KNOCKBACK_FORCE));
+
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(bulletId, EventName.COLLISION, BulletCollision.instance);
 
 		return 1;
+	}
+
+
+	@Override
+	public String toString() {
+		return "MachineGun()";
 	}
 }

@@ -24,7 +24,7 @@ public class WeaponComponent extends Component {
 
 
 	// TODO: Maybe move weapon logic out of the component
-	public void fireWeapon(EntityEngine entityEngine, Vector2 position, Vector2 direction) {
+	public void fireWeapon(EntityEngine entityEngine, int shooterId, Vector2 position, Vector2 direction) {
 		if (cooldownTime != 0) {
 			return;
 		}
@@ -32,7 +32,13 @@ public class WeaponComponent extends Component {
 			return;
 		}
 		cooldownTime = maxCooldownTime;
-		int ammoUsed = weapon.fire(entityEngine, position, direction);
+		int ammoUsed = weapon.fire(entityEngine, shooterId, position, direction);
 		ammo -= ammoUsed;
+	}
+
+
+	@Override
+	public String toString() {
+		return "WeaponComponent(" + weapon.toString() + ", " + ammo + ", " + maxCooldownTime + ")";
 	}
 }

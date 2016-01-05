@@ -46,6 +46,6 @@ public class SpriteComponent extends Component {
 
 	@Override
 	public String toString() {
-		return "SpriteComponent(" + sprite.toString() + ")";
+		return "SpriteComponent(" + sprite.toString() + ", " + animation.toString() + ", " + stateTime + ")";
 	}
 }

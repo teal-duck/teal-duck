@@ -3,6 +3,7 @@ package com.tealduck.game.event;
 
 import com.badlogic.gdx.Gdx;
 import com.tealduck.game.collision.Intersection;
+import com.tealduck.game.component.BulletComponent;
 import com.tealduck.game.component.DamageComponent;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.KnockbackComponent;
@@ -30,6 +31,14 @@ public class PlayerCollision implements IEvent {
 		Intersection intersection = (Intersection) data;
 
 		EntityManager entityManager = entityEngine.getEntityManager();
+
+		// Don't be harmed by own bullet
+		if (entityManager.entityHasComponent(sender, BulletComponent.class)) {
+			BulletComponent bulletComponent = entityManager.getComponent(sender, BulletComponent.class);
+			if (bulletComponent.shooterId == receiver) {
+				return false;
+			}
+		}
 
 		// TODO: Remove duplicate knockback code
 		// TODO: Add randomness to knockback code

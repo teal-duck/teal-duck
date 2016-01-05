@@ -59,6 +59,6 @@ public class PatrolRouteComponent extends Component {
 
 	@Override
 	public String toString() {
-		return route.toString();
+		return "PatrolRouteComponent(" + route.toString() + ", " + maxPauseTime + ")";
 	}
 }

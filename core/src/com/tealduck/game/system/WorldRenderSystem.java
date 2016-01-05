@@ -64,10 +64,13 @@ public class WorldRenderSystem extends GameSystem {
 	private final String defaultPixelShader = Gdx.files.internal("shaders/defaultPixelShader.glsl").readString();
 	private final String finalPixelShader = Gdx.files.internal("shaders/pixelShader.glsl").readString();
 
-	private static final float ambientIntensity = 1f; // 0.1f;
+	private static final float ambientIntensity = 0.1f;
 	private static final float colour = 0.7f;
 	private static final Vector3 ambientColour = new Vector3(WorldRenderSystem.colour, WorldRenderSystem.colour,
 			WorldRenderSystem.colour);
+
+	private boolean debugPatrol = false;
+	private boolean debugCollision = false;
 
 	private World world;
 
@@ -301,8 +304,6 @@ public class WorldRenderSystem extends GameSystem {
 
 	private void renderEntities(float deltaTime) {
 		boolean useSortedRendering = false;
-		boolean debugPatrol = false;
-		boolean debugCollision = true;
 
 		if (useSortedRendering) {
 			renderEntitiesSorted();

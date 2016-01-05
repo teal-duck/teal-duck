@@ -18,4 +18,10 @@ public class HealthComponent extends Component {
 		this.maxHealth = maxHealth;
 		this.health = health;
 	}
+
+
+	@Override
+	public String toString() {
+		return "HealthComponent(" + maxHealth + ", " + health + ")";
+	}
 }

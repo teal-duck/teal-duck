@@ -20,6 +20,6 @@ public class ChaseComponent extends Component {
 
 	@Override
 	public String toString() {
-		return "PathfindingComponent(" + targetEntityId + ")";
+		return "ChaseComponent(" + targetEntityId + ")";
 	}
 }

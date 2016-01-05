@@ -120,7 +120,7 @@ public class InputLogicSystem extends GameSystem {
 					Vector2 shootPosition = positionComponent.position.cpy();
 					// shootPosition.add(32, 32);
 
-					weaponComponent.fireWeapon(getEntityEngine(), shootPosition,
+					weaponComponent.fireWeapon(getEntityEngine(), entity, shootPosition,
 							positionComponent.lookAt.cpy());
 				}
 			}

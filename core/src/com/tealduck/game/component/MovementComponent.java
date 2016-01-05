@@ -35,8 +35,8 @@ public class MovementComponent extends Component {
 
 	@Override
 	public String toString() {
-		return "MovementComponent(" + velocity.toString() + ", " + acceleration + ", " + maxSpeed + ", "
-				+ sprintScale + ")"; // ", " + friction + ")";
+		return "MovementComponent(" + velocity.toString() + ", " + maxSpeed + ", " + sprintScale + ", "
+				+ friction + ")";
 	}
 
 }

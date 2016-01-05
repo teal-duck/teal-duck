@@ -9,5 +9,11 @@ public abstract class Weapon {
 	public abstract int ammoRequiredToFire();
 
 
-	public abstract int fire(EntityEngine entityEngine, Vector2 position, Vector2 direction);
+	public abstract int fire(EntityEngine entityEngine, int shooterId, Vector2 position, Vector2 direction);
+
+
+	@Override
+	public String toString() {
+		return "Weapon()";
+	}
 }
