@@ -60,6 +60,8 @@ public class GameScreen extends DuckScreenBase {
 		assetManager.load(AssetLocations.ENEMY, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.GOAL, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.BULLET, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.AMMO_PICKUP, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.HEALTH_PICKUP, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.POINT_LIGHT, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.CONE_LIGHT, Texture.class, textureParameter);
 		// assetManager.load(AssetLocations.MUZZLE_FLASH, Texture.class, textureParameter);
@@ -84,21 +86,16 @@ public class GameScreen extends DuckScreenBase {
 		textureMap.putTextureFromAssetManager(AssetLocations.ENEMY, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.GOAL, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.BULLET, assetManager);
-		// textureMap.putTextureFromAssetManager(AssetLocations.MUZZLE_FLASH, assetManager);
+		textureMap.putTextureFromAssetManager(AssetLocations.AMMO_PICKUP, assetManager);
+		textureMap.putTextureFromAssetManager(AssetLocations.HEALTH_PICKUP, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.POINT_LIGHT, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.CONE_LIGHT, assetManager);
-
-		// duckTexture = assetManager.get(AssetLocations.DUCK);
-		// enemyTexture = assetManager.get(AssetLocations.ENEMY);
-		// goalTexture = assetManager.get(AssetLocations.GOAL);
 
 		TiledMap tiledMap = assetManager.get(MapNames.TEST_MAP);
 		world = new World(getEntityEngine(), tiledMap);
 		world.addPatrolRoutes(EntityLoader.loadPatrolRoutes(tiledMap));
 
 		EntityLoader.loadEntities(world, textureMap);
-
-		// world.loadEntities(duckTexture, enemyTexture, goalTexture);
 	}
 
 

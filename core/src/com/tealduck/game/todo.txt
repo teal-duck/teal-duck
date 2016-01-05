@@ -7,16 +7,6 @@ From assessment doc:
 
 
 Required to do for assessment 2:
-- Health bar for enemies
-	
-- Ammo + health pickups
-	- Easy to code (just got a position, sprite and collision component)
-	- Somehow store the contents of the pickup in a component
-	- In player collision event, if sender has that pickup data component
-		- Add the ammo/health to player
-		- Send event to pickup for it to kill itself/player removes it from entity manager?
-	- Randomly placed?
-	
 - Scoring
 	- Who owns the code/event for this?
 		- Bullet?
@@ -71,6 +61,7 @@ Required to do for assessment 2:
 		- Repeat for up and down
 		- One of those is randomly chosen as the patrol path
 		- Simple to do
+	- Random pickups?
 		
 - Make the game look like it's set at the uni
 	- Perhaps write code for moving from level 1 to 2, then to 3 etc

@@ -29,6 +29,7 @@ import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.KnockbackComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PatrolRouteComponent;
+import com.tealduck.game.component.PickupComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
@@ -45,6 +46,9 @@ import com.tealduck.game.input.ControlMap;
 import com.tealduck.game.input.ControllerBindingType;
 import com.tealduck.game.input.controller.ControllerHelper;
 import com.tealduck.game.input.controller.PS4;
+import com.tealduck.game.pickup.AmmoPickup;
+import com.tealduck.game.pickup.HealthPickup;
+import com.tealduck.game.pickup.Pickup;
 import com.tealduck.game.weapon.MachineGun;
 
 
@@ -120,11 +124,11 @@ public class EntityLoader {
 			if (object instanceof TiledMapTileMapObject) {
 				TiledMapTileMapObject t = (TiledMapTileMapObject) object;
 				String name = t.getName();
+
 				if (name == null) {
-					System.out.println("null name");
+					Gdx.app.log("Load", "null name");
 					continue;
 				}
-
 				float x = t.getX();
 				float y = t.getY();
 
@@ -154,6 +158,31 @@ public class EntityLoader {
 					EntityLoader.createGoal(entityEngine,
 							textureMap.getTexture(AssetLocations.GOAL), new Vector2(x, y));
 					loadedGoal = true;
+				} else if (name.equals("AmmoPickup") || name.equals("HealthPickup")) {
+					int defaultAmount = 0;
+					if (name.equals("AmmoPickup")) {
+						defaultAmount = EntityConstants.AMMO_PICKUP_DEFAULT_AMOUNT;
+					} else {
+						defaultAmount = EntityConstants.HEALTH_PICKUP_DEFAULT_AMOUNT;
+					}
+					int amount = EntityLoader.getAmountForPickup(t, defaultAmount);
+
+					Texture texture = null;
+					if (name.equals("AmmoPickup")) {
+						texture = textureMap.getTexture(AssetLocations.AMMO_PICKUP);
+					} else {
+						texture = textureMap.getTexture(AssetLocations.HEALTH_PICKUP);
+					}
+
+					Pickup contents = null;
+					if (name.equals("AmmoPickup")) {
+						contents = new AmmoPickup(amount);
+					} else {
+						contents = new HealthPickup(amount);
+					}
+
+					EntityLoader.createAmmoPickup(entityEngine, texture, new Vector2(x, y),
+							contents);
 				} else {
 					Gdx.app.log("Load", "Unknown entity name: " + name);
 				}
@@ -162,6 +191,24 @@ public class EntityLoader {
 						+ object.getName());
 			}
 		}
+	}
+
+
+	private static int getAmountForPickup(TiledMapTileMapObject t, int defaultAmount) {
+		int amount = defaultAmount;
+		if (t.getProperties().containsKey("amount")) {
+			String amountProperty = t.getProperties().get("amount", String.class);
+			try {
+				amount = Integer.parseInt(amountProperty);
+			} catch (NumberFormatException e) {
+
+				Gdx.app.log("Load", "Ammo pickup amount not valid integer, using default");
+			}
+		} else {
+			Gdx.app.log("Load", "Ammo pickup doesn't state amount, using default");
+		}
+
+		return amount;
 	}
 
 
@@ -223,7 +270,7 @@ public class EntityLoader {
 		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
 		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
 		controls.addKeyForAction(Action.FIRE, Keys.SPACE);
-		// TODO: Add mouse click for firing
+		// TODO: Add mouse click for firing to control map
 
 		controls.addKeyForAction(Action.RELOAD, Keys.R);
 
@@ -258,17 +305,17 @@ public class EntityLoader {
 	 * @param entityManager
 	 * @param entityTagManager
 	 * @param texture
-	 * @param location
+	 * @param position
 	 * @return
 	 */
-	private static int createPlayer(EntityEngine entityEngine, Texture texture, Vector2 location,
+	private static int createPlayer(EntityEngine entityEngine, Texture texture, Vector2 position,
 			Texture bulletTexture) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int playerId = entityManager.createEntityWithTag(entityEngine.getEntityTagManager(), Tag.PLAYER);
 
 		entityManager.addComponent(playerId,
 				new SpriteComponent(texture, EntityLoader.animationFromTexture(texture, 64, 64, 0.2f)));
-		entityManager.addComponent(playerId, new PositionComponent(location));
+		entityManager.addComponent(playerId, new PositionComponent(position));
 		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0),
 				EntityConstants.PLAYER_SPEED, EntityConstants.PLAYER_SPRINT));
 
@@ -277,9 +324,9 @@ public class EntityLoader {
 		Gdx.app.log("Controls", uic.controls.toString());
 		entityManager.addComponent(playerId, uic);
 
-		EntityLoader.addEntityCircleCollisionComponent(entityManager, playerId, location,
+		EntityLoader.addEntityCircleCollisionComponent(entityManager, playerId, position,
 				EntityConstants.PLAYER_RADIUS);
-		// addEntityAABBCollisionComponent(entityManager, playerId, location, new Vector2(60, 60));
+		// addEntityAABBCollisionComponent(entityManager, playerId, position, new Vector2(60, 60));
 
 		entityManager.addComponent(playerId, new HealthComponent(EntityConstants.PLAYER_MAX_HEALTH));
 
@@ -300,20 +347,20 @@ public class EntityLoader {
 	/**
 	 * @param entityManager
 	 * @param texture
-	 * @param location
+	 * @param position
 	 * @return
 	 */
-	private static int createEnemy(EntityEngine entityEngine, Texture texture, Vector2 location) {
+	private static int createEnemy(EntityEngine entityEngine, Texture texture, Vector2 position) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int enemyId = entityManager.createEntity();
 		entityManager.addComponent(enemyId,
 				new SpriteComponent(texture, EntityLoader.animationFromTexture(texture, 64, 64, 0.2f)));
-		entityManager.addComponent(enemyId, new PositionComponent(location));
+		entityManager.addComponent(enemyId, new PositionComponent(position));
 		entityManager.addComponent(enemyId,
 				new MovementComponent(new Vector2(0, 0), EntityConstants.ENEMY_SPEED));
 		entityManager.addComponent(enemyId, new DamageComponent(EntityConstants.ENEMY_DAMAGE));
 		entityManager.addComponent(enemyId, new KnockbackComponent(EntityConstants.ENEMY_KNOCKBACK_FORCE));
-		EntityLoader.addEntityCircleCollisionComponent(entityManager, enemyId, location,
+		EntityLoader.addEntityCircleCollisionComponent(entityManager, enemyId, position,
 				EntityConstants.ENEMY_RADIUS);
 
 		entityManager.addComponent(enemyId, new ViewconeComponent());
@@ -341,16 +388,31 @@ public class EntityLoader {
 	}
 
 
-	private static int createGoal(EntityEngine entityEngine, Texture texture, Vector2 location) {
+	private static int createGoal(EntityEngine entityEngine, Texture texture, Vector2 position) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int goalId = entityManager.createEntityWithTag(entityEngine.getEntityTagManager(), Tag.GOAL);
 		entityManager.addComponent(goalId, new SpriteComponent(texture));
-		entityManager.addComponent(goalId, new PositionComponent(location));
-		EntityLoader.addEntityAABBCollisionComponent(entityManager, goalId, location, new Vector2(64, 64));
+		entityManager.addComponent(goalId, new PositionComponent(position));
+		EntityLoader.addEntityAABBCollisionComponent(entityManager, goalId, position, new Vector2(64, 64));
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(goalId, EventName.COLLISION, GoalCollision.instance);
 
 		return goalId;
+	}
+
+
+	private static void createAmmoPickup(EntityEngine entityEngine, Texture texture, Vector2 position,
+			Pickup contents) {
+		EntityManager entityManager = entityEngine.getEntityManager();
+
+		int pickupId = entityManager.createEntity();
+		entityManager.addComponent(pickupId, new SpriteComponent(texture));
+		entityManager.addComponent(pickupId, new PositionComponent(position));
+
+		entityManager.addComponent(pickupId, new PickupComponent(contents));
+
+		EntityLoader.addEntityCircleCollisionComponent(entityManager, pickupId, position,
+				EntityConstants.PICKUP_RADIUS);
 	}
 }

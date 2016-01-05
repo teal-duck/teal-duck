@@ -13,6 +13,11 @@
  </tileset>
  <tileset firstgid="81" name="entity_tiles" tilewidth="64" tileheight="64">
   <image source="../textures/world/entity_tiles.png" width="256" height="256"/>
+  <tile id="3">
+   <properties>
+    <property name="test" value=""/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Floor" width="64" height="64">
   <data encoding="base64" compression="zlib">
@@ -57,5 +62,7 @@
    </properties>
   </object>
   <object name="Goal" type="Goal" gid="83" x="1792" y="3072"/>
+  <object name="AmmoPickup" type="AmmoPickup" gid="84" x="256" y="3968"/>
+  <object name="HealthPickup" type="HealthPickup" gid="85" x="256" y="3712"/>
  </objectgroup>
 </map>

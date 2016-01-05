@@ -6,7 +6,13 @@ import com.tealduck.game.component.DamageComponent;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.KnockbackComponent;
 import com.tealduck.game.component.MovementComponent;
+import com.tealduck.game.component.PickupComponent;
+import com.tealduck.game.component.WeaponComponent;
+import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
+import com.tealduck.game.pickup.AmmoPickup;
+import com.tealduck.game.pickup.HealthPickup;
+import com.tealduck.game.pickup.Pickup;
 
 
 public class CollisionEvents {
@@ -14,7 +20,7 @@ public class CollisionEvents {
 	};
 
 
-	public static void doKnockback(EntityManager entityManager, int sender, int receiver,
+	public static void handleKnockback(EntityManager entityManager, int sender, int receiver,
 			Intersection intersection) {
 		// TODO: Add randomness to knockback code
 		// TODO: Stop enemies bouncing off enemies
@@ -32,7 +38,7 @@ public class CollisionEvents {
 	}
 
 
-	public static void doDamage(EntityManager entityManager, int sender, int receiver) {
+	public static void handleDamage(EntityManager entityManager, int sender, int receiver) {
 		// TODO: Defence component
 		if (entityManager.entityHasComponent(sender, DamageComponent.class)
 				&& entityManager.entityHasComponent(receiver, HealthComponent.class)) {
@@ -44,6 +50,47 @@ public class CollisionEvents {
 			if (healthComponent.health < 0) {
 				healthComponent.health = 0;
 			}
+		}
+	}
+
+
+	public static void handlePickup(EntityEngine entityEngine, int sender, int receiver) {
+		EntityManager entityManager = entityEngine.getEntityManager();
+		if (!entityManager.entityHasComponent(sender, PickupComponent.class)) {
+			return;
+		}
+		boolean pickedUp = false;
+
+		PickupComponent pickupComponent = entityManager.getComponent(sender, PickupComponent.class);
+		Pickup contents = pickupComponent.contents;
+
+		if (contents instanceof AmmoPickup) {
+			if (entityManager.entityHasComponent(receiver, WeaponComponent.class)) {
+				WeaponComponent weaponComponent = entityManager.getComponent(receiver,
+						WeaponComponent.class);
+				AmmoPickup ammoPickup = (AmmoPickup) contents;
+
+				weaponComponent.addAmmo(ammoPickup.ammo);
+				pickedUp = true;
+			}
+		} else if (contents instanceof HealthPickup) {
+			if (entityManager.entityHasComponent(receiver, HealthComponent.class)) {
+				HealthComponent healthComponent = entityManager.getComponent(receiver,
+						HealthComponent.class);
+				HealthPickup healthPickup = (HealthPickup) contents;
+
+				if (healthComponent.health != healthComponent.maxHealth) {
+					healthComponent.health += healthPickup.health;
+					if (healthComponent.health > healthComponent.maxHealth) {
+						healthComponent.health = healthComponent.maxHealth;
+					}
+					pickedUp = true;
+				}
+			}
+		}
+
+		if (pickedUp) {
+			entityEngine.flagEntityToRemove(sender);
 		}
 	}
 }

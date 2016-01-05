@@ -27,9 +27,9 @@ public class EnemyCollision implements IEvent {
 
 		EntityManager entityManager = entityEngine.getEntityManager();
 
-		CollisionEvents.doKnockback(entityManager, sender, receiver, intersection);
+		CollisionEvents.handleKnockback(entityManager, sender, receiver, intersection);
 
-		CollisionEvents.doDamage(entityManager, sender, receiver);
+		CollisionEvents.handleDamage(entityManager, sender, receiver);
 
 		return false;
 	}

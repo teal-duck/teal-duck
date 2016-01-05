@@ -19,7 +19,7 @@ public class EntityConstants {
 
 	public static final int MACHINE_GUN_CLIP_SIZE = 10;
 	public static final int START_AMMO_IN_CLIP = 10;
-	public static final int START_CLIPS = 200; // 2;
+	public static final int START_CLIPS = 0; // 200; // 2;
 	public static final int START_EXTRA_AMMO = EntityConstants.START_AMMO_IN_CLIP * EntityConstants.START_CLIPS;
 	public static final float COOLDOWN_TIME = 0.15f;
 	public static final float RELOAD_TIME = 4f;
@@ -27,9 +27,15 @@ public class EntityConstants {
 	public static final int BULLET_RADIUS = 12;
 	public static final float BULLET_KNOCKBACK_FORCE = 20000;
 
+	public static final float PICKUP_FULL_ROTATION_TIME = 2f;
+	public static final float PICKUP_RADIUS = 20;
+
+	public static final int AMMO_PICKUP_DEFAULT_AMOUNT = EntityConstants.MACHINE_GUN_CLIP_SIZE;
+	public static final int HEALTH_PICKUP_DEFAULT_AMOUNT = 1;
+
 	public static final boolean USE_CONE_LIGHTS = true;
 
-	public static final float AMBIENT_INTENSITY = 0.1f;
+	public static final float AMBIENT_INTENSITY = 0.2f;
 	private static final float colour = 0.8f;
 	public static final Vector3 AMBIENT_COLOUR = new Vector3(EntityConstants.colour, EntityConstants.colour,
 			EntityConstants.colour);

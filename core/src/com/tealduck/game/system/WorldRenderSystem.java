@@ -29,6 +29,8 @@ import com.tealduck.game.collision.Circle;
 import com.tealduck.game.collision.CollisionShape;
 import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.HealthComponent;
+import com.tealduck.game.component.MovementComponent;
+import com.tealduck.game.component.PickupComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.ViewconeComponent;
@@ -83,6 +85,10 @@ public class WorldRenderSystem extends GameSystem {
 	private final int[] mapRenderLayers = new int[] { 0, 1 };
 
 	private ShapeRenderer shapeRenderer;
+
+	private float pickupTime = 0;
+	private float pickupRotation = 0;
+	private float pickupY = 0;
 
 
 	public WorldRenderSystem(EntityEngine entityEngine, World world, TextureMap textureMap) {
@@ -167,15 +173,16 @@ public class WorldRenderSystem extends GameSystem {
 		float cameraTop = camera.position.y + (viewportHeight / 2);
 		float cameraBottom = camera.position.y - (viewportHeight / 2);
 
+		if (cameraRight > (mapWidth * tileWidth)) {
+			camera.position.x = (mapWidth * tileWidth) - (viewportWidth / 2);
+		}
+
 		if (cameraLeft < 0) {
 			camera.position.x = viewportWidth / 2;
 		}
+
 		if (cameraBottom < 0) {
 			camera.position.y = viewportHeight / 2;
-		}
-
-		if (cameraRight > (mapWidth * tileWidth)) {
-			camera.position.x = (mapWidth * tileWidth) - (viewportWidth / 2);
 		}
 
 		if (cameraTop > (mapHeight * tileHeight)) {
@@ -185,31 +192,62 @@ public class WorldRenderSystem extends GameSystem {
 
 
 	/**
+	 * Redraws all entities with sprites to the screen.
+	 *
+	 * @param deltaTime
+	 *                time elapsed since last update
+	 */
+	@Override
+	public void update(float deltaTime) {
+		updateSprites(deltaTime);
+		renderLightsToFrameBuffer(deltaTime);
+		clearScreen();
+		updateCamera();
+		renderWorld();
+		renderEntities(deltaTime);
+		renderHealthBars();
+	}
+
+
+	/**
 	 * For each entity that has a position and sprite, updates the position in the sprite to be the same as the
 	 * position.
 	 */
-	@SuppressWarnings("unchecked")
-	private void updateSprites() {
+	private void updateSprites(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
 
-		Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class,
-				SpriteComponent.class);
-		for (int entity : entities) {
-			PositionComponent positionComponent = entityManager.getComponent(entity,
-					PositionComponent.class);
-			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
-			Vector2 position = positionComponent.position;
-			Vector2 lookAt = positionComponent.lookAt;
+		pickupRotation += -deltaTime * (360 / EntityConstants.PICKUP_FULL_ROTATION_TIME);
 
-			sprite.setPosition(position.x, position.y);
-			sprite.setRotation(lookAt.angle());
-		}
+		pickupTime += deltaTime;
+		pickupY += 1 * Math.sin(pickupTime * 5);
 
-		entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
+		Set<Integer> entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
 		for (int entity : entities) {
 			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
 			sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+
+			if (entityManager.entityHasComponent(entity, PositionComponent.class)) {
+				PositionComponent positionComponent = entityManager.getComponent(entity,
+						PositionComponent.class);
+				Vector2 position = positionComponent.position;
+				Vector2 lookAt = positionComponent.lookAt;
+
+				float x = position.x;
+				float y = position.y;
+
+				boolean hasPickupComponent = entityManager.entityHasComponent(entity,
+						PickupComponent.class);
+				if (hasPickupComponent) {
+					lookAt.setAngle(pickupRotation);
+					y += pickupY;
+				}
+				y = position.y;
+
+				sprite.setPosition(x, y);
+				sprite.setRotation(lookAt.angle());
+			}
 		}
+
 	}
 
 
@@ -336,24 +374,6 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
-	/**
-	 * Redraws all entities with sprites to the screen.
-	 *
-	 * @param deltaTime
-	 *                time elapsed since last update
-	 */
-	@Override
-	public void update(float deltaTime) {
-		updateSprites();
-		renderLightsToFrameBuffer(deltaTime);
-		clearScreen();
-		updateCamera();
-		renderWorld();
-		renderEntities(deltaTime);
-		renderHealthBars();
-	}
-
-
 	private void renderPatrolRoutes() {
 		HashMap<String, ArrayList<Vector2>> patrolRoutes = world.getPatrolRoutes();
 		for (ArrayList<Vector2> patrolRoute : patrolRoutes.values()) {
@@ -382,13 +402,18 @@ public class WorldRenderSystem extends GameSystem {
 		for (int entity : entities) {
 			SpriteComponent spriteComponent = entityManager.getComponent(entity, SpriteComponent.class);
 
-			spriteComponent.stateTime += deltaTime;
+			if (entityManager.entityHasComponent(entity, MovementComponent.class)) {
+				if (entityManager.getComponent(entity, MovementComponent.class).velocity.len2() > 1) {
+					spriteComponent.stateTime += deltaTime;
+				}
+			} else {
+				spriteComponent.stateTime += deltaTime;
+			}
 			spriteComponent.setSpriteToAnimationFrame();
 
 			Sprite sprite = spriteComponent.sprite;
 			if (isSpriteOnScreen(sprite)) {
 				sprite.draw(batch);
-
 			}
 		}
 
@@ -397,7 +422,7 @@ public class WorldRenderSystem extends GameSystem {
 
 
 	private void renderHealthBars() {
-		// TODO: Don't always render health bars
+		// TODO: Only render health bar when entity takes damage?
 		EntityManager entityManager = getEntityManager();
 		shapeRenderer.begin(ShapeType.Filled);
 
@@ -433,7 +458,6 @@ public class WorldRenderSystem extends GameSystem {
 			float greenBarWidth = (healthBarWidth / maxHealth) * health;
 			shapeRenderer.setColor(Color.GREEN);
 			shapeRenderer.rect(healthBarX, healthBarY, greenBarWidth, healthBarHeight);
-
 		}
 		shapeRenderer.end();
 	}

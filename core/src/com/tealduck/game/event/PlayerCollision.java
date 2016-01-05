@@ -36,9 +36,11 @@ public class PlayerCollision implements IEvent {
 			}
 		}
 
-		CollisionEvents.doKnockback(entityManager, sender, receiver, intersection);
+		CollisionEvents.handlePickup(entityEngine, sender, receiver);
 
-		CollisionEvents.doDamage(entityManager, sender, receiver);
+		CollisionEvents.handleKnockback(entityManager, sender, receiver, intersection);
+
+		CollisionEvents.handleDamage(entityManager, sender, receiver);
 
 		return false;
 	}

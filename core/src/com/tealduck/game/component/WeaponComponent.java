@@ -49,12 +49,11 @@ public class WeaponComponent extends Component {
 		if (cooldownTime != 0) {
 			return;
 		}
-		if (ammoInClip < weapon.ammoRequiredToFire()) {
+		if (!hasEnoughAmmoInClipToFire()) {
 			startReloading();
 			return;
 		}
-		if (isReloading() && (ammoInClip >= weapon.ammoRequiredToFire())) {
-			System.out.println("Wat");
+		if (isReloading() && hasEnoughAmmoInClipToFire()) {
 			stopReloading();
 		}
 		cooldownTime = maxCooldownTime;
@@ -68,6 +67,11 @@ public class WeaponComponent extends Component {
 		if (ammoInClip <= 0) {
 			startReloading();
 		}
+	}
+
+
+	public boolean hasEnoughAmmoInClipToFire() {
+		return (ammoInClip >= weapon.ammoRequiredToFire());
 	}
 
 
@@ -146,5 +150,14 @@ public class WeaponComponent extends Component {
 	public String toString() {
 		return "WeaponComponent(" + weapon.toString() + ", " + ammoInClip + ", " + extraAmmo + ", "
 				+ maxCooldownTime + ", " + maxReloadTime + ")";
+	}
+
+
+	public void addAmmo(int ammo) {
+		boolean shouldReload = ((ammoInClip == 0) && (extraAmmo == 0));
+		extraAmmo += ammo;
+		if (shouldReload) {
+			startReloading();
+		}
 	}
 }
