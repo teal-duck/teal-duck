@@ -71,7 +71,6 @@ public class Circle extends CollisionShape {
 
 	@Override
 	public boolean containsPoint(Vector2 point) {
-		// TODO Circle contains point
-		return false;
+		return (point.cpy().sub(position).len2() < (radius * radius));
 	}
 }

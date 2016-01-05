@@ -28,7 +28,7 @@ import com.tealduck.game.collision.AABB;
 import com.tealduck.game.collision.Circle;
 import com.tealduck.game.collision.CollisionShape;
 import com.tealduck.game.component.CollisionComponent;
-import com.tealduck.game.component.MovementComponent;
+import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.ViewconeComponent;
@@ -194,7 +194,6 @@ public class WorldRenderSystem extends GameSystem {
 
 		Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class,
 				SpriteComponent.class);
-
 		for (int entity : entities) {
 			PositionComponent positionComponent = entityManager.getComponent(entity,
 					PositionComponent.class);
@@ -206,14 +205,10 @@ public class WorldRenderSystem extends GameSystem {
 			sprite.setRotation(lookAt.angle());
 		}
 
-		entities = entityManager.getEntitiesWithComponents(SpriteComponent.class, MovementComponent.class);
-
+		entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
 		for (int entity : entities) {
 			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
-			// Vector2 velocity = entityManager.getComponent(entity, MovementComponent.class).velocity;
-
 			sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-			// sprite.setRotation(velocity.angle());
 		}
 	}
 
@@ -221,7 +216,6 @@ public class WorldRenderSystem extends GameSystem {
 	@SuppressWarnings("unchecked")
 	private void renderLightsToFrameBuffer(float deltaTime) {
 		fbo.begin();
-		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		clearScreen();
 		batch.setProjectionMatrix(camera.combined);
 		batch.setShader(defaultShader);
@@ -229,9 +223,6 @@ public class WorldRenderSystem extends GameSystem {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setColor(1f, 1f, 1f, 1f);
 
-		// batch.setBlendFunction(GL20.GL_SRC_COLOR, GL20.GL_DST_ALPHA);
-		// batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		// batch.setColor(Color.GREEN);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 
 		boolean cone = EntityConstants.USE_CONE_LIGHTS;
@@ -290,7 +281,7 @@ public class WorldRenderSystem extends GameSystem {
 				// lightScale, 0f, 0, 0, lightSize, lightSize, false, false);
 			}
 		}
-		// batch.draw(light, x + 32f - 256f, y + 32f - 512f);
+
 		batch.end();
 		batch.setColor(Color.WHITE);
 		fbo.end();
@@ -320,7 +311,6 @@ public class WorldRenderSystem extends GameSystem {
 
 		renderer.setView(camera);
 		fbo.getColorBufferTexture().bind(1);
-		// Gdx.gl.glActiveTexture(1);
 		pointTexture.bind(0);
 		renderer.render(mapRenderLayers);
 		shapeRenderer.setProjectionMatrix(camera.combined);
@@ -360,6 +350,7 @@ public class WorldRenderSystem extends GameSystem {
 		updateCamera();
 		renderWorld();
 		renderEntities(deltaTime);
+		renderHealthBars();
 	}
 
 
@@ -402,6 +393,49 @@ public class WorldRenderSystem extends GameSystem {
 		}
 
 		batch.end();
+	}
+
+
+	private void renderHealthBars() {
+		// TODO: Don't always render health bars
+		EntityManager entityManager = getEntityManager();
+		shapeRenderer.begin(ShapeType.Filled);
+
+		@SuppressWarnings("unchecked")
+		Set<Integer> entities = entityManager.getEntitiesWithComponents(SpriteComponent.class,
+				HealthComponent.class);
+		for (int entity : entities) {
+			if (getEntityTagManager().doesEntityIdHaveTag(entity, Tag.PLAYER)) {
+				continue;
+			}
+
+			SpriteComponent spriteComponent = entityManager.getComponent(entity, SpriteComponent.class);
+			HealthComponent healthComponent = entityManager.getComponent(entity, HealthComponent.class);
+
+			Sprite sprite = spriteComponent.sprite;
+			int health = healthComponent.health;
+			int maxHealth = healthComponent.maxHealth;
+
+			float spriteX = sprite.getX();
+			float spriteY = sprite.getY();
+			float spriteWidth = sprite.getWidth();
+			float spriteHeight = sprite.getHeight();
+
+			float healthBarWidth = 32;
+			float healthBarHeight = 4;
+
+			float healthBarX = (spriteX + (spriteWidth / 2)) - (healthBarWidth / 2);
+			float healthBarY = (spriteY + spriteHeight) - healthBarHeight;
+
+			shapeRenderer.setColor(Color.RED);
+			shapeRenderer.rect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+
+			float greenBarWidth = (healthBarWidth / maxHealth) * health;
+			shapeRenderer.setColor(Color.GREEN);
+			shapeRenderer.rect(healthBarX, healthBarY, greenBarWidth, healthBarHeight);
+
+		}
+		shapeRenderer.end();
 	}
 
 

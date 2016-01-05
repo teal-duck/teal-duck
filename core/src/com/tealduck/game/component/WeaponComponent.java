@@ -39,9 +39,6 @@ public class WeaponComponent extends Component {
 
 		timePerReloadBullet = maxReloadTime / getClipSize();
 
-		System.out.println(ammoInClip);
-		System.out.println(extraAmmo);
-
 		fireLocation = new Vector2(0, 0);
 		fireDirection = new Vector2(0, 0);
 	}

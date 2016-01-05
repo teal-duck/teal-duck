@@ -7,7 +7,6 @@ From assessment doc:
 
 
 Required to do for assessment 2:
-- Needs to show ammo on screen
 - Health bar for enemies
 	
 - Ammo + health pickups

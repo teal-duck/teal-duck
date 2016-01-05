@@ -85,14 +85,6 @@ public class InputLogicSystem extends GameSystem {
 				if (!((xLook == 0) && (yLook == 0))) {
 					positionComponent.lookAt.set(xLook, yLook);
 				}
-				//
-				// if (xLook != 0) {
-				// positionComponent.lookAt.x = xLook;
-				// // }
-				// // if (yLook != 0) {
-				// positionComponent.lookAt.y = yLook;
-				// }
-
 			} else {
 				float x = Gdx.input.getX();
 				float y = Gdx.input.getY();
@@ -100,7 +92,9 @@ public class InputLogicSystem extends GameSystem {
 				Vector3 posInWorld3 = camera.unproject(new Vector3(x, y, 0));
 				Vector2 posInWorld = new Vector2(posInWorld3.x, posInWorld3.y);
 
-				positionComponent.lookAt.set(posInWorld.cpy().sub(positionComponent.position).nor());
+				Vector2 entityCenter = positionComponent.position.cpy().add(32, 32);
+
+				positionComponent.lookAt.set(posInWorld.cpy().sub(entityCenter).nor());
 			}
 
 			positionComponent.lookAt.nor();
