@@ -1,0 +1,143 @@
+From assessment doc:
+"In Assessment 2, you must design and implement:
+• the game map
+• at least one type of objective,
+• the randomly-allocated obstacles,
+• a scoring mechanism."
+
+
+Required to do for assessment 2:
+- Player shooting
+	- Points toward mouse on screen or in direction of right stick on controller
+	- Click/right trigger to shoot
+	- Just implement 1 weapon for assessment 2, but don't hardcode it so more can be added in assessment 4
+	- Starts with little bit of ammo cause it's a stealth game
+	- Needs to show ammo on screen
+	
+- Ammo + health pickups
+	- Easy to code (just got a position, sprite and collision component)
+	- Somehow store the contents of the pickup in a component
+	- In player collision event, if sender has that pickup data component
+		- Add the ammo/health to player
+		- Send event to pickup for it to kill itself/player removes it from entity manager?
+	- Randomly placed?
+	
+- Scoring
+	- Who owns the code/event for this?
+		- Bullet?
+		- Enemy?
+		- Player?
+	- Easy to do combos
+		- On kill, set timer to e.g. 5 seconds
+		- Count down each frame
+		- If gets to 0 then combo over
+		- If another kill, then reset the timer but only to e.g. 4 seconds
+		- Repeat
+		- On each kill, the timer is slightly smaller making it harder to get larger and larger combos
+		
+- Enemy chasing
+	- Viewcone
+		- Has a direction, viewing angle (FOV) and length
+		- Dot product to tell if enemy looking at player
+		- Somehow tell if the ray is going through the wall
+			- There are algorithms for this online
+			- Or ugly solution: do line-to-aabb collision for every solid tile in the ray's bounding box
+	- State machine
+		- S1
+			- Enemy follows patrol path
+			- If enemy sees player, go to S2, else go to S1
+		- S2
+			- Add a chase component to enemy
+				- For assessment 2, the enemy just walks towards player, even if there's a wall in the way
+				- Pathfinding is for assessment 4
+			- Go to S3
+		- S3
+			- Enemy walks towards player
+			- If enemy can still see player, go to S3, else go to S4
+		- S4
+			- Set a counter to e.g. 5 seconds
+			- Go to S5
+		- S5
+			- Enemy walks randomly, looking for player
+				- Perhaps pick random direction (stick to axis)
+				- Keep going until they hit a wall, then repeat?
+			- If enemy sees player, reset counter to 0 and go to S3
+			- Decrease counter
+			- If counter is 0 (i.e. time's up), remove chase component and go to S1
+
+- Random enemies
+	- Turret
+		- Stationary, uses the same viewcone logic to target player as other enemies
+		- Just needs rotating animation which can be done in coded
+		- And shooting animation, reuse player's
+	- Patrolling enemies
+		- Choose random location on map to spawn
+		- Keep going to left and to right as far as possible to get maximum horizontal movement
+		- Repeat for up and down
+		- One of those is randomly chosen as the patrol path
+		- Simple to do
+		
+- Make the game look like it's set at the uni
+	- Perhaps write code for moving from level 1 to 2, then to 3 etc
+	- Make level 1 be an overworld map with random planes etc
+		- Might need flying animation?
+		- Already have plane texture
+		- Enemy logic for this is really easy
+		- World can still be a tiled map (so appears same to the rest of code)
+			- But no actual tiles to load
+			- Just entities and a background texture
+		- For background, could we screenshot google maps?
+		
+- Menu, pause, save/load, gui
+	- Main menu with new game, load game, settings(?), quit
+	- New game just starts game
+	- Load shows list of saves
+	- Pause screen when press esc
+	- On pause screen and/or end of level, have save button
+		- Save format could just be JSON for simplicity?
+	- In-game gui for health bar, score, selected weapon and ammo
+	- Settings would be nice
+		- Shouldn't be too hard to make
+		- Input system already set up to allow rebinding
+		- Low priority for assessment 2
+		
+- Possibly 2 objective types
+	- Get to goal
+	- Kill all geese
+	- Shouldn't be too hard
+		- Goal logic already set up
+		- Tiled maps have properties so we can set objectiveType = "goal" or "kill"
+		- Getting to goal logic already separate from rest of code
+		- Could instead be:
+			if (((objectiveType == ObjectiveType.GOAL) && playerCollidesWithGoal())
+				|| ((objectiveType == ObjectiveType.KILL) && allEnemiesDead())) {
+				winGame();
+			}
+			
+- Animations should only play when entity moves
+
+
+Required assets:
+- Player gun, bullets, shooting animation
+- Ammo + health pickups, spinning animation? could possible just hardcode this as a hack
+- Turret texture
+- Gui + menu design
+- 2 level designs
+	- Could be 1 overworld
+		- Maybe use google maps, is that allowed?
+	- 1 indoors
+- Light cone texture
+- Sounds as semi-low priority
+	- Sfxr (might run under wine)
+
+
+Would be nice if there's time:
+- Shadows
+	- Raycast to corners of tiles, generate triangle strip
+	- Map vertices to colours of:
+		- (1, 1, 1, 1) for vertex over torch
+		- (1, 1, 1, (rayLength - vertexDistanceFromCentre) / rayLength) for other verticies
+			- Means ones at end of the torch distance have alpha 0
+- Settings menu
+- Pathfinding with A*?
+- Particles?
