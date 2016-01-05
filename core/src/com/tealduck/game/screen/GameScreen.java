@@ -23,6 +23,7 @@ import com.tealduck.game.system.MovementSystem;
 import com.tealduck.game.system.PatrolLogicSystem;
 import com.tealduck.game.system.WorldCollisionSystem;
 import com.tealduck.game.system.WorldRenderSystem;
+import com.tealduck.game.world.EntityConstants;
 import com.tealduck.game.world.EntityLoader;
 import com.tealduck.game.world.MapNames;
 import com.tealduck.game.world.World;
@@ -57,8 +58,9 @@ public class GameScreen extends DuckScreenBase {
 		assetManager.load(AssetLocations.DUCK, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.ENEMY, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.GOAL, Texture.class, textureParameter);
-		assetManager.load(AssetLocations.SPOTLIGHT, Texture.class, textureParameter);
-		assetManager.load(AssetLocations.CONE_LIGHT, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.POINT_LIGHT, Texture.class);
+		assetManager.load(AssetLocations.CONE_LIGHT, Texture.class);
+		assetManager.load(AssetLocations.BULLET, Texture.class, textureParameter);
 
 		assetManager.load(MapNames.TEST_MAP, TiledMap.class);
 
@@ -79,6 +81,7 @@ public class GameScreen extends DuckScreenBase {
 		textureMap.putTextureFromAssetManager(AssetLocations.DUCK, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.ENEMY, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.GOAL, assetManager);
+		textureMap.putTextureFromAssetManager(AssetLocations.BULLET, assetManager);
 
 		// duckTexture = assetManager.get(AssetLocations.DUCK);
 		// enemyTexture = assetManager.get(AssetLocations.ENEMY);
@@ -108,8 +111,10 @@ public class GameScreen extends DuckScreenBase {
 		systemManager.addSystem(new WorldCollisionSystem(getEntityEngine(), world), 5);
 		systemManager.addSystem(new EntityCollisionSystem(getEntityEngine()), 6);
 
-		WorldRenderSystem worldRenderSystem = new WorldRenderSystem(getEntityEngine(), world,
-				(Texture) assetManager.get(AssetLocations.SPOTLIGHT));
+		String lightLocation = EntityConstants.USE_CONE_LIGHTS ? AssetLocations.CONE_LIGHT
+				: AssetLocations.POINT_LIGHT;
+		Texture lightTexture = (Texture) assetManager.get(lightLocation);
+		WorldRenderSystem worldRenderSystem = new WorldRenderSystem(getEntityEngine(), world, lightTexture);
 		systemManager.addSystem(worldRenderSystem, 7);
 
 		systemManager.addSystem(new InputLogicSystem(getEntityEngine(), worldRenderSystem.getCamera()), 0);

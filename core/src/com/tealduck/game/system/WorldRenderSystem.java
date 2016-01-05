@@ -30,9 +30,11 @@ import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
+import com.tealduck.game.component.ViewconeComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
+import com.tealduck.game.world.EntityConstants;
 import com.tealduck.game.world.World;
 
 
@@ -62,7 +64,7 @@ public class WorldRenderSystem extends GameSystem {
 	private final String defaultPixelShader = Gdx.files.internal("shaders/defaultPixelShader.glsl").readString();
 	private final String finalPixelShader = Gdx.files.internal("shaders/pixelShader.glsl").readString();
 
-	private static final float ambientIntensity = 0.1f;
+	private static final float ambientIntensity = 1f; // 0.1f;
 	private static final float colour = 0.7f;
 	private static final Vector3 ambientColour = new Vector3(WorldRenderSystem.colour, WorldRenderSystem.colour,
 			WorldRenderSystem.colour);
@@ -227,7 +229,7 @@ public class WorldRenderSystem extends GameSystem {
 		// batch.setColor(Color.GREEN);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 
-		boolean cone = false;
+		boolean cone = EntityConstants.USE_CONE_LIGHTS;
 		int lightSize = 512;
 		int halfLightSize = lightSize / 2;
 		float scale = 0.5f;
@@ -238,7 +240,10 @@ public class WorldRenderSystem extends GameSystem {
 		float circleOriginX = halfLightSize;
 		float circleOriginY = halfLightSize;
 
-		for (int entity : getEntityManager().getEntitiesWithComponent(PositionComponent.class)) {
+		@SuppressWarnings("unchecked")
+		Set<Integer> entities = getEntityManager().getEntitiesWithComponents(PositionComponent.class,
+				ViewconeComponent.class);
+		for (int entity : entities) {
 			// TODO: Test if entity is on/near screen before rendering light
 			PositionComponent positionComponent = getEntityManager().getComponent(entity,
 					PositionComponent.class);
@@ -297,7 +302,7 @@ public class WorldRenderSystem extends GameSystem {
 	private void renderEntities(float deltaTime) {
 		boolean useSortedRendering = false;
 		boolean debugPatrol = false;
-		boolean debugCollision = false;
+		boolean debugCollision = true;
 
 		if (useSortedRendering) {
 			renderEntitiesSorted();

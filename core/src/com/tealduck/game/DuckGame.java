@@ -117,6 +117,8 @@ public class DuckGame extends Game {
 	public void render() {
 		calculateFPS(Gdx.graphics.getDeltaTime());
 		super.render();
+
+		entityEngine.removeAllFlaggedEntities();
 	}
 
 

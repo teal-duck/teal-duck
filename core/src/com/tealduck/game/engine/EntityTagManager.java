@@ -78,6 +78,15 @@ public class EntityTagManager {
 	}
 
 
+	public boolean doesEntityIdHaveTag(int entity, String tag) {
+		if (tags.containsKey(tag)) {
+			return (tags.get(tag) == entity);
+		} else {
+			return false;
+		}
+	}
+
+
 	/**
 	 *
 	 * @return Set containing Tags

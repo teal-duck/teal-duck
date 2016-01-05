@@ -10,16 +10,11 @@ import java.util.HashMap;
 public class EventManager {
 	// Map from entities to (map from event names to functions)
 	private HashMap<Integer, HashMap<String, IEvent>> events;
-	// private EntityManager entityManager;
-	// private EntityTagManager entityTagManager;
 	private EntityEngine entityEngine;
 
 
-	public EventManager(EntityEngine entityEngine) { // EntityManager entityManager, EntityTagManager
-								// entityTagManager) {
+	public EventManager(EntityEngine entityEngine) {
 		events = new HashMap<Integer, HashMap<String, IEvent>>();
-		// this.entityManager = entityManager;
-		// this.entityTagManager = entityTagManager;
 		this.entityEngine = entityEngine;
 	}
 
@@ -80,7 +75,7 @@ public class EventManager {
 
 		boolean killEntity = function.fire(entityEngine, senderEntity, receiverEntity, data);
 		if (killEntity) {
-			entityEngine.removeEntity(receiverEntity);
+			entityEngine.flagEntityToRemove(receiverEntity);
 		}
 
 		return killEntity;

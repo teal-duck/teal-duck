@@ -13,4 +13,11 @@ public class EntityConstants {
 	public static final int ENEMY_DAMAGE = 1;
 	public static final int PLAYER_MAX_HEALTH = 10;
 	public static final float PAUSE_TIME = 0.5f;
+
+	public static final int START_AMMO = 10000;
+	public static final float COOLDOWN_TIME = 0.2f;
+	public static final float BULLET_SPEED = 100f; // 1500f; // 3000f;
+	public static final int BULLET_RADIUS = 12;
+
+	public static final boolean USE_CONE_LIGHTS = true;
 }

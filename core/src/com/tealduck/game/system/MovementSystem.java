@@ -12,8 +12,7 @@ import com.tealduck.game.engine.GameSystem;
 
 
 public class MovementSystem extends GameSystem {
-	private float worldFriction = 0.8f;
-
+	// private float worldFriction = 0.8f;
 
 	public MovementSystem(EntityEngine entityEngine) {
 		super(entityEngine);
@@ -37,7 +36,7 @@ public class MovementSystem extends GameSystem {
 			Vector2 velocity = movementComponent.velocity;
 			Vector2 acceleration = movementComponent.acceleration;
 			// TODO: Calculate friction based on surface (and mass?)
-			float friction = worldFriction; // movementComponent.friction;
+			float friction = movementComponent.friction;
 
 			velocity.mulAdd(acceleration, deltaTime);
 			acceleration.setZero();

@@ -34,17 +34,22 @@ public abstract class GameSystem {
 	public abstract void update(float deltaTime);
 
 
-	protected EntityManager getEntityManager() {
+	public EntityEngine getEntityEngine() {
+		return entityEngine;
+	}
+
+
+	public EntityManager getEntityManager() {
 		return entityEngine.getEntityManager();
 	}
 
 
-	protected EntityTagManager getEntityTagManager() {
+	public EntityTagManager getEntityTagManager() {
 		return entityEngine.getEntityTagManager();
 	}
 
 
-	protected EventManager getEventManager() {
+	public EventManager getEventManager() {
 		return entityEngine.getEventManager();
 	}
 }

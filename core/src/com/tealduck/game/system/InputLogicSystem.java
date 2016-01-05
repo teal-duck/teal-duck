@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.UserInputComponent;
+import com.tealduck.game.component.WeaponComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
@@ -59,7 +60,7 @@ public class InputLogicSystem extends GameSystem {
 			int velocityLimit = 1;
 
 			float shiftScale = 1;
-			if (controls.getStateForAction(Action.SPRINT, controller) == 1) {
+			if (controls.getStateForAction(Action.SPRINT, controller) != 0) {
 				shiftScale = movementComponent.sprintScale;
 			}
 
@@ -81,12 +82,17 @@ public class InputLogicSystem extends GameSystem {
 				float xLook = (lookRightState > lookLeftState) ? lookRightState : -lookLeftState;
 				float yLook = (lookUpState > lookDownState) ? lookUpState : -lookDownState;
 
-				if (xLook != 0) {
-					positionComponent.lookAt.x = xLook;
+				if (!((xLook == 0) && (yLook == 0))) {
+					positionComponent.lookAt.set(xLook, yLook);
 				}
-				if (yLook != 0) {
-					positionComponent.lookAt.y = yLook;
-				}
+				//
+				// if (xLook != 0) {
+				// positionComponent.lookAt.x = xLook;
+				// // }
+				// // if (yLook != 0) {
+				// positionComponent.lookAt.y = yLook;
+				// }
+
 			} else {
 				float x = Gdx.input.getX();
 				float y = Gdx.input.getY();
@@ -95,6 +101,28 @@ public class InputLogicSystem extends GameSystem {
 				Vector2 posInWorld = new Vector2(posInWorld3.x, posInWorld3.y);
 
 				positionComponent.lookAt.set(posInWorld.cpy().sub(positionComponent.position).nor());
+			}
+
+			positionComponent.lookAt.nor();
+
+			if (entityManager.entityHasComponent(entity, WeaponComponent.class)) {
+				WeaponComponent weaponComponent = entityManager.getComponent(entity,
+						WeaponComponent.class);
+				weaponComponent.cooldownTime -= deltaTime;
+				if (weaponComponent.cooldownTime < 0) {
+					weaponComponent.cooldownTime = 0;
+				}
+
+				float fireState = controls.getStateForAction(Action.FIRE, controller);
+
+				if (fireState != 0) {
+					// TODO: Calculate position to shoot from
+					Vector2 shootPosition = positionComponent.position.cpy();
+					// shootPosition.add(32, 32);
+
+					weaponComponent.fireWeapon(getEntityEngine(), shootPosition,
+							positionComponent.lookAt.cpy());
+				}
 			}
 		}
 	}

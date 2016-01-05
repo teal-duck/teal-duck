@@ -32,6 +32,8 @@ import com.tealduck.game.component.PatrolRouteComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
+import com.tealduck.game.component.ViewconeComponent;
+import com.tealduck.game.component.WeaponComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EventManager;
@@ -43,6 +45,7 @@ import com.tealduck.game.input.ControlMap;
 import com.tealduck.game.input.ControllerBindingType;
 import com.tealduck.game.input.controller.ControllerHelper;
 import com.tealduck.game.input.controller.PS4;
+import com.tealduck.game.weapon.MachineGun;
 
 
 public class EntityLoader {
@@ -131,7 +134,8 @@ public class EntityLoader {
 					}
 
 					EntityLoader.createPlayer(entityEngine,
-							textureMap.getTexture(AssetLocations.DUCK), new Vector2(x, y));
+							textureMap.getTexture(AssetLocations.DUCK), new Vector2(x, y),
+							textureMap.getTexture(AssetLocations.BULLET));
 					loadedPlayer = true;
 
 				} else if (name.equals("Enemy")) {
@@ -161,7 +165,7 @@ public class EntityLoader {
 	}
 
 
-	private static CollisionComponent addEntityCircleCollisionComponent(EntityManager entityManager, int entityId,
+	public static CollisionComponent addEntityCircleCollisionComponent(EntityManager entityManager, int entityId,
 			Vector2 entityPosition, float radius) {
 		// TODO: addEntityCircleCollisionComponent offsetFromPosition
 		Vector2 offsetFromPosition = new Vector2(32, 32);
@@ -172,7 +176,7 @@ public class EntityLoader {
 	}
 
 
-	private static CollisionComponent addEntityAABBCollisionComponent(EntityManager entityManager, int entityId,
+	public static CollisionComponent addEntityAABBCollisionComponent(EntityManager entityManager, int entityId,
 			Vector2 entityPosition, Vector2 entitySize) {
 		Vector2 offsetFromPosition = (new Vector2(64, 64)).sub(entitySize).scl(0.5f);
 		AABB aabb = new AABB(entityPosition.cpy(), entitySize.cpy());
@@ -253,7 +257,8 @@ public class EntityLoader {
 	 * @param location
 	 * @return
 	 */
-	private static int createPlayer(EntityEngine entityEngine, Texture texture, Vector2 location) {
+	private static int createPlayer(EntityEngine entityEngine, Texture texture, Vector2 location,
+			Texture bulletTexture) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int playerId = entityManager.createEntityWithTag(entityEngine.getEntityTagManager(), Tag.PLAYER);
 
@@ -275,6 +280,9 @@ public class EntityLoader {
 		entityManager.addComponent(playerId, new HealthComponent(EntityConstants.PLAYER_MAX_HEALTH));
 
 		entityManager.addComponent(playerId, new KnockbackComponent(EntityConstants.PLAYER_KNOCKBACK_FORCE));
+
+		entityManager.addComponent(playerId, new WeaponComponent(new MachineGun(bulletTexture),
+				EntityConstants.START_AMMO, EntityConstants.COOLDOWN_TIME));
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(playerId, EventName.COLLISION, PlayerCollision.instance);
@@ -301,6 +309,8 @@ public class EntityLoader {
 		entityManager.addComponent(enemyId, new KnockbackComponent(EntityConstants.ENEMY_KNOCKBACK_FORCE));
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, enemyId, location,
 				EntityConstants.ENEMY_RADIUS);
+
+		entityManager.addComponent(enemyId, new ViewconeComponent());
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(enemyId, EventName.COLLISION, EnemyCollision.instance);
