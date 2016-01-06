@@ -15,6 +15,7 @@ import com.tealduck.game.TextureMap;
 import com.tealduck.game.collision.Collision;
 import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.HealthComponent;
+import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.system.ChaseSystem;
@@ -129,10 +130,15 @@ public class GameScreen extends DuckScreenBase {
 		if (worldRenderSystem != null) {
 			worldRenderSystem.resizeCamera(width, height);
 		}
+
+		GuiRenderSystem guiRenderSystem = getSystemManager().getSystemOfType(GuiRenderSystem.class);
+		if (guiRenderSystem != null) {
+			guiRenderSystem.resizeCamera(width, height);
+		}
 	}
 
 
-	public boolean hasPlayerWon() {
+	private boolean hasPlayerWon() {
 		EntityManager entityManager = getEntityManager();
 		try {
 			int playerId = getEntityTagManager().getEntity(Tag.PLAYER);
@@ -153,7 +159,7 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
-	public boolean isEntityAlive(int entityId) {
+	private boolean isEntityAlive(int entityId) {
 		EntityManager entityManager = getEntityManager();
 		if (entityManager.entityHasComponent(entityId, HealthComponent.class)) {
 			HealthComponent healthComponent = entityManager.getComponent(entityId, HealthComponent.class);
@@ -163,7 +169,7 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
-	public boolean hasPlayerDied() {
+	private boolean hasPlayerDied() {
 		try {
 			int playerId = getEntityTagManager().getEntity(Tag.PLAYER);
 			return !isEntityAlive(playerId);
@@ -173,7 +179,7 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
-	public void removeDeadEntities() {
+	private void removeDeadEntities() {
 		EntityManager entityManager = getEntityManager();
 		Set<Integer> entities = entityManager.getEntitiesWithComponent(HealthComponent.class);
 
@@ -185,9 +191,22 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	private void handleScores(float deltaTime) {
+		EntityManager entityManager = getEntityManager();
+		Set<Integer> entities = entityManager.getEntitiesWithComponent(ScoreComponent.class);
+
+		for (int entity : entities) {
+			entityManager.getComponent(entity, ScoreComponent.class).comboCountdown(deltaTime);
+		}
+	}
+
+
 	@Override
 	public void render(float deltaTime) {
 		super.render(deltaTime);
+
+		// TODO: Move score combo countdown handling
+		handleScores(deltaTime);
 
 		if (hasPlayerWon()) {
 			this.loadScreen(WinScreen.class);

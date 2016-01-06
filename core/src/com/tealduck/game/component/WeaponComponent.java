@@ -16,10 +16,8 @@ public class WeaponComponent extends Component {
 
 	// TODO: Should maxCooldownTime be part of the weapon?
 	public float cooldownTime = 0;
-	public float maxCooldownTime;
 
 	public float reloadTime = 0;
-	public float maxReloadTime;
 	public float timePerReloadBullet;
 	public float bulletReloadTime = 0;
 
@@ -29,15 +27,12 @@ public class WeaponComponent extends Component {
 	public Vector2 fireDirection;
 
 
-	public WeaponComponent(Weapon weapon, int ammoInClip, int extraAmmo, float maxCooldownTime,
-			float maxReloadTime) {
+	public WeaponComponent(Weapon weapon, int ammoInClip, int extraAmmo) {
 		this.weapon = weapon;
 		this.ammoInClip = ammoInClip;
 		this.extraAmmo = extraAmmo;
-		this.maxCooldownTime = maxCooldownTime;
-		this.maxReloadTime = maxReloadTime;
 
-		timePerReloadBullet = maxReloadTime / getClipSize();
+		timePerReloadBullet = weapon.getReloadTime() / getClipSize();
 
 		fireLocation = new Vector2(0, 0);
 		fireDirection = new Vector2(0, 0);
@@ -56,7 +51,7 @@ public class WeaponComponent extends Component {
 		if (isReloading() && hasEnoughAmmoInClipToFire()) {
 			stopReloading();
 		}
-		cooldownTime = maxCooldownTime;
+		cooldownTime = weapon.getCooldownTime();
 		int ammoUsed = weapon.fire(entityEngine, shooterId, position, direction);
 		ammoInClip -= ammoUsed;
 
@@ -101,7 +96,7 @@ public class WeaponComponent extends Component {
 		if (ammoInClip == getClipSize()) {
 			return;
 		}
-		reloadTime = maxReloadTime;
+		reloadTime = weapon.getReloadTime();
 		bulletReloadTime = 0;
 	}
 
@@ -148,8 +143,7 @@ public class WeaponComponent extends Component {
 
 	@Override
 	public String toString() {
-		return "WeaponComponent(" + weapon.toString() + ", " + ammoInClip + ", " + extraAmmo + ", "
-				+ maxCooldownTime + ", " + maxReloadTime + ")";
+		return "WeaponComponent(" + weapon.toString() + ", " + ammoInClip + ", " + extraAmmo + ")";
 	}
 
 

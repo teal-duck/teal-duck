@@ -2,11 +2,13 @@ package com.tealduck.game.event;
 
 
 import com.tealduck.game.collision.Intersection;
+import com.tealduck.game.component.BulletComponent;
 import com.tealduck.game.component.DamageComponent;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.KnockbackComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PickupComponent;
+import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.component.WeaponComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
@@ -47,14 +49,29 @@ public class CollisionEvents {
 
 			// TODO: Maybe have invulnerability for a second after taking damage
 			healthComponent.health -= damageComponent.damage;
-			if (healthComponent.health < 0) {
+			if (healthComponent.health <= 0) {
 				healthComponent.health = 0;
+
+				CollisionEvents.handleScoreForEntityDeath(entityManager, sender, receiver);
 			}
 		}
 	}
 
 
+	public static void handleScoreForEntityDeath(EntityManager entityManager, int killerEntity, int deadEntity) {
+		if (entityManager.entityHasComponent(killerEntity, ScoreComponent.class)) {
+			ScoreComponent scoreComponent = entityManager.getComponent(killerEntity, ScoreComponent.class);
+			scoreComponent.increaseScoreWithComboGain(10);
+
+		} else if (entityManager.entityHasComponent(killerEntity, BulletComponent.class)) {
+			int shooterEntity = entityManager.getComponent(killerEntity, BulletComponent.class).shooterId;
+			CollisionEvents.handleScoreForEntityDeath(entityManager, shooterEntity, deadEntity);
+		}
+	}
+
+
 	public static void handlePickup(EntityEngine entityEngine, int sender, int receiver) {
+		// TODO: Animation on pick up
 		EntityManager entityManager = entityEngine.getEntityManager();
 		if (!entityManager.entityHasComponent(sender, PickupComponent.class)) {
 			return;

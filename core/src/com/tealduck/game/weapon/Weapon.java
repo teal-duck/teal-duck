@@ -12,11 +12,17 @@ public abstract class Weapon {
 	public abstract int fire(EntityEngine entityEngine, int shooterId, Vector2 position, Vector2 direction);
 
 
+	public abstract int getClipSize();
+
+
+	public abstract float getCooldownTime();
+
+
+	public abstract float getReloadTime();
+
+
 	@Override
 	public String toString() {
 		return "Weapon()";
 	}
-
-
-	public abstract int getClipSize();
 }

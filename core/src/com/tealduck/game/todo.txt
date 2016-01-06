@@ -7,19 +7,6 @@ From assessment doc:
 
 
 Required to do for assessment 2:
-- Scoring
-	- Who owns the code/event for this?
-		- Bullet?
-		- Enemy?
-		- Player?
-	- Easy to do combos
-		- On kill, set timer to e.g. 5 seconds
-		- Count down each frame
-		- If gets to 0 then combo over
-		- If another kill, then reset the timer but only to e.g. 4 seconds
-		- Repeat
-		- On each kill, the timer is slightly smaller making it harder to get larger and larger combos
-		
 - Enemy chasing
 	- Viewcone
 		- Has a direction, viewing angle (FOV) and length

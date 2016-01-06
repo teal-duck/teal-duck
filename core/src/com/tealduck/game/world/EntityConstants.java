@@ -19,11 +19,11 @@ public class EntityConstants {
 
 	public static final int MACHINE_GUN_CLIP_SIZE = 10;
 	public static final int START_AMMO_IN_CLIP = 10;
-	public static final int START_CLIPS = 0; // 200; // 2;
+	public static final int START_CLIPS = 1;
 	public static final int START_EXTRA_AMMO = EntityConstants.START_AMMO_IN_CLIP * EntityConstants.START_CLIPS;
 	public static final float COOLDOWN_TIME = 0.15f;
 	public static final float RELOAD_TIME = 4f;
-	public static final float BULLET_SPEED = 900f; // 3000f;
+	public static final float BULLET_SPEED = 900f;
 	public static final int BULLET_RADIUS = 12;
 	public static final float BULLET_KNOCKBACK_FORCE = 20000;
 

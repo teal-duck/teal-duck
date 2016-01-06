@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tealduck.game.Tag;
 import com.tealduck.game.component.HealthComponent;
+import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.component.WeaponComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
@@ -24,17 +25,27 @@ public class GuiRenderSystem extends GameSystem {
 	private OrthographicCamera camera;
 	private BitmapFont font;
 
+	private static final float HEALTH_TEXT_X = 10;
+	private static final float HEALTH_TEXT_Y_OFFSET = 10;
+	private static final int HEALTH_HEART_SIZE = 20;
+
+	private static final int HEALTH_HEART_GAP = 8;
+	private static final int CORNER_RADIUS = GuiRenderSystem.HEALTH_HEART_GAP * 2;
+
+	private static final int RIGHT_EXTRA = 0; // 24;
+
+	private static final Color BACKGROUND_COLOUR = Color.BLUE;
+
+	private final float backgroundWidth;
+	private final float backgroundHeight;
+
+	private int screenWidth;
+	private int screenHeight;
+
 	private GlyphLayout healthText;
-	private GlyphLayout ammoText;
-	private float healthTextX = 10;
-	private float healthTextYOffset = 10;
-	private int healthSize = 20;
-	private float healthOffset = 8;
 
-	private Texture healthTexture;
-	private Texture healthBackgroundTexture;
-
-	private Texture ammoBackgroundTexture;
+	private Texture healthHeartTexture;
+	private Texture backgroundTexture;
 
 
 	public GuiRenderSystem(EntityEngine entityEngine, SpriteBatch batch, OrthographicCamera camera,
@@ -45,50 +56,51 @@ public class GuiRenderSystem extends GameSystem {
 		this.font = font;
 
 		healthText = new GlyphLayout(font, "Health:");
-		ammoText = new GlyphLayout(font, "Ammo:  ");
 
-		Color backgroundColour = Color.BLUE;
+		Pixmap healthHeartPixmap = new Pixmap(GuiRenderSystem.HEALTH_HEART_SIZE,
+				GuiRenderSystem.HEALTH_HEART_SIZE, Format.RGBA8888);
+		healthHeartPixmap.setColor(Color.RED);
+		healthHeartPixmap.fill();
+		healthHeartTexture = new Texture(healthHeartPixmap);
 
-		Pixmap healthPixmap = new Pixmap(healthSize, healthSize, Format.RGBA8888);
-		healthPixmap.setColor(Color.RED);
-		healthPixmap.fill();
-		healthTexture = new Texture(healthPixmap);
-
-		// TODO: Replace healthBackground with 9-patch
+		// TODO: Replace gui backgrounds with 9-patch
 		int maxHealth = EntityConstants.PLAYER_MAX_HEALTH;
-		float healthBackgroundPixmapWidth = (healthTextX + healthText.width
-				+ (maxHealth * (healthSize + healthOffset)) + healthOffset);
-		float healthBackgroundPixmapHeight = (((healthTextYOffset + healthSize) - 1) + healthOffset);
-		Pixmap healthBackgroundPixmap = new Pixmap((int) healthBackgroundPixmapWidth,
-				(int) healthBackgroundPixmapHeight, Format.RGBA8888);
-		healthBackgroundPixmap.setColor(backgroundColour);
-		// healthBackgroundPixmap.fill();
-		int healthBackgroundRadius = (int) healthOffset * 2;
-		healthBackgroundPixmap.fillRectangle(0, 0, healthBackgroundPixmap.getWidth(),
-				healthBackgroundPixmap.getHeight() - healthBackgroundRadius);
-		healthBackgroundPixmap.fillRectangle(0, 0, healthBackgroundPixmap.getWidth() - healthBackgroundRadius,
-				healthBackgroundPixmap.getHeight());
-		healthBackgroundPixmap.fillCircle(healthBackgroundPixmap.getWidth() - healthBackgroundRadius,
-				healthBackgroundPixmap.getHeight() - healthBackgroundRadius, healthBackgroundRadius);
+		backgroundWidth = (GuiRenderSystem.HEALTH_TEXT_X + healthText.width
+				+ (maxHealth * (GuiRenderSystem.HEALTH_HEART_SIZE + GuiRenderSystem.HEALTH_HEART_GAP))
+				+ GuiRenderSystem.HEALTH_HEART_GAP);
+		backgroundHeight = (((GuiRenderSystem.HEALTH_TEXT_Y_OFFSET + GuiRenderSystem.HEALTH_HEART_SIZE) - 1)
+				+ GuiRenderSystem.HEALTH_HEART_GAP);
 
-		healthBackgroundTexture = new Texture(healthBackgroundPixmap);
+		backgroundTexture = generateBackground(backgroundWidth, backgroundHeight, GuiRenderSystem.CORNER_RADIUS,
+				GuiRenderSystem.BACKGROUND_COLOUR);
+	}
 
-		float ammoBackgroundPixmapWidth = healthBackgroundPixmapWidth;
-		float ammoBackgroundPixmapHeight = healthBackgroundPixmapHeight;
-		Pixmap ammoBackgroundPixmap = new Pixmap((int) ammoBackgroundPixmapWidth,
-				(int) ammoBackgroundPixmapHeight, Format.RGBA8888);
-		ammoBackgroundPixmap.setColor(backgroundColour);
-		// healthBackgroundPixmap.fill();
-		int ammoBackgroundRadius = healthBackgroundRadius;
-		ammoBackgroundPixmap.fillRectangle(0, 0, ammoBackgroundPixmap.getWidth(),
-				ammoBackgroundPixmap.getHeight() - ammoBackgroundRadius);
-		ammoBackgroundPixmap.fillRectangle(ammoBackgroundRadius, 0,
-				ammoBackgroundPixmap.getWidth() - ammoBackgroundRadius,
-				ammoBackgroundPixmap.getHeight());
-		ammoBackgroundPixmap.fillCircle(ammoBackgroundRadius,
-				ammoBackgroundPixmap.getHeight() - ammoBackgroundRadius, ammoBackgroundRadius);
 
-		ammoBackgroundTexture = new Texture(ammoBackgroundPixmap);
+	public Texture generateBackground(float width, float height, int cornerRadius, Color colour) {
+		Pixmap backgroundPixmap = new Pixmap((int) width + cornerRadius, (int) height + cornerRadius,
+				Format.RGBA8888);
+		backgroundPixmap.setColor(colour);
+
+		int cr = cornerRadius;
+		int pw = backgroundPixmap.getWidth();
+		int ph = backgroundPixmap.getHeight();
+
+		backgroundPixmap.fillRectangle(cr, 0, pw - (cr * 2), cr);
+		backgroundPixmap.fillRectangle(cr, ph - cr, pw - (cr * 2), cr);
+		backgroundPixmap.fillRectangle(0, cr, pw, ph - (cr * 2));
+
+		backgroundPixmap.fillCircle(cr, cr, cr);
+		backgroundPixmap.fillCircle(pw - cr, cr, cr);
+		backgroundPixmap.fillCircle(cr, ph - cr, cr);
+		backgroundPixmap.fillCircle(pw - cr, ph - cr, cr);
+
+		return new Texture(backgroundPixmap);
+	}
+
+
+	public void resizeCamera(int windowWidth, int windowHeight) {
+		screenWidth = windowWidth;
+		screenHeight = windowHeight;
 	}
 
 
@@ -109,6 +121,9 @@ public class GuiRenderSystem extends GameSystem {
 
 			WeaponComponent weaponComponent = entityManager.getComponent(playerId, WeaponComponent.class);
 			renderWeaponAmmo(weaponComponent);
+
+			ScoreComponent scoreComponent = entityManager.getComponent(playerId, ScoreComponent.class);
+			renderScore(scoreComponent);
 		} catch (NullPointerException e) {
 		} catch (IllegalArgumentException e) {
 		}
@@ -117,48 +132,72 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
-	private void renderWeaponAmmo(WeaponComponent weaponComponent) {
-		float ammoX = camera.viewportWidth - ammoBackgroundTexture.getWidth();
-		float ammoTextY = camera.viewportHeight - healthTextYOffset;
-
-		batch.draw(ammoBackgroundTexture, ammoX, camera.viewportHeight - ammoBackgroundTexture.getHeight());
-
-		float ammoTextX = ammoX + healthTextX;
-		font.draw(batch, ammoText, ammoTextX, ammoTextY);
-
-		ammoTextX += ammoText.width;
-
-		int ammoInClip = weaponComponent.ammoInClip;
-		int clipSize = weaponComponent.getClipSize();
-		int extraAmmo = weaponComponent.extraAmmo;
-		boolean isReloading = weaponComponent.isReloading();
-		String currentAmmoText = ammoInClip + "/" + clipSize + " (" + extraAmmo + ")";
-		if (isReloading) {
-			currentAmmoText += " R";
-		}
-		font.draw(batch, currentAmmoText, ammoTextX, ammoTextY);
-	}
-
-
 	public void renderHealthBar(int health) {
 		if (health < 0) {
 			health = 0;
 		}
 
-		batch.draw(healthBackgroundTexture, 0, camera.viewportHeight - healthBackgroundTexture.getHeight());
+		float backgroundX = -GuiRenderSystem.CORNER_RADIUS;
+		float backgroundY = (screenHeight - backgroundTexture.getHeight()) + GuiRenderSystem.CORNER_RADIUS;
+		batch.draw(backgroundTexture, backgroundX, backgroundY);
 
-		float healthX = healthTextX;
-		float healthY = camera.viewportHeight - healthTextYOffset;
+		float healthX = GuiRenderSystem.HEALTH_TEXT_X;
+		float healthY = screenHeight - GuiRenderSystem.HEALTH_TEXT_Y_OFFSET;
 
-		font.draw(batch, healthText, healthTextX, healthY);
+		font.draw(batch, healthText, GuiRenderSystem.HEALTH_TEXT_X, healthY);
 
-		healthX += healthText.width + healthOffset;
-		healthY -= healthSize - 1;
+		healthX += healthText.width + GuiRenderSystem.HEALTH_HEART_GAP;
+		healthY -= GuiRenderSystem.HEALTH_HEART_SIZE - 1;
 
 		for (int i = 0; i < health; i += 1) {
-			batch.draw(healthTexture, healthX, healthY);
-			healthX += healthSize + healthOffset;
+			batch.draw(healthHeartTexture, healthX, healthY);
+			healthX += GuiRenderSystem.HEALTH_HEART_SIZE + GuiRenderSystem.HEALTH_HEART_GAP;
 		}
+	}
+
+
+	private void renderBackgroundWithTexture(float x, float y, float textX, float textY, String text) {
+		batch.draw(backgroundTexture, x, y);
+		font.draw(batch, text, textX, textY);
+	}
+
+
+	private void renderScore(ScoreComponent scoreComponent) {
+		float scoreX = (screenWidth - backgroundTexture.getWidth()) + GuiRenderSystem.CORNER_RADIUS
+				+ GuiRenderSystem.RIGHT_EXTRA;
+		float scoreY = (screenHeight - backgroundTexture.getHeight()) + GuiRenderSystem.CORNER_RADIUS;
+		float scoreTextX = scoreX + GuiRenderSystem.HEALTH_TEXT_X;
+		float scoreTextY = screenHeight - GuiRenderSystem.HEALTH_TEXT_Y_OFFSET;
+		String text = "Score: " + scoreComponent.score;
+
+		if (scoreComponent.combo > 0) {
+			text += " + " + scoreComponent.workingScore;
+			if (scoreComponent.combo > 1) {
+				text += " x" + scoreComponent.combo;
+			}
+		}
+
+		renderBackgroundWithTexture(scoreX, scoreY, scoreTextX, scoreTextY, text);
+	}
+
+
+	private void renderWeaponAmmo(WeaponComponent weaponComponent) {
+		float ammoX = (screenWidth - backgroundTexture.getWidth()) + GuiRenderSystem.CORNER_RADIUS
+				+ GuiRenderSystem.RIGHT_EXTRA;
+		float ammoY = -GuiRenderSystem.CORNER_RADIUS;
+		float ammoTextX = ammoX + GuiRenderSystem.HEALTH_TEXT_X;
+		float ammoTextY = (-GuiRenderSystem.CORNER_RADIUS + backgroundTexture.getHeight())
+				- GuiRenderSystem.HEALTH_TEXT_Y_OFFSET;
+
+		String text = "Ammo: ";
+		text += weaponComponent.ammoInClip;
+		text += "/" + weaponComponent.getClipSize();
+		text += " (" + weaponComponent.extraAmmo + ")";
+		if (weaponComponent.isReloading()) {
+			text += " R";
+		}
+
+		renderBackgroundWithTexture(ammoX, ammoY, ammoTextX, ammoTextY, text);
 	}
 
 }

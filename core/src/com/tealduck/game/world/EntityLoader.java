@@ -31,6 +31,7 @@ import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PatrolRouteComponent;
 import com.tealduck.game.component.PickupComponent;
 import com.tealduck.game.component.PositionComponent;
+import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.UserInputComponent;
 import com.tealduck.game.component.ViewconeComponent;
@@ -151,6 +152,7 @@ public class EntityLoader {
 						EntityLoader.addPatrolRouteToEnemy(entityManager, world, routeName,
 								enemyId);
 					}
+
 				} else if (name.equals("Goal")) {
 					if (loadedGoal) {
 						throw new IllegalArgumentException("More than 1 goal");
@@ -202,10 +204,10 @@ public class EntityLoader {
 				amount = Integer.parseInt(amountProperty);
 			} catch (NumberFormatException e) {
 
-				Gdx.app.log("Load", "Ammo pickup amount not valid integer, using default");
+				Gdx.app.log("Load", "Pickup amount not valid integer, using default");
 			}
 		} else {
-			Gdx.app.log("Load", "Ammo pickup doesn't state amount, using default");
+			Gdx.app.log("Load", "Pickup doesn't state amount, using default");
 		}
 
 		return amount;
@@ -230,7 +232,6 @@ public class EntityLoader {
 		CollisionComponent collisionComponent = new CollisionComponent(aabb, offsetFromPosition);
 		entityManager.addComponent(entityId, collisionComponent);
 		return collisionComponent;
-
 	}
 
 
@@ -332,10 +333,11 @@ public class EntityLoader {
 
 		entityManager.addComponent(playerId, new KnockbackComponent(EntityConstants.PLAYER_KNOCKBACK_FORCE));
 
-		entityManager.addComponent(playerId,
-				new WeaponComponent(new MachineGun(bulletTexture),
-						EntityConstants.MACHINE_GUN_CLIP_SIZE, EntityConstants.START_EXTRA_AMMO,
-						EntityConstants.COOLDOWN_TIME, EntityConstants.RELOAD_TIME));
+		MachineGun weapon = new MachineGun(bulletTexture);
+		entityManager.addComponent(playerId, new WeaponComponent(weapon, EntityConstants.START_AMMO_IN_CLIP,
+				EntityConstants.START_EXTRA_AMMO));
+
+		entityManager.addComponent(playerId, new ScoreComponent());
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(playerId, EventName.COLLISION, PlayerCollision.instance);

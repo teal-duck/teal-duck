@@ -28,6 +28,18 @@ public class MachineGun extends Weapon {
 
 
 	@Override
+	public float getCooldownTime() {
+		return EntityConstants.COOLDOWN_TIME;
+	}
+
+
+	@Override
+	public float getReloadTime() {
+		return EntityConstants.RELOAD_TIME;
+	}
+
+
+	@Override
 	public int ammoRequiredToFire() {
 		return 1;
 	}

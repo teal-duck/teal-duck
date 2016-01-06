@@ -62,7 +62,7 @@
    </properties>
   </object>
   <object name="Goal" type="Goal" gid="83" x="1792" y="3072"/>
-  <object name="AmmoPickup" type="AmmoPickup" gid="84" x="256" y="3968"/>
-  <object name="HealthPickup" type="HealthPickup" gid="85" x="256" y="3712"/>
+  <object name="AmmoPickup" type="Pickup" gid="84" x="256" y="3968"/>
+  <object name="HealthPickup" type="Pickup" gid="85" x="256" y="3712"/>
  </objectgroup>
 </map>
