@@ -5,28 +5,23 @@ import com.tealduck.game.engine.Component;
 
 
 public class ViewconeComponent extends Component {
-	public float fov;
+	public float halfFov;
 	public float length;
 
 
-	public ViewconeComponent(float fov, float length) {
-		this.fov = fov;
+	public ViewconeComponent(float halfFov, float length) {
+		this.halfFov = halfFov;
 		this.length = length;
 	}
 
 
-	public float getFovRadians() {
-		return (float) Math.acos(fov);
-	}
-
-
 	public float getHalfFovRadians() {
-		return getFovRadians() / 2;
+		return (float) Math.acos(halfFov);
 	}
 
 
 	@Override
 	public String toString() {
-		return "ViewconeComponent(" + fov + ", " + length + ")";
+		return "ViewconeComponent(" + halfFov + ", " + length + ")";
 	}
 }

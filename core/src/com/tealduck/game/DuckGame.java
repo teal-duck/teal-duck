@@ -36,6 +36,7 @@ public class DuckGame extends Game {
 	private float time = 0;
 	private int frames = 0;
 	private boolean logFPS = false;
+	private float gameTime = 0;
 
 
 	@Override
@@ -115,10 +116,17 @@ public class DuckGame extends Game {
 
 	@Override
 	public void render() {
-		calculateFPS(Gdx.graphics.getDeltaTime());
+		float deltaTime = Gdx.graphics.getDeltaTime();
+		gameTime += deltaTime;
+		calculateFPS(deltaTime);
 		super.render();
 
 		entityEngine.removeAllFlaggedEntities();
+	}
+
+
+	public float getGameTime() {
+		return gameTime;
 	}
 
 

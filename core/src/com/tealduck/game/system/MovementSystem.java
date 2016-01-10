@@ -38,12 +38,12 @@ public class MovementSystem extends GameSystem {
 			// TODO: Calculate friction based on surface (and mass?)
 			float friction = movementComponent.friction;
 
+			float MAX_VELOCITY = 1500f;
+
 			velocity.mulAdd(acceleration, deltaTime);
 			acceleration.setZero();
-
-			Vector2 end = position.cpy().mulAdd(velocity, deltaTime);
-
-			position.set(end);
+			velocity.limit(MAX_VELOCITY);
+			position.mulAdd(velocity, deltaTime);
 			velocity.scl(friction);
 		}
 	}

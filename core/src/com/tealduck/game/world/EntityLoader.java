@@ -3,6 +3,7 @@ package com.tealduck.game.world;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -20,9 +21,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.AssetLocations;
 import com.tealduck.game.EventName;
 import com.tealduck.game.Tag;
+import com.tealduck.game.Team;
 import com.tealduck.game.TextureMap;
 import com.tealduck.game.collision.AABB;
 import com.tealduck.game.collision.Circle;
+import com.tealduck.game.component.ChaseComponent;
 import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.DamageComponent;
 import com.tealduck.game.component.HealthComponent;
@@ -33,6 +36,7 @@ import com.tealduck.game.component.PickupComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.component.SpriteComponent;
+import com.tealduck.game.component.TeamComponent;
 import com.tealduck.game.component.UserInputComponent;
 import com.tealduck.game.component.ViewconeComponent;
 import com.tealduck.game.component.WeaponComponent;
@@ -112,7 +116,7 @@ public class EntityLoader {
 
 	public static void loadEntities(World world, TextureMap textureMap) {
 		// TODO: Rewrite loadEntities method, it's very large
-		boolean loadedPlayer = false;
+		int playerId = -1;
 		boolean loadedGoal = false;
 
 		TiledMap tiledMap = world.getTiledMap();
@@ -134,14 +138,13 @@ public class EntityLoader {
 				float y = t.getY();
 
 				if (name.equals("Player")) {
-					if (loadedPlayer) {
+					if (playerId != -1) {
 						throw new IllegalArgumentException("More than 1 player");
 					}
 
-					EntityLoader.createPlayer(entityEngine,
+					playerId = EntityLoader.createPlayer(entityEngine,
 							textureMap.getTexture(AssetLocations.DUCK), new Vector2(x, y),
 							textureMap.getTexture(AssetLocations.BULLET));
-					loadedPlayer = true;
 
 				} else if (name.equals("Enemy")) {
 					int enemyId = EntityLoader.createEnemy(entityEngine,
@@ -193,6 +196,13 @@ public class EntityLoader {
 						+ object.getName());
 			}
 		}
+
+		if (playerId == -1) {
+			Gdx.app.log("Load", "No player exists in map");
+			return;
+		}
+
+		EntityLoader.addChaseComponentToEnemies(entityManager, playerId);
 	}
 
 
@@ -316,7 +326,8 @@ public class EntityLoader {
 
 		entityManager.addComponent(playerId,
 				new SpriteComponent(texture, EntityLoader.animationFromTexture(texture, 64, 64, 0.2f)));
-		entityManager.addComponent(playerId, new PositionComponent(position));
+		entityManager.addComponent(playerId,
+				new PositionComponent(position, new Vector2(1, 0), new Vector2(64, 64)));
 		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0),
 				EntityConstants.PLAYER_SPEED, EntityConstants.PLAYER_SPRINT));
 
@@ -327,7 +338,8 @@ public class EntityLoader {
 
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, playerId, position,
 				EntityConstants.PLAYER_RADIUS);
-		// addEntityAABBCollisionComponent(entityManager, playerId, position, new Vector2(60, 60));
+		// addEntityAABBCollisionComponent(entityManager, playerId, position, new Vector2(60,
+		// 60));
 
 		entityManager.addComponent(playerId, new HealthComponent(EntityConstants.PLAYER_MAX_HEALTH));
 
@@ -338,6 +350,8 @@ public class EntityLoader {
 				EntityConstants.START_EXTRA_AMMO));
 
 		entityManager.addComponent(playerId, new ScoreComponent());
+
+		entityManager.addComponent(playerId, new TeamComponent(Team.GOOD));
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(playerId, EventName.COLLISION, PlayerCollision.instance);
@@ -357,7 +371,8 @@ public class EntityLoader {
 		int enemyId = entityManager.createEntity();
 		entityManager.addComponent(enemyId,
 				new SpriteComponent(texture, EntityLoader.animationFromTexture(texture, 64, 64, 0.2f)));
-		entityManager.addComponent(enemyId, new PositionComponent(position));
+		entityManager.addComponent(enemyId,
+				new PositionComponent(position, new Vector2(1, 0), new Vector2(64, 64)));
 		entityManager.addComponent(enemyId,
 				new MovementComponent(new Vector2(0, 0), EntityConstants.ENEMY_SPEED));
 		entityManager.addComponent(enemyId, new DamageComponent(EntityConstants.ENEMY_DAMAGE));
@@ -365,10 +380,12 @@ public class EntityLoader {
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, enemyId, position,
 				EntityConstants.ENEMY_RADIUS);
 
-		entityManager.addComponent(enemyId, new ViewconeComponent(EntityConstants.ENEMY_VIEW_FOV,
+		entityManager.addComponent(enemyId, new ViewconeComponent(EntityConstants.ENEMY_VIEW_HALF_FOV,
 				EntityConstants.ENEMY_VIEW_LENGTH));
 
 		entityManager.addComponent(enemyId, new HealthComponent(3));
+
+		entityManager.addComponent(enemyId, new TeamComponent(Team.BAD));
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(enemyId, EventName.COLLISION, EnemyCollision.instance);
@@ -391,11 +408,31 @@ public class EntityLoader {
 	}
 
 
+	private static void addChaseComponentToEnemies(EntityManager entityManager, int playerId) {
+		// Enemies that don't have patrol route should chase player
+
+		Set<Integer> entities = entityManager.getEntitiesWithComponent(TeamComponent.class);
+		for (int entity : entities) {
+			if (entityManager.entityHasComponent(entity, PatrolRouteComponent.class)) {
+				continue;
+			}
+
+			TeamComponent teamComponent = entityManager.getComponent(entity, TeamComponent.class);
+			Team team = teamComponent.team;
+
+			if (team == Team.BAD) {
+				entityManager.addComponent(entity, new ChaseComponent(playerId, false));
+			}
+		}
+	}
+
+
 	private static int createGoal(EntityEngine entityEngine, Texture texture, Vector2 position) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int goalId = entityManager.createEntityWithTag(entityEngine.getEntityTagManager(), Tag.GOAL);
 		entityManager.addComponent(goalId, new SpriteComponent(texture));
-		entityManager.addComponent(goalId, new PositionComponent(position));
+		entityManager.addComponent(goalId,
+				new PositionComponent(position, new Vector2(1, 0), new Vector2(64, 64)));
 		EntityLoader.addEntityAABBCollisionComponent(entityManager, goalId, position, new Vector2(64, 64));
 
 		EventManager eventManager = entityEngine.getEventManager();
@@ -411,7 +448,8 @@ public class EntityLoader {
 
 		int pickupId = entityManager.createEntity();
 		entityManager.addComponent(pickupId, new SpriteComponent(texture));
-		entityManager.addComponent(pickupId, new PositionComponent(position));
+		entityManager.addComponent(pickupId,
+				new PositionComponent(position, new Vector2(1, 0), new Vector2(64, 64)));
 
 		entityManager.addComponent(pickupId, new PickupComponent(contents));
 

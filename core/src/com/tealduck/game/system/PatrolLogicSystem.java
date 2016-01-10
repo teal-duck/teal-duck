@@ -4,6 +4,7 @@ package com.tealduck.game.system;
 import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
+import com.tealduck.game.component.ChaseComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PatrolRouteComponent;
 import com.tealduck.game.component.PositionComponent;
@@ -42,6 +43,11 @@ public class PatrolLogicSystem extends GameSystem {
 				MovementComponent.class, PatrolRouteComponent.class);
 
 		for (int entity : entities) {
+			// If the entity is in the chasing state, don't follow patrol route
+			if (entityManager.entityHasComponent(entity, ChaseComponent.class)) {
+				continue;
+			}
+
 			PositionComponent positionComponent = entityManager.getComponent(entity,
 					PositionComponent.class);
 			MovementComponent movementComponent = entityManager.getComponent(entity,

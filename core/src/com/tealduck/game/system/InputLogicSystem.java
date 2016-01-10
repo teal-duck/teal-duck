@@ -8,8 +8,10 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.tealduck.game.Team;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
+import com.tealduck.game.component.TeamComponent;
 import com.tealduck.game.component.UserInputComponent;
 import com.tealduck.game.component.WeaponComponent;
 import com.tealduck.game.engine.EntityEngine;
@@ -92,7 +94,8 @@ public class InputLogicSystem extends GameSystem {
 				Vector3 posInWorld3 = camera.unproject(new Vector3(x, y, 0));
 				Vector2 posInWorld = new Vector2(posInWorld3.x, posInWorld3.y);
 
-				Vector2 entityCenter = positionComponent.position.cpy().add(32, 32);
+				Vector2 entityCenter = positionComponent.getCenter();
+				// .position.cpy().add(32, 32);
 
 				positionComponent.lookAt.set(posInWorld.cpy().sub(entityCenter).nor());
 			}
@@ -110,11 +113,18 @@ public class InputLogicSystem extends GameSystem {
 
 				if ((fireState != 0) || Gdx.input.isButtonPressed(0)) {
 					// TODO: Calculate position to shoot from
-					Vector2 shootPosition = positionComponent.position.cpy();
+					Vector2 shootPosition = positionComponent.getCenter();
+					// .position.cpy();
 					Vector2 shootDirection = positionComponent.lookAt.cpy().nor();
 					shootPosition.mulAdd(shootDirection, 20f);
+
+					Team team = null;
+					if (entityManager.entityHasComponent(entity, TeamComponent.class)) {
+						team = entityManager.getComponent(entity, TeamComponent.class).team;
+					}
+
 					weaponComponent.fireWeapon(getEntityEngine(), entity, shootPosition,
-							shootDirection);
+							shootDirection, team);
 				}
 
 				float reloadState = controls.getStateForAction(Action.RELOAD, controller);

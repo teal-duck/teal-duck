@@ -37,11 +37,13 @@ public class EntityConstants {
 	public static final boolean USE_CONE_LIGHTS = true;
 
 	// Used with dot product, a . b = cos(t)
-	private static final float ENEMY_VIEW_FOV_DEGREES = 45f; // MathUtils.cosDeg(30);
-	public static final float ENEMY_VIEW_FOV = MathUtils.cosDeg(EntityConstants.ENEMY_VIEW_FOV_DEGREES);
+	private static final float ENEMY_VIEW_HALF_FOV_DEGREES = 15f; // 30f; // MathUtils.cosDeg(30);
+	public static final float ENEMY_VIEW_HALF_FOV = MathUtils.cosDeg(EntityConstants.ENEMY_VIEW_HALF_FOV_DEGREES);
 
 	// In pixels, not tiles
-	public static final float ENEMY_VIEW_LENGTH = 64 * 4f;
+	public static final float ENEMY_VIEW_LENGTH = 64 * 2f; // 4f;
+
+	public static final float ENEMY_TIME_TO_FORGET = 5f;
 
 	public static final float AMBIENT_INTENSITY = 0.2f;
 	private static final float colour = 0.8f;

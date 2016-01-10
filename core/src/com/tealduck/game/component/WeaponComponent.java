@@ -2,6 +2,7 @@ package com.tealduck.game.component;
 
 
 import com.badlogic.gdx.math.Vector2;
+import com.tealduck.game.Team;
 import com.tealduck.game.engine.Component;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.weapon.Weapon;
@@ -39,7 +40,8 @@ public class WeaponComponent extends Component {
 
 
 	// TODO: Maybe move weapon logic out of the component
-	public void fireWeapon(EntityEngine entityEngine, int shooterId, Vector2 position, Vector2 direction) {
+	public void fireWeapon(EntityEngine entityEngine, int shooterId, Vector2 position, Vector2 direction,
+			Team team) {
 		if (cooldownTime != 0) {
 			return;
 		}
@@ -51,7 +53,7 @@ public class WeaponComponent extends Component {
 			stopReloading();
 		}
 		cooldownTime = weapon.getCooldownTime();
-		int ammoUsed = weapon.fire(entityEngine, shooterId, position, direction);
+		int ammoUsed = weapon.fire(entityEngine, shooterId, position, direction, team);
 		ammoInClip -= ammoUsed;
 
 		justFired = true;

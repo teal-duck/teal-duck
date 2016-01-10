@@ -85,6 +85,11 @@ public abstract class DuckScreenBase implements Screen {
 	}
 
 
+	public DuckGame getGame() {
+		return game;
+	}
+
+
 	public SpriteBatch getBatch() {
 		return game.getBatch();
 	}

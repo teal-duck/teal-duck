@@ -51,7 +51,7 @@ public class EntityCollisionSystem extends GameSystem {
 
 				eventManager.triggerEvent(other, entity, EventName.COLLISION, intersection);
 				eventManager.triggerEvent(entity, other, EventName.COLLISION,
-						intersection.flippedCopy());
+						intersection.getFlippedCopy());
 			}
 		}
 	}

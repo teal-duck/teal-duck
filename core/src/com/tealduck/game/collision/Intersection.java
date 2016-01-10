@@ -20,13 +20,18 @@ public class Intersection {
 	}
 
 
-	public Intersection copy() {
+	public Vector2 getFlippedResolveVector() {
+		return normal.cpy().scl(-1);
+	}
+
+
+	public Intersection getCopy() {
 		return new Intersection(normal.cpy(), distance);
 	}
 
 
-	public Intersection flippedCopy() {
-		return new Intersection(normal.cpy().scl(-1), distance);
+	public Intersection getFlippedCopy() {
+		return new Intersection(getFlippedResolveVector(), distance);
 	}
 
 

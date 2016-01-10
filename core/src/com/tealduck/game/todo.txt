@@ -16,35 +16,18 @@ Required to do for assessment 2:
 
 - Enemy chasing
 	- Viewcone
-		- Has a direction, viewing angle (FOV) and length
-		- Dot product to tell if enemy looking at player
 		- Somehow tell if the ray is going through the wall
 			- There are algorithms for this online
 			- Or ugly solution: do line-to-aabb collision for every solid tile in the ray's bounding box
 		- Also create new viewcone texture
-	- State machine
-		- S1
-			- Enemy follows patrol path
-			- If enemy sees player, go to S2, else go to S1
-		- S2
-			- Add a chase component to enemy
-				- For assessment 2, the enemy just walks towards player, even if there's a wall in the way
-				- Pathfinding is for assessment 4
-			- Go to S3
-		- S3
-			- Enemy walks towards player
-			- If enemy can still see player, go to S3, else go to S4
-		- S4
-			- Set a counter to e.g. 5 seconds
-			- Go to S5
-		- S5
-			- Enemy walks randomly, looking for player
-				- Perhaps pick random direction (stick to axis)
-				- Keep going until they hit a wall, then repeat?
-			- If enemy sees player, reset counter to 0 and go to S3
-			- Decrease counter
-			- If counter is 0 (i.e. time's up), remove chase component and go to S1
-		
+	- Search for player
+		- If enemy has chase component but can't see player, try to find player
+		- Enemy walks randomly?
+			- Perhaps pick random direction (stick to axis)?
+			- Keep going until they hit a wall, then repeat?
+	- Perhaps enemies without patrol routes should always be searching for the player?
+		- Follow above logic for looking for player
+
 - Menu, pause, save/load, gui
 	- Main menu with new game, load game, settings(?), quit
 	- New game just starts game

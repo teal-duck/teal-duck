@@ -87,6 +87,11 @@ public class EntityTagManager {
 	}
 
 
+	public boolean isTagAssignedToEntity(String tag) {
+		return tags.containsKey(tag);
+	}
+
+
 	/**
 	 *
 	 * @return Set containing Tags

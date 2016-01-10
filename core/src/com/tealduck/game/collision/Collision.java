@@ -214,7 +214,7 @@ public class Collision {
 			Intersection intersection = Collision.circleToAabb((Circle) s1, (AABB) s0);
 			// Need to flip because aabbToCircle resolution vector is in opposite direction
 			if (intersection != null) {
-				intersection = intersection.flippedCopy();
+				intersection = intersection.getFlippedCopy();
 			}
 
 			return intersection;
