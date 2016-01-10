@@ -14,7 +14,6 @@ public class WeaponComponent extends Component {
 	public int ammoInClip;
 	public int extraAmmo;
 
-	// TODO: Should maxCooldownTime be part of the weapon?
 	public float cooldownTime = 0;
 
 	public float reloadTime = 0;

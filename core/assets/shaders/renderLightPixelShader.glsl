@@ -14,6 +14,6 @@ varying vec2 vTexCoord;
 uniform sampler2D u_texture; // Diffuse map
 
 void main() {
-	vec4 DiffuseColor = texture2D(u_texture, vTexCoord);
-	gl_FragColor = vColor * DiffuseColor;
+	vec4 diffuseColour = texture2D(u_texture, vTexCoord);
+	gl_FragColor = vColor * diffuseColour;
 }

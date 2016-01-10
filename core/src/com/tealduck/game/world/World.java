@@ -124,7 +124,6 @@ public class World {
 	}
 
 
-	// TODO: pixelToTile + pixelToTilExact + tileToPixel reuse vector2 instead of allocating new
 	public Vector2 pixelToTile(Vector2 pixel) {
 		if (pixel == null) {
 			throw new IllegalArgumentException("pixel is null");

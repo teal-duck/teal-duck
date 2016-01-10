@@ -1,6 +1,7 @@
 package com.tealduck.game.world;
 
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 
 
@@ -34,6 +35,13 @@ public class EntityConstants {
 	public static final int HEALTH_PICKUP_DEFAULT_AMOUNT = 1;
 
 	public static final boolean USE_CONE_LIGHTS = true;
+
+	// Used with dot product, a . b = cos(t)
+	private static final float ENEMY_VIEW_FOV_DEGREES = 45f; // MathUtils.cosDeg(30);
+	public static final float ENEMY_VIEW_FOV = MathUtils.cosDeg(EntityConstants.ENEMY_VIEW_FOV_DEGREES);
+
+	// In pixels, not tiles
+	public static final float ENEMY_VIEW_LENGTH = 64 * 4f;
 
 	public static final float AMBIENT_INTENSITY = 0.2f;
 	private static final float colour = 0.8f;

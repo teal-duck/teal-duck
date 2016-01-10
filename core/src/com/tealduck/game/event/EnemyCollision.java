@@ -18,7 +18,6 @@ public class EnemyCollision implements IEvent {
 
 	@Override
 	public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
-		// TODO: Maybe change how data is passed to events
 		if ((data == null) || !(data instanceof Intersection)) {
 			Gdx.app.log("Event", "Enemy collision event expected an intersection instance");
 			return false;

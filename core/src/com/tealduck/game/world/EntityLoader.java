@@ -365,7 +365,8 @@ public class EntityLoader {
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, enemyId, position,
 				EntityConstants.ENEMY_RADIUS);
 
-		entityManager.addComponent(enemyId, new ViewconeComponent());
+		entityManager.addComponent(enemyId, new ViewconeComponent(EntityConstants.ENEMY_VIEW_FOV,
+				EntityConstants.ENEMY_VIEW_LENGTH));
 
 		entityManager.addComponent(enemyId, new HealthComponent(3));
 

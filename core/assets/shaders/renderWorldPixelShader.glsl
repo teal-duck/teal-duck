@@ -17,18 +17,21 @@ uniform sampler2D u_lightmap; // Light map
 
 // Additional parameters for the shader
 uniform vec2 resolution; // Resolution of screen
-uniform LOWP vec4 ambientColor; // Ambient RGB, alpha channel is intensity 
+uniform LOWP vec4 ambientColour; // Ambient RGB, alpha channel is intensity 
 
 void main() {
-	vec4 diffuseColor = texture2D(u_texture, vTexCoord);
-	vec2 lightCoord = (gl_FragCoord.xy / resolution.xy);
+	vec4 diffuseColour = texture2D(u_texture, vTexCoord);
+	vec2 lightCoord = gl_FragCoord.xy / resolution.xy;
 	vec4 light = texture2D(u_lightmap, lightCoord);
 	
-	// gl_FragColor = vColor * light;
-	
-	vec3 ambient = ambientColor.rgb * ambientColor.a;
-	vec3 intensity = ambient + light.rgb;
- 	vec3 finalColor = diffuseColor.rgb * intensity;
-	
-	gl_FragColor = vColor * vec4(finalColor, diffuseColor.a);
+	bool debugLights = false;
+	if (debugLights) {
+		gl_FragColor = vColor * light;
+	} else {
+		vec3 ambient = ambientColour.rgb * ambientColour.a;
+		vec3 intensity = ambient + light.rgb;
+	 	vec3 finalColour = diffuseColour.rgb * intensity;
+		
+		gl_FragColor = vColor * vec4(finalColour, diffuseColour.a);
+	}
 }

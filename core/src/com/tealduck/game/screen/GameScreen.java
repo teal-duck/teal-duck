@@ -32,11 +32,6 @@ import com.tealduck.game.world.World;
 
 
 public class GameScreen extends DuckScreenBase {
-	// TODO: Move loaded textures into a map from name to texture instance
-	// private Texture duckTexture;
-	// private Texture enemyTexture;
-	// private Texture goalTexture;
-
 	private TextureMap textureMap;
 	private World world;
 
@@ -54,8 +49,8 @@ public class GameScreen extends DuckScreenBase {
 	@Override
 	public boolean startAssetLoading(AssetManager assetManager) {
 		TextureParameter textureParameter = new TextureParameter();
-		textureParameter.minFilter = TextureFilter.Nearest;
-		textureParameter.magFilter = TextureFilter.Nearest;
+		textureParameter.minFilter = TextureFilter.Linear;
+		textureParameter.magFilter = TextureFilter.Linear;
 
 		assetManager.load(AssetLocations.DUCK, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.ENEMY, Texture.class, textureParameter);

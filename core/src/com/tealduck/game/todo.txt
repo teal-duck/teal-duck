@@ -7,6 +7,13 @@ From assessment doc:
 
 
 Required to do for assessment 2:
+- Enemy drops on death (add a DropComponent to them?)
+- In GameScreen.update(), after it calls super.update(), it calls removeDeadEntities()
+	- Rename this to flagDeadEntitiesForRemoval()
+	- DuckGame.render() calls entityEngine.removeAllFlaggedEntities()
+	- Should drops be handled here or in events?
+- Calculate score combo time
+
 - Enemy chasing
 	- Viewcone
 		- Has a direction, viewing angle (FOV) and length
@@ -14,6 +21,7 @@ Required to do for assessment 2:
 		- Somehow tell if the ray is going through the wall
 			- There are algorithms for this online
 			- Or ugly solution: do line-to-aabb collision for every solid tile in the ray's bounding box
+		- Also create new viewcone texture
 	- State machine
 		- S1
 			- Enemy follows patrol path
@@ -36,30 +44,6 @@ Required to do for assessment 2:
 			- If enemy sees player, reset counter to 0 and go to S3
 			- Decrease counter
 			- If counter is 0 (i.e. time's up), remove chase component and go to S1
-
-- Random enemies
-	- Turret
-		- Stationary, uses the same viewcone logic to target player as other enemies
-		- Just needs rotating animation which can be done in coded
-		- And shooting animation, reuse player's
-	- Patrolling enemies
-		- Choose random location on map to spawn
-		- Keep going to left and to right as far as possible to get maximum horizontal movement
-		- Repeat for up and down
-		- One of those is randomly chosen as the patrol path
-		- Simple to do
-	- Random pickups?
-		
-- Make the game look like it's set at the uni
-	- Perhaps write code for moving from level 1 to 2, then to 3 etc
-	- Make level 1 be an overworld map with random planes etc
-		- Might need flying animation?
-		- Already have plane texture
-		- Enemy logic for this is really easy
-		- World can still be a tiled map (so appears same to the rest of code)
-			- But no actual tiles to load
-			- Just entities and a background texture
-		- For background, could we screenshot google maps?
 		
 - Menu, pause, save/load, gui
 	- Main menu with new game, load game, settings(?), quit
@@ -74,6 +58,39 @@ Required to do for assessment 2:
 		- Input system already set up to allow rebinding
 		- Low priority for assessment 2
 		
+- Random enemies
+	- Turret
+		- Stationary, uses the same viewcone logic to target player as other enemies
+		- Just needs rotating animation which can be done in coded
+		- And shooting animation, reuse player's
+		- Possibly place against a wall to limit rotation to -180 to +180 degrees
+	- Patrolling enemies
+		- Choose random location on map to spawn
+		- Keep going to left and to right as far as possible to get maximum horizontal movement
+		- Repeat for up and down
+		- One of those is randomly chosen as the patrol path
+		- Simple to do
+		- Perhaps only place if route length is long enough?
+		- Maybe even check if there's a route to the player so the enemy doesn't spawn in a hole
+	- Random pickups?
+		
+- Make the game look like it's set at the uni
+	- Perhaps write code for moving from level 1 to 2, then to 3 etc
+	- Make level 1 be an overworld map with random planes etc
+		- Might need flying animation?
+		- Already have plane texture
+		- Enemy logic for this is really easy
+		- World can still be a tiled map (so appears same to the rest of code)
+			- But no actual tiles to load
+			- Just entities and a background texture
+		- For background, could we screenshot google maps?
+	- For indoor levels, try to model floor plans of a building in uni
+	- Would it be too much to add stairs?
+		- Use layers?
+			- Would mean multiple floor, wall, collision, entity and path layers
+		- Or seperate *.tmx files?
+			- Possibly doable but inefficient
+		
 - Possibly 2 objective types
 	- Get to goal
 	- Kill all geese
@@ -86,16 +103,13 @@ Required to do for assessment 2:
 				|| ((objectiveType == ObjectiveType.KILL) && allEnemiesDead())) {
 				winGame();
 			}
-			
-- Animations should only play when entity moves
-
 
 Required assets:
 - Player gun, bullets, shooting animation
 - Ammo + health pickups, spinning animation? could possible just hardcode this as a hack
 - Turret texture
 - Gui + menu design
-- 2 level designs
+- 2-3 level designs
 	- Could be 1 overworld
 		- Maybe use google maps, is that allowed?
 	- 1 indoors
@@ -114,3 +128,4 @@ Would be nice if there's time:
 - Settings menu
 - Pathfinding with A*?
 - Particles?
+- Local multiplayer

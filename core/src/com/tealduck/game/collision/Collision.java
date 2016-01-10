@@ -92,7 +92,6 @@ public class Collision {
 	 * @return
 	 */
 	public static Vector2 vectorFromCenterOfAABBToEdge(AABB aabb, Vector2 pointInAABB) {
-		// TODO: vectorFromCenterOfAABBToEdge
 		// http://stackoverflow.com/questions/3180000/calculate-a-vector-from-a-point-in-a-rectangle-to-edge-based-on-angle
 		Vector2 vec = pointInAABB.cpy().sub(aabb.getCenter());
 		float angle = vec.angleRad();

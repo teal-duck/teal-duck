@@ -63,12 +63,14 @@ public class WorldRenderSystem extends GameSystem {
 	private Texture coneTexture;
 	private Texture pointTexture;
 	private FrameBuffer fbo;
-	private ShaderProgram defaultShader;
-	private ShaderProgram lightShader;
+	private ShaderProgram renderLightShader;
+	private ShaderProgram renderWorldShader;
 
 	private final String vertexShader = Gdx.files.internal("shaders/vertexShader.glsl").readString();
-	private final String defaultPixelShader = Gdx.files.internal("shaders/defaultPixelShader.glsl").readString();
-	private final String finalPixelShader = Gdx.files.internal("shaders/pixelShader.glsl").readString();
+	private final String renderLightPixelShader = Gdx.files.internal("shaders/renderLightPixelShader.glsl")
+			.readString();
+	private final String renderWorldPixelShader = Gdx.files.internal("shaders/renderWorldPixelShader.glsl")
+			.readString();
 
 	private boolean debugPatrol = false;
 	private boolean debugCollision = false;
@@ -114,15 +116,15 @@ public class WorldRenderSystem extends GameSystem {
 		pointTexture = textureMap.getTexture(AssetLocations.POINT_LIGHT);
 
 		ShaderProgram.pedantic = false;
-		defaultShader = new ShaderProgram(vertexShader, defaultPixelShader);
-		lightShader = new ShaderProgram(vertexShader, finalPixelShader);
+		renderLightShader = new ShaderProgram(vertexShader, renderLightPixelShader);
+		renderWorldShader = new ShaderProgram(vertexShader, renderWorldPixelShader);
 
-		lightShader.begin();
-		lightShader.setUniformi("u_lightmap", 1);
-		lightShader.setUniformf("ambientColor", EntityConstants.AMBIENT_COLOUR.x,
+		renderWorldShader.begin();
+		renderWorldShader.setUniformi("u_lightmap", 1);
+		renderWorldShader.setUniformf("ambientColour", EntityConstants.AMBIENT_COLOUR.x,
 				EntityConstants.AMBIENT_COLOUR.y, EntityConstants.AMBIENT_COLOUR.z,
 				EntityConstants.AMBIENT_INTENSITY);
-		lightShader.end();
+		renderWorldShader.end();
 	}
 
 
@@ -137,9 +139,9 @@ public class WorldRenderSystem extends GameSystem {
 
 		fbo = new FrameBuffer(Format.RGBA8888, windowWidth, windowHeight, false);
 
-		lightShader.begin();
-		lightShader.setUniformf("resolution", windowWidth, windowHeight);
-		lightShader.end();
+		renderWorldShader.begin();
+		renderWorldShader.setUniformf("resolution", windowWidth, windowHeight);
+		renderWorldShader.end();
 	}
 
 
@@ -253,10 +255,12 @@ public class WorldRenderSystem extends GameSystem {
 
 	@SuppressWarnings("unchecked")
 	private void renderLightsToFrameBuffer(float deltaTime) {
+		EntityManager entityManager = getEntityManager();
+
 		fbo.begin();
 		clearScreen();
 		batch.setProjectionMatrix(camera.combined);
-		batch.setShader(defaultShader);
+		batch.setShader(renderLightShader);
 		batch.begin();
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setColor(1f, 1f, 1f, 1f);
@@ -274,34 +278,64 @@ public class WorldRenderSystem extends GameSystem {
 		float circleOriginX = halfLightSize;
 		float circleOriginY = halfLightSize;
 
-		Set<Integer> entities = getEntityManager().getEntitiesWithComponents(PositionComponent.class,
+		Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class,
 				ViewconeComponent.class);
 		for (int entity : entities) {
 			// TODO: Test if entity is on/near screen before rendering light
-			PositionComponent positionComponent = getEntityManager().getComponent(entity,
+			PositionComponent positionComponent = entityManager.getComponent(entity,
 					PositionComponent.class);
+			ViewconeComponent viewconeComponent = entityManager.getComponent(entity,
+					ViewconeComponent.class);
 			Vector2 position = positionComponent.position;
 			Vector2 lookAt = positionComponent.lookAt;
+			float length = viewconeComponent.length;
+
 			float x = position.x;
 			float y = position.y;
 			float angle = lookAt.angle();
 
+			float xLength = 2 * length * (float) Math.tan(viewconeComponent.getHalfFovRadians());
+
+			float scaleX = xLength / lightSize;
+			float scaleY = length / lightSize;
+
+			float drawX = (x + 32f) - halfLightSize;
+			float drawY = (y + 32f) - lightSize;
+
+			// System.out.println("Fov: " + fov + "; Length: " + length + "; Half fov angle: " +
+			// halfFovAngle
+			// + "; X length: " + xLength);
+
 			if (cone) {
-				batch.draw(coneTexture, (x + 32f) - halfLightSize, (y + 32f) - lightSize, coneOriginX,
-						coneOriginY, lightSize, lightSize, lightScale, lightScale, angle + 90f,
-						0, 0, lightSize, lightSize, false, false);
+				// void com.badlogic.gdx.graphics.g2d.Batch.draw(Texture texture, float x, float y,
+				// float originX, float originY, float width, float height, float scaleX, float scaleY,
+				// float rotation, int srcX, int srcY, int srcWidth, int srcHeight, boolean flipX,
+				// boolean flipY)
+				batch.draw(coneTexture, // texture
+						drawX, // x
+						drawY, // y
+						coneOriginX, // origin x
+						coneOriginY, // origin y
+						lightSize, // width
+						lightSize, // height
+						scaleX, // scale x
+						scaleY, // scale y
+						angle + 90f, // rotation
+						0, 0, lightSize, lightSize, // src
+						false, false // flip
+				);
 			} else {
-				batch.draw(pointTexture, (x + 32f) - halfLightSize, (y + 32f) - halfLightSize,
-						circleOriginX, circleOriginY, lightSize, lightSize, lightScale,
-						lightScale, 0f, 0, 0, lightSize, lightSize, false, false);
+				// Point light for testing
+				batch.draw(pointTexture, drawX, drawY, circleOriginX, circleOriginY, lightSize,
+						lightSize, lightScale, lightScale, 0f, 0, 0, lightSize, lightSize,
+						false, false);
 			}
 		}
 
 		lightScale = 0.1f;
 		entities = getEntityManager().getEntitiesWithComponents(PositionComponent.class, WeaponComponent.class);
 		for (int entity : entities) {
-			WeaponComponent weaponComponent = getEntityManager().getComponent(entity,
-					WeaponComponent.class);
+			WeaponComponent weaponComponent = entityManager.getComponent(entity, WeaponComponent.class);
 			if (weaponComponent.justFired) {
 				weaponComponent.justFired = false;
 				Vector2 position = weaponComponent.fireLocation;
@@ -344,7 +378,7 @@ public class WorldRenderSystem extends GameSystem {
 
 
 	private void renderWorld() {
-		batch.setShader(lightShader);
+		batch.setShader(renderWorldShader);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		renderer.setView(camera);
