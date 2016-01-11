@@ -41,7 +41,7 @@ public class EntityConstants {
 	public static final float ENEMY_VIEW_HALF_FOV = MathUtils.cosDeg(EntityConstants.ENEMY_VIEW_HALF_FOV_DEGREES);
 
 	// In pixels, not tiles
-	public static final float ENEMY_VIEW_LENGTH = 64 * 2f; // 4f;
+	public static final float ENEMY_VIEW_LENGTH = 64 * 4f; // 2f; // 4f;
 
 	public static final float ENEMY_TIME_TO_FORGET = 5f;
 

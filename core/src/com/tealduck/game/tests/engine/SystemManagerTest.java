@@ -48,7 +48,7 @@ public class SystemManagerTest {
 		System.out.println(systemManager);
 		System.out.println("");
 
-		ChaseSystem pls = new ChaseSystem(entityEngine);
+		ChaseSystem pls = new ChaseSystem(entityEngine, null);
 		systemManager.addSystem(pls, 2);
 
 		System.out.println(systemManager);

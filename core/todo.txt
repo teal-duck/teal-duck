@@ -13,6 +13,10 @@ Required to do for assessment 2:
 	- DuckGame.render() calls entityEngine.removeAllFlaggedEntities()
 	- Should drops be handled here or in events?
 - Calculate score combo time
+- Show the target on the map
+	- Raycast to nearest tile and to nearest enemy
+	- With controller, if an enemy is a small jump away (like 1-2 degrees)
+		- Perhaps lock on
 
 - Enemy chasing
 	- Viewcone

@@ -31,7 +31,7 @@ public class ControllerHelper extends ControllerAdapter {
 
 	@Override
 	public boolean buttonDown(Controller controller, int buttonIndex) {
-		System.out.println("Controller #" + indexOf(controller) + ", button " + buttonIndex + " down");
+		// System.out.println("Controller #" + indexOf(controller) + ", button " + buttonIndex + " down");
 		return false;
 	}
 

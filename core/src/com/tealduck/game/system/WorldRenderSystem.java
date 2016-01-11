@@ -208,6 +208,35 @@ public class WorldRenderSystem extends GameSystem {
 		renderWorld();
 		renderEntities(deltaTime);
 		renderHealthBars();
+
+		// shapeRenderer.begin(ShapeType.Filled);
+		// shapeRenderer.setColor(Color.RED);
+		//
+		// EntityManager entityManager = getEntityManager();
+		// @SuppressWarnings("unchecked")
+		// Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class);
+		// for (int entity : entities) {
+		// if (!entityManager.entityHasComponent(entity, WeaponComponent.class)) { // &&
+		// // !entityManager.entityHasComponent(entity,
+		// // ViewconeComponent.class))
+		// // {
+		// continue;
+		// }
+		// PositionComponent positionComponent = entityManager.getComponent(entity,
+		// PositionComponent.class);
+		// Vector2 center = positionComponent.getCenter();
+		// Vector2 lookAt = positionComponent.lookAt;
+		//
+		// Ray ray = new Ray(center, lookAt.cpy());
+		// Vector2 intersection = ray.worldIntersection(world, 4f);
+		// if (intersection != null) {
+		// shapeRenderer.line(center, intersection);
+		// shapeRenderer.circle(intersection.x, intersection.y, 5f);
+		// }
+		//
+		// }
+		//
+		// shapeRenderer.end();
 	}
 
 

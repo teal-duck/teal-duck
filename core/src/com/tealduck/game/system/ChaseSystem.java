@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.Tag;
+import com.tealduck.game.collision.Ray;
 import com.tealduck.game.component.ChaseComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
@@ -14,11 +15,16 @@ import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.GameSystem;
 import com.tealduck.game.world.EntityConstants;
+import com.tealduck.game.world.World;
 
 
 public class ChaseSystem extends GameSystem {
-	public ChaseSystem(EntityEngine entityEngine) {
+	private World world;
+
+
+	public ChaseSystem(EntityEngine entityEngine, World world) {
 		super(entityEngine);
+		this.world = world;
 	}
 
 
@@ -120,9 +126,12 @@ public class ChaseSystem extends GameSystem {
 				return false;
 			}
 
-			// TODO: Check if ray goes through walls
+			Ray ray = new Ray(chaserPosition.cpy(), vecToTarget.cpy().nor());
+			Vector2 intersectTile = ray.worldIntersection(world, vecToTarget.len() / 64f);
 
-			return true;
+			if (intersectTile == null) {
+				return true;
+			}
 		}
 
 		return false;

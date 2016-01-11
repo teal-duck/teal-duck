@@ -102,7 +102,7 @@ public class GameScreen extends DuckScreenBase {
 	 */
 	@Override
 	protected void loadSystems(SystemManager systemManager) {
-		systemManager.addSystem(new ChaseSystem(getEntityEngine()), 1);
+		systemManager.addSystem(new ChaseSystem(getEntityEngine(), world), 1);
 		systemManager.addSystem(new PatrolLogicSystem(getEntityEngine()), 2);
 		systemManager.addSystem(new MovementSystem(getEntityEngine()), 4);
 		systemManager.addSystem(new WorldCollisionSystem(getEntityEngine(), world), 5);
