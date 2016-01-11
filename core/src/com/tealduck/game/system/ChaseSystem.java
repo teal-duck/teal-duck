@@ -126,6 +126,12 @@ public class ChaseSystem extends GameSystem {
 				return false;
 			}
 
+			// Hacky
+			// If player is less than a tile away, don't perform raycast
+			if (vecToTarget.len2() < (64 * 64)) {
+				return true;
+			}
+
 			Ray ray = new Ray(chaserPosition.cpy(), vecToTarget.cpy().nor());
 			Vector2 intersectTile = ray.worldIntersection(world, vecToTarget.len() / 64f);
 

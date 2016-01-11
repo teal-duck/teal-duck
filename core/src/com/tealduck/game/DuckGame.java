@@ -3,6 +3,7 @@ package com.tealduck.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.controllers.Controllers;
@@ -15,10 +16,14 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.SystemManager;
+import com.tealduck.game.input.Action;
+import com.tealduck.game.input.ControlMap;
+import com.tealduck.game.input.ControllerBindingType;
 import com.tealduck.game.input.controller.ControllerHelper;
+import com.tealduck.game.input.controller.PS4;
 import com.tealduck.game.screen.AssetLoadingScreen;
 import com.tealduck.game.screen.DuckScreenBase;
-import com.tealduck.game.screen.GameScreen;
+import com.tealduck.game.screen.MainMenuScreen;
 
 
 public class DuckGame extends Game {
@@ -27,6 +32,8 @@ public class DuckGame extends Game {
 	private SystemManager systemManager;
 	private EntityEngine entityEngine;
 	private OrthographicCamera guiCamera;
+
+	private ControlMap controlMap;
 
 	private BitmapFont font;
 
@@ -62,8 +69,10 @@ public class DuckGame extends Game {
 
 		setupControllers();
 
-		// loadScreen(MainMenuScreen.class);
-		loadScreen(GameScreen.class);
+		controlMap = loadPlayerControls();
+
+		loadScreen(MainMenuScreen.class);
+		// loadScreen(GameScreen.class);
 	}
 
 
@@ -146,6 +155,50 @@ public class DuckGame extends Game {
 	}
 
 
+	private ControlMap loadPlayerControls() {
+		ControlMap controls = new ControlMap();
+
+		controls.addKeyForAction(Action.RIGHT, Keys.D, Keys.RIGHT);
+		controls.addKeyForAction(Action.LEFT, Keys.A, Keys.LEFT);
+		controls.addKeyForAction(Action.UP, Keys.W, Keys.UP);
+		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
+		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
+		controls.addKeyForAction(Action.FIRE, Keys.SPACE);
+		// TODO: Add mouse click for firing to control map
+
+		controls.addKeyForAction(Action.RELOAD, Keys.R);
+
+		controls.addKeyForAction(Action.ENTER, Keys.ENTER);
+
+		float deadzone = 0.2f;
+		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_X,
+				deadzone);
+		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_X,
+				deadzone);
+		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_Y,
+				deadzone);
+		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_Y,
+				deadzone);
+		controls.addControllerForAction(Action.SPRINT, ControllerBindingType.BUTTON, PS4.BUTTON_R1);
+
+		controls.addControllerForAction(Action.LOOK_RIGHT, ControllerBindingType.AXIS_POSITIVE,
+				PS4.AXIS_RIGHT_X, deadzone);
+		controls.addControllerForAction(Action.LOOK_LEFT, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_RIGHT_X,
+				deadzone);
+		controls.addControllerForAction(Action.LOOK_UP, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_RIGHT_Y,
+				deadzone);
+		controls.addControllerForAction(Action.LOOK_DOWN, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_RIGHT_Y,
+				deadzone);
+		controls.addControllerForAction(Action.FIRE, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_R2,
+				deadzone);
+		controls.addControllerForAction(Action.RELOAD, ControllerBindingType.BUTTON, PS4.BUTTON_L1);
+
+		controls.addControllerForAction(Action.ENTER, ControllerBindingType.BUTTON, PS4.BUTTON_CROSS);
+
+		return controls;
+	}
+
+
 	@Override
 	public void dispose() {
 		if (screen != null) {
@@ -197,6 +250,11 @@ public class DuckGame extends Game {
 
 	public int getWindowWidth() {
 		return windowWidth;
+	}
+
+
+	public ControlMap getControlMap() {
+		return controlMap;
 	}
 
 

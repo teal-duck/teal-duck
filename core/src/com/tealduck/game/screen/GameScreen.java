@@ -91,7 +91,7 @@ public class GameScreen extends DuckScreenBase {
 		world = new World(getEntityEngine(), tiledMap);
 		world.addPatrolRoutes(EntityLoader.loadPatrolRoutes(tiledMap));
 
-		EntityLoader.loadEntities(world, textureMap);
+		EntityLoader.loadEntities(world, textureMap, getControlMap());
 	}
 
 

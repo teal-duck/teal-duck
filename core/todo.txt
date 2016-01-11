@@ -17,13 +17,16 @@ Required to do for assessment 2:
 	- Raycast to nearest tile and to nearest enemy
 	- With controller, if an enemy is a small jump away (like 1-2 degrees)
 		- Perhaps lock on
+- Move pickup logic into Pickup.applyToEntity(int entity)
+	- Visitor pattern
+- Sprinting
+	- Limited time
+	- Speeds up animation
+	- Flying
 
 - Enemy chasing
 	- Viewcone
-		- Somehow tell if the ray is going through the wall
-			- There are algorithms for this online
-			- Or ugly solution: do line-to-aabb collision for every solid tile in the ray's bounding box
-		- Also create new viewcone texture
+		- Create new viewcone texture
 	- Search for player
 		- If enemy has chase component but can't see player, try to find player
 		- Enemy walks randomly?

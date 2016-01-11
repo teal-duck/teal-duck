@@ -13,6 +13,7 @@ import com.tealduck.game.engine.EntityTagManager;
 import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.GameSystem;
 import com.tealduck.game.engine.SystemManager;
+import com.tealduck.game.input.ControlMap;
 
 
 public abstract class DuckScreenBase implements Screen {
@@ -142,6 +143,11 @@ public abstract class DuckScreenBase implements Screen {
 
 	public int getWindowHeight() {
 		return game.getWindowHeight();
+	}
+
+
+	public ControlMap getControlMap() {
+		return game.getControlMap();
 	}
 
 

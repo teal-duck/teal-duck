@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -46,11 +45,8 @@ import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.event.EnemyCollision;
 import com.tealduck.game.event.GoalCollision;
 import com.tealduck.game.event.PlayerCollision;
-import com.tealduck.game.input.Action;
 import com.tealduck.game.input.ControlMap;
-import com.tealduck.game.input.ControllerBindingType;
 import com.tealduck.game.input.controller.ControllerHelper;
-import com.tealduck.game.input.controller.PS4;
 import com.tealduck.game.pickup.AmmoPickup;
 import com.tealduck.game.pickup.HealthPickup;
 import com.tealduck.game.pickup.Pickup;
@@ -114,7 +110,7 @@ public class EntityLoader {
 	}
 
 
-	public static void loadEntities(World world, TextureMap textureMap) {
+	public static void loadEntities(World world, TextureMap textureMap, ControlMap controlMap) {
 		// TODO: Rewrite loadEntities method, it's very large
 		int playerId = -1;
 		boolean loadedGoal = false;
@@ -144,7 +140,7 @@ public class EntityLoader {
 
 					playerId = EntityLoader.createPlayer(entityEngine,
 							textureMap.getTexture(AssetLocations.DUCK), new Vector2(x, y),
-							textureMap.getTexture(AssetLocations.BULLET));
+							textureMap.getTexture(AssetLocations.BULLET), controlMap);
 
 				} else if (name.equals("Enemy")) {
 					int enemyId = EntityLoader.createEnemy(entityEngine,
@@ -272,46 +268,6 @@ public class EntityLoader {
 	}
 
 
-	private static ControlMap loadPlayerControls() {
-		ControlMap controls = new ControlMap();
-
-		controls.addKeyForAction(Action.RIGHT, Keys.D, Keys.RIGHT);
-		controls.addKeyForAction(Action.LEFT, Keys.A, Keys.LEFT);
-		controls.addKeyForAction(Action.UP, Keys.W, Keys.UP);
-		controls.addKeyForAction(Action.DOWN, Keys.S, Keys.DOWN);
-		controls.addKeyForAction(Action.SPRINT, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
-		controls.addKeyForAction(Action.FIRE, Keys.SPACE);
-		// TODO: Add mouse click for firing to control map
-
-		controls.addKeyForAction(Action.RELOAD, Keys.R);
-
-		float deadzone = 0.2f;
-		controls.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_X,
-				deadzone);
-		controls.addControllerForAction(Action.LEFT, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_X,
-				deadzone);
-		controls.addControllerForAction(Action.UP, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_LEFT_Y,
-				deadzone);
-		controls.addControllerForAction(Action.DOWN, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_Y,
-				deadzone);
-		controls.addControllerForAction(Action.SPRINT, ControllerBindingType.BUTTON, PS4.BUTTON_R1);
-
-		controls.addControllerForAction(Action.LOOK_RIGHT, ControllerBindingType.AXIS_POSITIVE,
-				PS4.AXIS_RIGHT_X, deadzone);
-		controls.addControllerForAction(Action.LOOK_LEFT, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_RIGHT_X,
-				deadzone);
-		controls.addControllerForAction(Action.LOOK_UP, ControllerBindingType.AXIS_NEGATIVE, PS4.AXIS_RIGHT_Y,
-				deadzone);
-		controls.addControllerForAction(Action.LOOK_DOWN, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_RIGHT_Y,
-				deadzone);
-		controls.addControllerForAction(Action.FIRE, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_R2,
-				deadzone);
-		controls.addControllerForAction(Action.RELOAD, ControllerBindingType.BUTTON, PS4.BUTTON_L1);
-
-		return controls;
-	}
-
-
 	/**
 	 * @param entityManager
 	 * @param entityTagManager
@@ -320,7 +276,7 @@ public class EntityLoader {
 	 * @return
 	 */
 	private static int createPlayer(EntityEngine entityEngine, Texture texture, Vector2 position,
-			Texture bulletTexture) {
+			Texture bulletTexture, ControlMap controlMap) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int playerId = entityManager.createEntityWithTag(entityEngine.getEntityTagManager(), Tag.PLAYER);
 
@@ -331,9 +287,9 @@ public class EntityLoader {
 		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0),
 				EntityConstants.PLAYER_SPEED, EntityConstants.PLAYER_SPRINT));
 
-		ControlMap controls = EntityLoader.loadPlayerControls();
-		UserInputComponent uic = new UserInputComponent(controls, ControllerHelper.getFirstControllerOrNull());
-		Gdx.app.log("Controls", uic.controls.toString());
+		UserInputComponent uic = new UserInputComponent(controlMap,
+				ControllerHelper.getFirstControllerOrNull());
+		Gdx.app.log("Controls", controlMap.toString());
 		entityManager.addComponent(playerId, uic);
 
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, playerId, position,
