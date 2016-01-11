@@ -8,21 +8,22 @@ From assessment doc:
 
 Required to do for assessment 2:
 - Enemy drops on death (add a DropComponent to them?)
-- In GameScreen.update(), after it calls super.update(), it calls removeDeadEntities()
-	- Rename this to flagDeadEntitiesForRemoval()
-	- DuckGame.render() calls entityEngine.removeAllFlaggedEntities()
-	- Should drops be handled here or in events?
+	- In GameScreen.update(), after it calls super.update(), it calls removeDeadEntities()
+		- Rename this to flagDeadEntitiesForRemoval()
+		- DuckGame.render() calls entityEngine.removeAllFlaggedEntities()
+		- Should drops be handled here or in events?
+	
 - Calculate score combo time
-- Show the target on the map
-	- Raycast to nearest tile and to nearest enemy
-	- With controller, if an enemy is a small jump away (like 1-2 degrees)
-		- Perhaps lock on
+
 - Move pickup logic into Pickup.applyToEntity(int entity)
 	- Visitor pattern
+	
 - Sprinting
 	- Limited time
 	- Speeds up animation
 	- Flying
+	
+- When paused, stop animations
 
 - Enemy chasing
 	- Viewcone
@@ -93,6 +94,12 @@ Required to do for assessment 2:
 				|| ((objectiveType == ObjectiveType.KILL) && allEnemiesDead())) {
 				winGame();
 			}
+			
+			
+- Show the target on the map
+	- Raycast to nearest tile and to nearest enemy
+	- With controller, if an enemy is a small jump away (like 1-2 degrees)
+		- Perhaps lock on
 
 Required assets:
 - Player gun, bullets, shooting animation

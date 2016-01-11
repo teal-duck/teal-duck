@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -46,7 +47,6 @@ import com.tealduck.game.event.EnemyCollision;
 import com.tealduck.game.event.GoalCollision;
 import com.tealduck.game.event.PlayerCollision;
 import com.tealduck.game.input.ControlMap;
-import com.tealduck.game.input.controller.ControllerHelper;
 import com.tealduck.game.pickup.AmmoPickup;
 import com.tealduck.game.pickup.HealthPickup;
 import com.tealduck.game.pickup.Pickup;
@@ -110,8 +110,8 @@ public class EntityLoader {
 	}
 
 
-	public static void loadEntities(World world, TextureMap textureMap, ControlMap controlMap) {
-		// TODO: Rewrite loadEntities method, it's very large
+	public static void loadEntities(World world, TextureMap textureMap, ControlMap controlMap,
+			Controller controller) {
 		int playerId = -1;
 		boolean loadedGoal = false;
 
@@ -140,7 +140,8 @@ public class EntityLoader {
 
 					playerId = EntityLoader.createPlayer(entityEngine,
 							textureMap.getTexture(AssetLocations.DUCK), new Vector2(x, y),
-							textureMap.getTexture(AssetLocations.BULLET), controlMap);
+							textureMap.getTexture(AssetLocations.BULLET), controlMap,
+							controller);
 
 				} else if (name.equals("Enemy")) {
 					int enemyId = EntityLoader.createEnemy(entityEngine,
@@ -276,7 +277,7 @@ public class EntityLoader {
 	 * @return
 	 */
 	private static int createPlayer(EntityEngine entityEngine, Texture texture, Vector2 position,
-			Texture bulletTexture, ControlMap controlMap) {
+			Texture bulletTexture, ControlMap controlMap, Controller controller) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int playerId = entityManager.createEntityWithTag(entityEngine.getEntityTagManager(), Tag.PLAYER);
 
@@ -287,8 +288,7 @@ public class EntityLoader {
 		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0),
 				EntityConstants.PLAYER_SPEED, EntityConstants.PLAYER_SPRINT));
 
-		UserInputComponent uic = new UserInputComponent(controlMap,
-				ControllerHelper.getFirstControllerOrNull());
+		UserInputComponent uic = new UserInputComponent(controlMap, controller);
 		Gdx.app.log("Controls", controlMap.toString());
 		entityManager.addComponent(playerId, uic);
 

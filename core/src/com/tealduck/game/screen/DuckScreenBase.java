@@ -3,6 +3,7 @@ package com.tealduck.game.screen;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -148,6 +149,11 @@ public abstract class DuckScreenBase implements Screen {
 
 	public ControlMap getControlMap() {
 		return game.getControlMap();
+	}
+
+
+	public Controller getController() {
+		return game.getController();
 	}
 
 

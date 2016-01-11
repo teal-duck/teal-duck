@@ -3,10 +3,14 @@ package com.tealduck.game.screen;
 
 import java.util.Set;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.tealduck.game.AssetLocations;
 import com.tealduck.game.DuckGame;
@@ -18,6 +22,7 @@ import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.SystemManager;
+import com.tealduck.game.input.Action;
 import com.tealduck.game.system.ChaseSystem;
 import com.tealduck.game.system.EntityCollisionSystem;
 import com.tealduck.game.system.GuiRenderSystem;
@@ -35,9 +40,15 @@ public class GameScreen extends DuckScreenBase {
 	private TextureMap textureMap;
 	private World world;
 
+	private boolean paused;
+
+	private ShapeRenderer shapeRenderer;
+
 
 	public GameScreen(DuckGame game) {
 		super(game);
+		paused = false;
+		shapeRenderer = new ShapeRenderer();
 	}
 
 
@@ -91,7 +102,7 @@ public class GameScreen extends DuckScreenBase {
 		world = new World(getEntityEngine(), tiledMap);
 		world.addPatrolRoutes(EntityLoader.loadPatrolRoutes(tiledMap));
 
-		EntityLoader.loadEntities(world, textureMap, getControlMap());
+		EntityLoader.loadEntities(world, textureMap, getControlMap(), getController());
 	}
 
 
@@ -196,23 +207,66 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	private boolean previousPauseState = false;
+
+
 	@Override
 	public void render(float deltaTime) {
-		super.render(deltaTime);
+		if (paused) {
+			SystemManager systemManager = getSystemManager();
+			try {
+				WorldRenderSystem worldRenderSystem = systemManager
+						.getSystemOfType(WorldRenderSystem.class);
+				worldRenderSystem.update(deltaTime);
 
-		// TODO: Move score combo countdown handling
-		handleScores(deltaTime);
+				// GuiRenderSystem guiRenderSystem =
+				// systemManager.getSystemOfType(GuiRenderSystem.class);
+				// guiRenderSystem.update(deltaTime);
+			} catch (IllegalArgumentException e) {
+			} catch (NullPointerException e) {
+			}
 
-		if (hasPlayerWon()) {
-			this.loadScreen(WinScreen.class);
-			return;
+			renderPauseOverlay();
+		} else {
+			super.render(deltaTime);
+
+			// TODO: Move score combo countdown handling
+			handleScores(deltaTime);
+
+			if (hasPlayerWon()) {
+				this.loadScreen(WinScreen.class);
+				return;
+			}
+
+			if (hasPlayerDied()) {
+				this.loadScreen(GameOverScreen.class);
+				return;
+			}
+
+			removeDeadEntities();
 		}
 
-		if (hasPlayerDied()) {
-			this.loadScreen(GameOverScreen.class);
-			return;
+		float pauseState = getControlMap().getStateForAction(Action.PAUSE, getController());
+		if ((pauseState > 0) && !previousPauseState) {
+			paused = !paused;
 		}
+		previousPauseState = (pauseState > 0);
+	}
 
-		removeDeadEntities();
+
+	private void renderPauseOverlay() {
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		shapeRenderer.setProjectionMatrix(getGuiCamera().combined);
+
+		shapeRenderer.begin(ShapeType.Filled);
+		float colour = 0.2f;
+		float alpha = 0.5f;
+		shapeRenderer.setColor(colour, colour, colour, alpha);
+		shapeRenderer.rect(0, 0, getWindowWidth(), getWindowHeight());
+		shapeRenderer.end();
+
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+
+		// TODO: Pause overlay
 	}
 }

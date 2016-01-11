@@ -3,34 +3,53 @@ package com.tealduck.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.engine.SystemManager;
-import com.tealduck.game.input.Action;
-import com.tealduck.game.input.ControlMap;
-import com.tealduck.game.input.controller.ControllerHelper;
+import com.tealduck.game.gui.ButtonList;
 
 
 public class LoadGameScreen extends DuckScreenBase {
 	private GlyphLayout titleText;
-	// Require the player to let go of enter after pressing it on main menu
-	private boolean enterJustPushed = true;
+	private ButtonList backButton;
 
 
 	public LoadGameScreen(DuckGame game) {
 		super(game);
 		titleText = new GlyphLayout(getFont(), "Load Game");
+		backButton = new ButtonList(new String[] { "Back" }, getFont(), getGuiCamera(), getControlMap(),
+				getController());
+		setBackButtonPosition();
+	}
+
+
+	private void setBackButtonPosition() {
+		backButton.setPositions(32, 32 + 40, 200, 40, 0, 25);
+	}
+
+
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		setBackButtonPosition();
 	}
 
 
 	@Override
 	public void render(float deltaTime) {
 		super.render(deltaTime);
+		backButton.updateSelected();
+		if (backButton.isSelectedSelected()) {
+			loadScreen(MainMenuScreen.class);
+		}
+		draw();
+	}
 
+
+	public void draw() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -42,17 +61,9 @@ public class LoadGameScreen extends DuckScreenBase {
 
 		batch.begin();
 		font.draw(batch, titleText, windowMiddle - textHalfWidth, getWindowHeight() - 50);
-		font.draw(batch, "> Back < ", 32, 32);
 		batch.end();
 
-		Controller controller = ControllerHelper.getFirstControllerOrNull();
-		ControlMap controlMap = getControlMap();
-		float selectState = controlMap.getStateForAction(Action.ENTER, controller);
-		if ((selectState > 0) && !enterJustPushed) {
-			this.loadScreen(MainMenuScreen.class);
-		}
-
-		enterJustPushed = (selectState > 0);
+		backButton.render(batch);
 	}
 
 
