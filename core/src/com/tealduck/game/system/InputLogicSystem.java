@@ -61,16 +61,39 @@ public class InputLogicSystem extends GameSystem {
 
 			int velocityLimit = 1;
 
-			float shiftScale = 1;
-			if (controls.getStateForAction(Action.SPRINT, controller) != 0) {
-				shiftScale = movementComponent.sprintScale;
+			movementComponent.sprintTime -= deltaTime;
+			if (movementComponent.sprintTime < 0) {
+				movementComponent.sprintTime = 0;
+				if (movementComponent.sprinting) {
+					movementComponent.sprinting = false;
+					movementComponent.sprintTime = movementComponent.maxSprintTime;
+				}
 			}
 
-			Vector2 accelerationDelta = new Vector2(dx, dy); // movementComponent.acceleration;
+			float sprintScale = 1;
+			if (controls.getStateForAction(Action.SPRINT, controller) > 0) {
+				if (movementComponent.sprinting) {
+					sprintScale = movementComponent.sprintScale;
+				} else {
+					if (movementComponent.sprintTime <= 0) {
+						movementComponent.sprinting = true;
+						movementComponent.sprintTime = movementComponent.maxSprintTime;
+						sprintScale = movementComponent.sprintScale;
+					}
+				}
+			} else {
+				movementComponent.sprinting = false;
+				movementComponent.sprintTime = movementComponent.maxSprintTime
+						- movementComponent.sprintTime;
+			}
+
+			System.out.println("Sprinting: " + (movementComponent.sprinting ? "true" : "false") + "; " //
+					+ "Sprint time: " + movementComponent.sprintTime);
+
+			Vector2 accelerationDelta = new Vector2(dx, dy);
 			accelerationDelta.limit(velocityLimit);
-			accelerationDelta.scl(movementComponent.maxSpeed * shiftScale);
+			accelerationDelta.scl(movementComponent.maxSpeed * sprintScale);
 			movementComponent.acceleration.add(accelerationDelta);
-			// movementComponent.velocity.add(new Vector2(dx, dy).scl(movementComponent.maxSpeed));
 
 			// TODO: Perhaps put mouse into the input system instead of if (controller != null)
 			if (controller != null) {

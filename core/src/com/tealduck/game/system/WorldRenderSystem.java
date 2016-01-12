@@ -51,15 +51,12 @@ public class WorldRenderSystem extends GameSystem {
 	//
 	// https://www.filterforge.com/filters/2312.jpg
 
-	// TODO: Tidy up lighting code and textures
 	// TODO: Shadows
-	// TODO: Attach lights to entities with viewcones, scale lights to viewcone FOV
 
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
 	private Batch batch;
 
-	// private Texture lightTexture;
 	private Texture coneTexture;
 	private Texture pointTexture;
 	private FrameBuffer fbo;

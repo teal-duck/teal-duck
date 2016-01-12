@@ -286,8 +286,9 @@ public class EntityLoader {
 				new SpriteComponent(texture, EntityLoader.animationFromTexture(texture, 64, 64, 0.2f)));
 		entityManager.addComponent(playerId,
 				new PositionComponent(position, new Vector2(1, 0), new Vector2(64, 64)));
-		entityManager.addComponent(playerId, new MovementComponent(new Vector2(0, 0),
-				EntityConstants.PLAYER_SPEED, EntityConstants.PLAYER_SPRINT));
+		entityManager.addComponent(playerId,
+				new MovementComponent(new Vector2(0, 0), EntityConstants.PLAYER_SPEED,
+						EntityConstants.PLAYER_SPRINT, EntityConstants.PLAYER_SPRINT_TIME));
 
 		UserInputComponent uic = new UserInputComponent(controlMap, controller);
 		Gdx.app.log("Controls", controlMap.toString());

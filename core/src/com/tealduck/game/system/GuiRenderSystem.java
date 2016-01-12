@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tealduck.game.Tag;
 import com.tealduck.game.component.HealthComponent;
+import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.component.WeaponComponent;
 import com.tealduck.game.engine.EntityEngine;
@@ -124,6 +125,10 @@ public class GuiRenderSystem extends GameSystem {
 
 			ScoreComponent scoreComponent = entityManager.getComponent(playerId, ScoreComponent.class);
 			renderScore(scoreComponent);
+
+			MovementComponent movementComponent = entityManager.getComponent(playerId,
+					MovementComponent.class);
+			renderSprint(movementComponent);
 		} catch (NullPointerException e) {
 		} catch (IllegalArgumentException e) {
 		}
@@ -198,6 +203,19 @@ public class GuiRenderSystem extends GameSystem {
 		}
 
 		renderBackgroundWithTexture(ammoX, ammoY, ammoTextX, ammoTextY, text);
+	}
+
+
+	private void renderSprint(MovementComponent movementComponent) {
+		float sprintX = -GuiRenderSystem.CORNER_RADIUS;
+		float sprintY = -GuiRenderSystem.CORNER_RADIUS;
+		float sprintTextX = HEALTH_TEXT_X; // sprintX + GuiRenderSystem.HEALTH_TEXT_X;
+		float sprintTextY = (-GuiRenderSystem.CORNER_RADIUS + backgroundTexture.getHeight())
+				- GuiRenderSystem.HEALTH_TEXT_Y_OFFSET;
+
+		String text = "Sprint: ";
+
+		renderBackgroundWithTexture(sprintX, sprintY, sprintTextX, sprintTextY, text);
 	}
 
 }

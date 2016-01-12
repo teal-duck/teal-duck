@@ -64,5 +64,15 @@
   <object name="Goal" type="Goal" gid="83" x="1792" y="3072"/>
   <object name="AmmoPickup" type="Pickup" gid="84" x="256" y="3968"/>
   <object name="HealthPickup" type="Pickup" gid="85" x="256" y="3712"/>
+  <object name="Enemy" type="Enemy" gid="82" x="1088" y="3200"/>
+  <object name="Enemy" type="Enemy" gid="82" x="1664" y="3072"/>
+  <object name="Enemy" type="Enemy" gid="82" x="1408" y="3008"/>
+  <object name="Enemy" type="Enemy" gid="82" x="1856" y="3648"/>
+  <object name="Enemy" type="Enemy" gid="82" x="1600" y="3968"/>
+  <object name="Enemy" type="Enemy" gid="82" x="960" y="3584"/>
+  <object name="Enemy" type="Enemy" gid="84" x="1152" y="3968"/>
+  <object name="AmmoPickup" type="Pickup" gid="84" x="1472" y="3328"/>
+  <object name="HealthPickup" type="Pickup" gid="85" x="832" y="3328"/>
+  <object name="HealthPickup" type="Pickup" gid="85" x="1792" y="3904"/>
  </objectgroup>
 </map>

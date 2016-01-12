@@ -78,7 +78,7 @@ public class MachineGun extends Weapon {
 
 		float bulletSpeed = EntityConstants.BULLET_SPEED;
 		entityManager.addComponent(bulletId,
-				new MovementComponent(direction.cpy().scl(bulletSpeed), bulletSpeed, 0, 1));
+				new MovementComponent(direction.cpy().scl(bulletSpeed), bulletSpeed, 1));
 
 		entityManager.addComponent(bulletId, new SpriteComponent(bulletTexture));
 
