@@ -60,6 +60,10 @@ public class EntityLoader {
 	};
 
 
+	/**
+	 * @param polylineMapObject
+	 * @return
+	 */
 	private static final ArrayList<Vector2> loadPatrolRoute(PolylineMapObject polylineMapObject) {
 		ArrayList<Vector2> routeVertices = new ArrayList<Vector2>();
 

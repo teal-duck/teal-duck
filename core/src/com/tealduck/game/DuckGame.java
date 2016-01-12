@@ -62,7 +62,8 @@ public class DuckGame extends Game {
 		guiCamera = new OrthographicCamera();
 
 		// TODO: Font size
-		font = new BitmapFont();
+		
+		font = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS), Gdx.files.internal(AssetLocations.BERLIN_SANS_PNG), false);
 		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		font.getData().setScale(1.5f);
 

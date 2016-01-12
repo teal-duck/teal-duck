@@ -26,6 +26,10 @@ public class AssetLocations {
 	public static final String GRID = AssetLocations.WORLD + "grid_64x64.png";
 
 	public static final String LOADING_TEXT = AssetLocations.GUI + "loading_text.png";
+	
+	public static final String FONTS = "fonts/";
+	public static final String BERLIN_SANS = AssetLocations.FONTS + "berlin-sans.fnt";
+	public static final String BERLIN_SANS_PNG = AssetLocations.FONTS + "berlin-sans.png";
 
 
 	private AssetLocations() {
