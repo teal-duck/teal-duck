@@ -34,7 +34,12 @@ public class MainMenuScreen extends DuckScreenBase {
 
 
 	private void setButtonLocations() {
-		buttons.setPositions((getWindowWidth() / 2) - 100, 200, 200, 40, 10, 25);
+		buttons.setPositions((getWindowWidth() / 2) - (ButtonList.BUTTON_WIDTH / 2), //
+				200, //
+				ButtonList.BUTTON_WIDTH, //
+				ButtonList.BUTTON_HEIGHT, //
+				ButtonList.BUTTON_DIFFERENCE, //
+				ButtonList.BUTTON_TEXT_VERTICAL_OFFSET);
 	}
 
 

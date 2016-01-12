@@ -16,6 +16,7 @@ public class MovementComponent extends Component {
 	public float maxSprintTime;
 	/// public float sprintCooldownTime;
 	public boolean sprinting = false;
+	public boolean usedAllSprint = false;
 
 
 	public MovementComponent(Vector2 velocity, float maxSpeed) {
@@ -40,8 +41,8 @@ public class MovementComponent extends Component {
 		this.friction = friction;
 
 		this.sprintScale = sprintScale;
-		this.sprintTime = 0f;
 		this.maxSprintTime = maxSprintTime;
+		sprintTime = maxSprintTime;
 
 		acceleration = new Vector2(0, 0);
 	}

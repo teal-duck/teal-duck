@@ -21,7 +21,7 @@ import com.tealduck.game.input.ControlMapCreator;
 import com.tealduck.game.input.controller.ControllerHelper;
 import com.tealduck.game.screen.AssetLoadingScreen;
 import com.tealduck.game.screen.DuckScreenBase;
-import com.tealduck.game.screen.MainMenuScreen;
+import com.tealduck.game.screen.GameScreen;
 
 
 public class DuckGame extends Game {
@@ -62,18 +62,19 @@ public class DuckGame extends Game {
 		guiCamera = new OrthographicCamera();
 
 		// TODO: Font size
-		
-		font = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS), Gdx.files.internal(AssetLocations.BERLIN_SANS_PNG), false);
+
+		font = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS),
+				Gdx.files.internal(AssetLocations.BERLIN_SANS_PNG), false);
 		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		font.getData().setScale(1.5f);
+		// safont.getData().setScale(1.5f);
 
 		setupControllers();
 
 		controller = ControllerHelper.getFirstControllerOrNull();
 		controlMap = ControlMapCreator.newDefaultControlMap(getControllerName(controller));
 
-		loadScreen(MainMenuScreen.class);
-		// loadScreen(GameScreen.class);
+		// loadScreen(MainMenuScreen.class);
+		loadScreen(GameScreen.class);
 	}
 
 

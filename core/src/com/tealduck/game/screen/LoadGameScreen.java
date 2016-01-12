@@ -28,7 +28,11 @@ public class LoadGameScreen extends DuckScreenBase {
 
 
 	private void setBackButtonPosition() {
-		backButton.setPositions(32, 32 + 40, 200, 40, 0, 25);
+		backButton.setPositions(30, 32 + ButtonList.BUTTON_HEIGHT, //
+				ButtonList.BUTTON_WIDTH, //
+				ButtonList.BUTTON_HEIGHT, //
+				ButtonList.BUTTON_DIFFERENCE, //
+				ButtonList.BUTTON_TEXT_VERTICAL_OFFSET);
 	}
 
 

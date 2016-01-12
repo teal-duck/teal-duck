@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.tealduck.game.Tag;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.MovementComponent;
@@ -48,6 +50,8 @@ public class GuiRenderSystem extends GameSystem {
 	private Texture healthHeartTexture;
 	private Texture backgroundTexture;
 
+	private ShapeRenderer shapeRenderer;
+
 
 	public GuiRenderSystem(EntityEngine entityEngine, SpriteBatch batch, OrthographicCamera camera,
 			BitmapFont font) {
@@ -74,6 +78,8 @@ public class GuiRenderSystem extends GameSystem {
 
 		backgroundTexture = generateBackground(backgroundWidth, backgroundHeight, GuiRenderSystem.CORNER_RADIUS,
 				GuiRenderSystem.BACKGROUND_COLOUR);
+
+		shapeRenderer = new ShapeRenderer();
 	}
 
 
@@ -111,7 +117,6 @@ public class GuiRenderSystem extends GameSystem {
 		EntityTagManager entityTagManager = getEntityTagManager();
 
 		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
 		batch.enableBlending();
 
 		try {
@@ -133,11 +138,12 @@ public class GuiRenderSystem extends GameSystem {
 		} catch (IllegalArgumentException e) {
 		}
 
-		batch.end();
 	}
 
 
 	public void renderHealthBar(int health) {
+		batch.begin();
+
 		if (health < 0) {
 			health = 0;
 		}
@@ -158,6 +164,8 @@ public class GuiRenderSystem extends GameSystem {
 			batch.draw(healthHeartTexture, healthX, healthY);
 			healthX += GuiRenderSystem.HEALTH_HEART_SIZE + GuiRenderSystem.HEALTH_HEART_GAP;
 		}
+
+		batch.end();
 	}
 
 
@@ -168,6 +176,8 @@ public class GuiRenderSystem extends GameSystem {
 
 
 	private void renderScore(ScoreComponent scoreComponent) {
+		batch.begin();
+
 		float scoreX = (screenWidth - backgroundTexture.getWidth()) + GuiRenderSystem.CORNER_RADIUS
 				+ GuiRenderSystem.RIGHT_EXTRA;
 		float scoreY = (screenHeight - backgroundTexture.getHeight()) + GuiRenderSystem.CORNER_RADIUS;
@@ -183,10 +193,14 @@ public class GuiRenderSystem extends GameSystem {
 		}
 
 		renderBackgroundWithTexture(scoreX, scoreY, scoreTextX, scoreTextY, text);
+
+		batch.end();
 	}
 
 
 	private void renderWeaponAmmo(WeaponComponent weaponComponent) {
+		batch.begin();
+
 		float ammoX = (screenWidth - backgroundTexture.getWidth()) + GuiRenderSystem.CORNER_RADIUS
 				+ GuiRenderSystem.RIGHT_EXTRA;
 		float ammoY = -GuiRenderSystem.CORNER_RADIUS;
@@ -203,19 +217,58 @@ public class GuiRenderSystem extends GameSystem {
 		}
 
 		renderBackgroundWithTexture(ammoX, ammoY, ammoTextX, ammoTextY, text);
+
+		batch.end();
 	}
 
 
 	private void renderSprint(MovementComponent movementComponent) {
+		batch.begin();
+
 		float sprintX = -GuiRenderSystem.CORNER_RADIUS;
 		float sprintY = -GuiRenderSystem.CORNER_RADIUS;
-		float sprintTextX = HEALTH_TEXT_X; // sprintX + GuiRenderSystem.HEALTH_TEXT_X;
+		float sprintTextX = GuiRenderSystem.HEALTH_TEXT_X;
 		float sprintTextY = (-GuiRenderSystem.CORNER_RADIUS + backgroundTexture.getHeight())
 				- GuiRenderSystem.HEALTH_TEXT_Y_OFFSET;
 
 		String text = "Sprint: ";
 
 		renderBackgroundWithTexture(sprintX, sprintY, sprintTextX, sprintTextY, text);
+		batch.end();
+
+		float sprintBarX = sprintTextX + 65;
+		float sprintBarY = sprintTextY - 20;
+		float sprintBarWidth = 130;
+		float sprintBarHeight = 20;
+
+		float maxSprintTime = movementComponent.maxSprintTime;
+		float sprintTime = movementComponent.sprintTime;
+
+		float sprintBarFillWidth;
+		if (movementComponent.sprinting) {
+			sprintBarFillWidth = (sprintBarWidth / maxSprintTime) * (sprintTime);
+		} else {
+			sprintBarFillWidth = (sprintBarWidth / maxSprintTime) * (sprintTime);
+		}
+
+		shapeRenderer.begin(ShapeType.Filled);
+		// if (movementComponent.sprinting) {
+		shapeRenderer.setColor(Color.BLACK);
+		// } else {
+		// shapeRenderer.setColor(Color.BLACK);
+		// }
+		shapeRenderer.rect(sprintBarX, sprintBarY, sprintBarWidth, sprintBarHeight);
+
+		if (movementComponent.usedAllSprint) {
+			shapeRenderer.setColor(Color.RED);
+		} else if (sprintTime >= maxSprintTime) {
+			shapeRenderer.setColor(Color.GREEN);
+		} else {
+			shapeRenderer.setColor(Color.YELLOW);
+		}
+		shapeRenderer.rect(sprintBarX, sprintBarY, sprintBarFillWidth, sprintBarHeight);
+
+		shapeRenderer.end();
 	}
 
 }

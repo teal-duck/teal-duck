@@ -9,6 +9,8 @@ import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -25,6 +27,7 @@ import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.SystemManager;
+import com.tealduck.game.gui.ButtonList;
 import com.tealduck.game.input.Action;
 import com.tealduck.game.pickup.Pickup;
 import com.tealduck.game.system.ChaseSystem;
@@ -41,10 +44,24 @@ import com.tealduck.game.world.World;
 
 
 public class GameScreen extends DuckScreenBase {
+	private static final int RESUME = 0;
+	private static final int SAVE = 1;
+	private static final int QUIT = 2;
+	private static final String[] PAUSE_BUTTON_TEXTS = new String[] { "Resume", "Save", "Quit to Menu" };
+
+	private ButtonList pauseButtons;
+
+	private int pauseButtonBackgroundWidth = ButtonList.BUTTON_WIDTH + 100;
+	private int pauseButtonBackgroundHeight = ButtonList.BUTTON_HEIGHT * 6;
+	private int pauseButtonTextYOffset = 30;
+	private int pauseButtonsBackgroundYOffset = ButtonList.BUTTON_HEIGHT;
+
+	private GlyphLayout pauseTextLayout;
+
 	private TextureMap textureMap;
 	private World world;
 
-	private boolean paused;
+	private boolean paused = false;
 
 	private ShapeRenderer shapeRenderer;
 
@@ -52,7 +69,6 @@ public class GameScreen extends DuckScreenBase {
 	public GameScreen(DuckGame game) {
 		super(game);
 		paused = false;
-		shapeRenderer = new ShapeRenderer();
 	}
 
 
@@ -102,11 +118,27 @@ public class GameScreen extends DuckScreenBase {
 		textureMap.putTextureFromAssetManager(AssetLocations.POINT_LIGHT, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.CONE_LIGHT, assetManager);
 
+		shapeRenderer = new ShapeRenderer();
+		pauseButtons = new ButtonList(GameScreen.PAUSE_BUTTON_TEXTS, getFont(), getGuiCamera(), getControlMap(),
+				getController());
+		setButtonLocations();
+		pauseTextLayout = new GlyphLayout(getFont(), "Paused");
+
 		TiledMap tiledMap = assetManager.get(MapNames.TEST_MAP);
 		world = new World(getEntityEngine(), tiledMap);
 		world.addPatrolRoutes(EntityLoader.loadPatrolRoutes(tiledMap));
 
 		EntityLoader.loadEntities(world, textureMap, getControlMap(), getController());
+	}
+
+
+	private void setButtonLocations() {
+		pauseButtons.setPositions((getWindowWidth() / 2) - (ButtonList.BUTTON_WIDTH / 2), //
+				(getWindowHeight() / 2) + pauseButtonsBackgroundYOffset, //
+				ButtonList.BUTTON_WIDTH, //
+				ButtonList.BUTTON_HEIGHT, //
+				ButtonList.BUTTON_DIFFERENCE, //
+				ButtonList.BUTTON_TEXT_VERTICAL_OFFSET);
 	}
 
 
@@ -145,6 +177,8 @@ public class GameScreen extends DuckScreenBase {
 		if (guiRenderSystem != null) {
 			guiRenderSystem.resizeCamera(width, height);
 		}
+
+		setButtonLocations();
 	}
 
 
@@ -237,6 +271,12 @@ public class GameScreen extends DuckScreenBase {
 						.getSystemOfType(WorldRenderSystem.class);
 				worldRenderSystem.update(deltaTime);
 
+				pauseButtons.updateSelected();
+				if (pauseButtons.isSelectedSelected()) {
+					int selected = pauseButtons.getSelected();
+					selectPauseOption(selected);
+				}
+
 				// GuiRenderSystem guiRenderSystem =
 				// systemManager.getSystemOfType(GuiRenderSystem.class);
 				// guiRenderSystem.update(deltaTime);
@@ -273,19 +313,67 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	private void selectPauseOption(int selected) {
+		switch (selected) {
+		case RESUME:
+			paused = false;
+			break;
+		case SAVE:
+			saveGame();
+			break;
+		case QUIT:
+			quitGame();
+			break;
+		}
+	}
+
+
+	private void saveGame() {
+		Gdx.app.log("Save", "Todo");
+	}
+
+
+	private void quitGame() {
+		loadScreen(MainMenuScreen.class);
+	}
+
+
 	private void renderPauseOverlay() {
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		shapeRenderer.setProjectionMatrix(getGuiCamera().combined);
+
+		float windowWidth = getWindowWidth();
+		float windowHeight = getWindowHeight();
 
 		shapeRenderer.begin(ShapeType.Filled);
 		float colour = 0.2f;
 		float alpha = 0.5f;
 		shapeRenderer.setColor(colour, colour, colour, alpha);
 		shapeRenderer.rect(0, 0, getWindowWidth(), getWindowHeight());
+
+		shapeRenderer.setColor(colour, colour, colour, 1f);
+
+		float width = pauseButtonBackgroundWidth;
+		float height = pauseButtonBackgroundHeight;
+		float x = (windowWidth / 2) - (width / 2);
+		float y = (windowHeight / 2) - (height / 2);
+
+		shapeRenderer.rect(x, y, width, height);
+
 		shapeRenderer.end();
 
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 
-		// TODO: Pause overlay
+		SpriteBatch batch = getBatch();
+
+		float textWidth = pauseTextLayout.width;
+		float textX = (windowWidth / 2) - (textWidth / 2);
+		float textY = (y + height) - pauseButtonTextYOffset;
+
+		batch.begin();
+		getFont().draw(batch, pauseTextLayout, textX, textY);
+		batch.end();
+
+		pauseButtons.render(batch);
 	}
 }

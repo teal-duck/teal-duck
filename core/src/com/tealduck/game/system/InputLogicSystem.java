@@ -61,13 +61,19 @@ public class InputLogicSystem extends GameSystem {
 
 			int velocityLimit = 1;
 
-			movementComponent.sprintTime -= deltaTime;
+			if (movementComponent.sprinting) {
+				movementComponent.sprintTime -= deltaTime;
+			} else {
+				movementComponent.sprintTime += deltaTime;
+			}
 			if (movementComponent.sprintTime < 0) {
 				movementComponent.sprintTime = 0;
-				if (movementComponent.sprinting) {
-					movementComponent.sprinting = false;
-					movementComponent.sprintTime = movementComponent.maxSprintTime;
-				}
+				movementComponent.sprinting = false;
+				movementComponent.usedAllSprint = true;
+			}
+			if (movementComponent.sprintTime > movementComponent.maxSprintTime) {
+				movementComponent.sprintTime = movementComponent.maxSprintTime;
+				movementComponent.usedAllSprint = false;
 			}
 
 			float sprintScale = 1;
@@ -75,20 +81,14 @@ public class InputLogicSystem extends GameSystem {
 				if (movementComponent.sprinting) {
 					sprintScale = movementComponent.sprintScale;
 				} else {
-					if (movementComponent.sprintTime <= 0) {
+					if ((movementComponent.sprintTime >= 0) && !movementComponent.usedAllSprint) {
 						movementComponent.sprinting = true;
-						movementComponent.sprintTime = movementComponent.maxSprintTime;
 						sprintScale = movementComponent.sprintScale;
 					}
 				}
 			} else {
 				movementComponent.sprinting = false;
-				movementComponent.sprintTime = movementComponent.maxSprintTime
-						- movementComponent.sprintTime;
 			}
-
-			System.out.println("Sprinting: " + (movementComponent.sprinting ? "true" : "false") + "; " //
-					+ "Sprint time: " + movementComponent.sprintTime);
 
 			Vector2 accelerationDelta = new Vector2(dx, dy);
 			accelerationDelta.limit(velocityLimit);

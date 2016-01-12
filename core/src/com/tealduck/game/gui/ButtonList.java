@@ -38,6 +38,11 @@ public class ButtonList {
 	private int previousDirection = 0;
 	private boolean enterJustPushed = true;
 
+	public static final int BUTTON_WIDTH = 200;
+	public static final int BUTTON_HEIGHT = 40;
+	public static final int BUTTON_DIFFERENCE = 10;
+	public static final int BUTTON_TEXT_VERTICAL_OFFSET = 30;
+
 
 	public ButtonList(String[] buttonTexts, BitmapFont font, OrthographicCamera guiCamera, ControlMap controlMap,
 			Controller controller) {
