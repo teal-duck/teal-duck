@@ -7,17 +7,8 @@ From assessment doc:
 
 
 Required to do for assessment 2:
-- Enemy drops on death (add a DropComponent to them?)
-	- In GameScreen.update(), after it calls super.update(), it calls removeDeadEntities()
-		- Rename this to flagDeadEntitiesForRemoval()
-		- DuckGame.render() calls entityEngine.removeAllFlaggedEntities()
-		- Should drops be handled here or in events?
-	
 - Calculate score combo time
 
-- Move pickup logic into Pickup.applyToEntity(int entity)
-	- Visitor pattern
-	
 - Sprinting
 	- Limited time
 	- Speeds up animation
@@ -28,13 +19,6 @@ Required to do for assessment 2:
 - Enemy chasing
 	- Viewcone
 		- Create new viewcone texture
-	- Search for player
-		- If enemy has chase component but can't see player, try to find player
-		- Enemy walks randomly?
-			- Perhaps pick random direction (stick to axis)?
-			- Keep going until they hit a wall, then repeat?
-	- Perhaps enemies without patrol routes should always be searching for the player?
-		- Follow above logic for looking for player
 
 - Menu, pause, save/load, gui
 	- Main menu with new game, load game, settings(?), quit

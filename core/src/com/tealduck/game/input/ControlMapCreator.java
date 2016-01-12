@@ -25,6 +25,7 @@ public class ControlMapCreator {
 		controlMap.addKeyForAction(Action.RELOAD, Keys.R);
 		controlMap.addKeyForAction(Action.ENTER, Keys.ENTER);
 		controlMap.addKeyForAction(Action.PAUSE, Keys.ESCAPE, Keys.P);
+		controlMap.addKeyForAction(Action.BACK, Keys.BACKSPACE);
 
 		return controlMap;
 	}
@@ -57,6 +58,7 @@ public class ControlMapCreator {
 
 		controlMap.addControllerForAction(Action.ENTER, ControllerBindingType.BUTTON, PS4.BUTTON_CROSS);
 		controlMap.addControllerForAction(Action.PAUSE, ControllerBindingType.BUTTON, PS4.BUTTON_OPTIONS);
+		controlMap.addControllerForAction(Action.BACK, ControllerBindingType.BUTTON, PS4.BUTTON_CIRCLE);
 
 		return controlMap;
 	}
@@ -91,6 +93,7 @@ public class ControlMapCreator {
 
 		controlMap.addControllerForAction(Action.ENTER, ControllerBindingType.BUTTON, Xbox360.BUTTON_A);
 		controlMap.addControllerForAction(Action.PAUSE, ControllerBindingType.BUTTON, Xbox360.BUTTON_START);
+		controlMap.addControllerForAction(Action.BACK, ControllerBindingType.BUTTON, Xbox360.BUTTON_B);
 
 		return controlMap;
 	}

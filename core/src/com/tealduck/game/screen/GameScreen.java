@@ -12,17 +12,21 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.AssetLocations;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.Tag;
 import com.tealduck.game.TextureMap;
 import com.tealduck.game.collision.Collision;
 import com.tealduck.game.component.CollisionComponent;
+import com.tealduck.game.component.DropComponent;
 import com.tealduck.game.component.HealthComponent;
+import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.input.Action;
+import com.tealduck.game.pickup.Pickup;
 import com.tealduck.game.system.ChaseSystem;
 import com.tealduck.game.system.EntityCollisionSystem;
 import com.tealduck.game.system.GuiRenderSystem;
@@ -192,6 +196,20 @@ public class GameScreen extends DuckScreenBase {
 		for (int entity : entities) {
 			if (!isEntityAlive(entity)) {
 				getEntityEngine().flagEntityToRemove(entity);
+
+				if (entityManager.entityHasComponent(entity, DropComponent.class)
+						&& entityManager.entityHasComponent(entity, PositionComponent.class)) {
+					DropComponent dropComponent = entityManager.getComponent(entity,
+							DropComponent.class);
+					PositionComponent positionComponent = entityManager.getComponent(entity,
+							PositionComponent.class);
+
+					Pickup contents = dropComponent.pickup;
+					Texture texture = textureMap.getTexture(contents.getTextureName());
+					Vector2 position = positionComponent.position.cpy();
+					EntityLoader.createPickup(getEntityEngine(), texture, position, contents);
+
+				}
 			}
 		}
 	}
@@ -247,7 +265,8 @@ public class GameScreen extends DuckScreenBase {
 		}
 
 		float pauseState = getControlMap().getStateForAction(Action.PAUSE, getController());
-		if ((pauseState > 0) && !previousPauseState) {
+		float backState = getControlMap().getStateForAction(Action.BACK, getController());
+		if ((((backState > 0) && paused) || (pauseState > 0)) && !previousPauseState) {
 			paused = !paused;
 		}
 		previousPauseState = (pauseState > 0);

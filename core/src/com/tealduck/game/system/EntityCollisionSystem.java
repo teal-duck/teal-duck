@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.tealduck.game.EventName;
 import com.tealduck.game.collision.Collision;
 import com.tealduck.game.collision.CollisionShape;
 import com.tealduck.game.collision.Intersection;
@@ -14,6 +13,7 @@ import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.GameSystem;
+import com.tealduck.game.event.EventName;
 
 
 public class EntityCollisionSystem extends GameSystem {

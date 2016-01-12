@@ -40,7 +40,7 @@ public class PlayerCollision implements IEvent {
 
 		CollisionEvents.handleKnockback(entityManager, sender, receiver, intersection);
 
-		CollisionEvents.handleDamage(entityManager, sender, receiver);
+		CollisionEvents.handleDamage(entityEngine, sender, receiver);
 
 		return false;
 	}

@@ -8,13 +8,13 @@ import com.tealduck.game.collision.AABB;
 import com.tealduck.game.collision.Collision;
 import com.tealduck.game.collision.CollisionShape;
 import com.tealduck.game.collision.Intersection;
-import com.tealduck.game.component.BulletComponent;
 import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
+import com.tealduck.game.event.EventName;
 import com.tealduck.game.world.World;
 
 
@@ -41,9 +41,6 @@ public class WorldCollisionSystem extends GameSystem {
 					PositionComponent.class);
 			CollisionComponent collisionComponent = entityManager.getComponent(entity,
 					CollisionComponent.class);
-
-			// TODO: Improve handling of entities that die on collision with terrain (e.g. bullets)
-			boolean isBullet = entityManager.entityHasComponent(entity, BulletComponent.class);
 
 			CollisionShape entityShape = collisionComponent.collisionShape;
 			Vector2 offsetFromPosition = collisionComponent.offsetFromPosition;
@@ -109,14 +106,11 @@ public class WorldCollisionSystem extends GameSystem {
 				}
 
 				if (fixIntersection != null) {
-					if (isBullet) {
-						getEntityEngine().flagEntityToRemove(entity);
-						break;
-					}
-
 					Vector2 fixVector = fixIntersection.getResolveVector();
 
 					entityShape.getPosition().add(fixVector);
+
+					getEventManager().triggerEvent(-1, entity, EventName.WORLD_COLLISION);
 				} else {
 					break;
 				}

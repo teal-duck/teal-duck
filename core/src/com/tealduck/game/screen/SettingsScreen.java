@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.gui.ButtonList;
+import com.tealduck.game.input.Action;
 
 
 public class SettingsScreen extends DuckScreenBase {
@@ -43,9 +44,17 @@ public class SettingsScreen extends DuckScreenBase {
 		super.render(deltaTime);
 		backButton.updateSelected();
 		if (backButton.isSelectedSelected()) {
-			loadScreen(MainMenuScreen.class);
+			goBack();
+		}
+		if (getControlMap().getStateForAction(Action.BACK, getController()) > 0) {
+			goBack();
 		}
 		draw();
+	}
+
+
+	private void goBack() {
+		loadScreen(MainMenuScreen.class);
 	}
 
 

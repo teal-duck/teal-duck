@@ -16,10 +16,10 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.AssetLocations;
-import com.tealduck.game.EventName;
 import com.tealduck.game.Tag;
 import com.tealduck.game.Team;
 import com.tealduck.game.TextureMap;
@@ -28,6 +28,7 @@ import com.tealduck.game.collision.Circle;
 import com.tealduck.game.component.ChaseComponent;
 import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.DamageComponent;
+import com.tealduck.game.component.DropComponent;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.KnockbackComponent;
 import com.tealduck.game.component.MovementComponent;
@@ -44,8 +45,9 @@ import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.event.EnemyCollision;
-import com.tealduck.game.event.GoalCollision;
+import com.tealduck.game.event.EventName;
 import com.tealduck.game.event.PlayerCollision;
+import com.tealduck.game.event.SearchWorldCollision;
 import com.tealduck.game.input.ControlMap;
 import com.tealduck.game.pickup.AmmoPickup;
 import com.tealduck.game.pickup.HealthPickup;
@@ -183,8 +185,7 @@ public class EntityLoader {
 						contents = new HealthPickup(amount);
 					}
 
-					EntityLoader.createAmmoPickup(entityEngine, texture, new Vector2(x, y),
-							contents);
+					EntityLoader.createPickup(entityEngine, texture, new Vector2(x, y), contents);
 				} else {
 					Gdx.app.log("Load", "Unknown entity name: " + name);
 				}
@@ -343,10 +344,23 @@ public class EntityLoader {
 
 		entityManager.addComponent(enemyId, new TeamComponent(Team.BAD));
 
+		entityManager.addComponent(enemyId, new DropComponent(EntityLoader.randomPickup()));
+
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(enemyId, EventName.COLLISION, EnemyCollision.instance);
 
+		eventManager.addEvent(enemyId, EventName.WORLD_COLLISION, SearchWorldCollision.instance);
+
 		return enemyId;
+	}
+
+
+	private static Pickup randomPickup() {
+		if (MathUtils.randomBoolean()) {
+			return new AmmoPickup(EntityConstants.AMMO_PICKUP_DEFAULT_AMOUNT);
+		} else {
+			return new HealthPickup(EntityConstants.HEALTH_PICKUP_DEFAULT_AMOUNT);
+		}
 	}
 
 
@@ -391,15 +405,11 @@ public class EntityLoader {
 				new PositionComponent(position, new Vector2(1, 0), new Vector2(64, 64)));
 		EntityLoader.addEntityAABBCollisionComponent(entityManager, goalId, position, new Vector2(64, 64));
 
-		EventManager eventManager = entityEngine.getEventManager();
-		eventManager.addEvent(goalId, EventName.COLLISION, GoalCollision.instance);
-
 		return goalId;
 	}
 
 
-	private static void createAmmoPickup(EntityEngine entityEngine, Texture texture, Vector2 position,
-			Pickup contents) {
+	public static void createPickup(EntityEngine entityEngine, Texture texture, Vector2 position, Pickup contents) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 
 		int pickupId = entityManager.createEntity();

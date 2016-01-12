@@ -1,6 +1,7 @@
 package com.tealduck.game.component;
 
 
+import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.engine.Component;
 import com.tealduck.game.world.EntityConstants;
 
@@ -10,6 +11,15 @@ public class ChaseComponent extends Component {
 	public float forgetTime;
 	public float maxTimeToForget;
 	public boolean forgettable;
+
+	public Vector2 searchDirection;
+	public float searchTime = 0f;
+	public float rotateTime = 0f;
+	public float startRotation = 0f;
+	public float endRotation = 0f;
+	public float rotPerSecond = 0f;
+	public boolean hitWorld = false;
+	public float maxSearchTime = 0f;
 
 
 	public ChaseComponent() {
@@ -37,6 +47,8 @@ public class ChaseComponent extends Component {
 		this.maxTimeToForget = maxTimeToForget;
 		this.forgettable = forgettable;
 		forgetTime = 0;
+
+		searchDirection = new Vector2().setToRandomDirection();
 	}
 
 

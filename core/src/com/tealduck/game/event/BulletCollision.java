@@ -36,6 +36,6 @@ public class BulletCollision implements IEvent {
 			// Remove bullet if collided with an enemy's bullet
 			return (shooterId != otherShooterId);
 		}
-		return true;
+		return false;
 	}
 }

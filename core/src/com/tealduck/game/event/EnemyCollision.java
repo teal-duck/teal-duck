@@ -30,7 +30,7 @@ public class EnemyCollision implements IEvent {
 
 		CollisionEvents.handleKnockback(entityManager, sender, receiver, intersection);
 
-		CollisionEvents.handleDamage(entityManager, sender, receiver);
+		CollisionEvents.handleDamage(entityEngine, sender, receiver);
 
 		if (entityManager.entityHasComponent(sender, BulletComponent.class)) {
 			BulletComponent bulletComponent = entityManager.getComponent(sender, BulletComponent.class);

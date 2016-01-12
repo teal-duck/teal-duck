@@ -11,11 +11,9 @@ import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PickupComponent;
 import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.component.TeamComponent;
-import com.tealduck.game.component.WeaponComponent;
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
-import com.tealduck.game.pickup.AmmoPickup;
-import com.tealduck.game.pickup.HealthPickup;
+import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.pickup.Pickup;
 
 
@@ -78,7 +76,8 @@ public class CollisionEvents {
 	}
 
 
-	public static void handleDamage(EntityManager entityManager, int sender, int receiver) {
+	public static void handleDamage(EntityEngine entityEngine, int sender, int receiver) {
+		EntityManager entityManager = entityEngine.getEntityManager();
 		if (!CollisionEvents.areEntitiesOnSameTeam(entityManager, sender, receiver)) {
 			if (entityManager.entityHasComponent(sender, DamageComponent.class)
 					&& entityManager.entityHasComponent(receiver, HealthComponent.class)) {
@@ -94,6 +93,11 @@ public class CollisionEvents {
 					healthComponent.health = 0;
 
 					CollisionEvents.handleScoreForEntityDeath(entityManager, sender, receiver);
+				}
+
+				if (entityManager.entityHasComponent(sender, BulletComponent.class)) {
+					EventManager eventManager = entityEngine.getEventManager();
+					eventManager.triggerEvent(receiver, sender, EventName.REMOVE);
 				}
 			}
 		}
@@ -118,35 +122,11 @@ public class CollisionEvents {
 		if (!entityManager.entityHasComponent(sender, PickupComponent.class)) {
 			return;
 		}
-		boolean pickedUp = false;
 
 		PickupComponent pickupComponent = entityManager.getComponent(sender, PickupComponent.class);
 		Pickup contents = pickupComponent.contents;
 
-		if (contents instanceof AmmoPickup) {
-			if (entityManager.entityHasComponent(receiver, WeaponComponent.class)) {
-				WeaponComponent weaponComponent = entityManager.getComponent(receiver,
-						WeaponComponent.class);
-				AmmoPickup ammoPickup = (AmmoPickup) contents;
-
-				weaponComponent.addAmmo(ammoPickup.ammo);
-				pickedUp = true;
-			}
-		} else if (contents instanceof HealthPickup) {
-			if (entityManager.entityHasComponent(receiver, HealthComponent.class)) {
-				HealthComponent healthComponent = entityManager.getComponent(receiver,
-						HealthComponent.class);
-				HealthPickup healthPickup = (HealthPickup) contents;
-
-				if (healthComponent.health != healthComponent.maxHealth) {
-					healthComponent.health += healthPickup.health;
-					if (healthComponent.health > healthComponent.maxHealth) {
-						healthComponent.health = healthComponent.maxHealth;
-					}
-					pickedUp = true;
-				}
-			}
-		}
+		boolean pickedUp = contents.applyToEntity(entityManager, receiver);
 
 		if (pickedUp) {
 			entityEngine.flagEntityToRemove(sender);
