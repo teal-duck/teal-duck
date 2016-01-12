@@ -7,27 +7,9 @@ From assessment doc:
 
 
 Required to do for assessment 2:
-- Calculate score combo time
-
-- Sprinting
-	- Limited time
-	- Speeds up animation
-	- Flying
-	
-- When paused, stop animations
-
-- Enemy chasing
-	- Viewcone
-		- Create new viewcone texture
-
-- Menu, pause, save/load, gui
-	- Main menu with new game, load game, settings(?), quit
-	- New game just starts game
-	- Load shows list of saves
-	- Pause screen when press esc
-	- On pause screen and/or end of level, have save button
-		- Save format could just be JSON for simplicity?
-	- In-game gui for health bar, score, selected weapon and ammo
+- Menu
+	- Game over screen
+	- Game continue screen
 	- Settings would be nice
 		- Shouldn't be too hard to make
 		- Input system already set up to allow rebinding

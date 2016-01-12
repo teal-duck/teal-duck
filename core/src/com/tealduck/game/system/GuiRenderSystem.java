@@ -251,6 +251,7 @@ public class GuiRenderSystem extends GameSystem {
 			sprintBarFillWidth = (sprintBarWidth / maxSprintTime) * (sprintTime);
 		}
 
+		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeType.Filled);
 		// if (movementComponent.sprinting) {
 		shapeRenderer.setColor(Color.BLACK);

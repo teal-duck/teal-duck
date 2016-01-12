@@ -28,8 +28,16 @@ public class ScoreComponent extends Component {
 
 
 	public float getComboTimeForCombo(int combo) {
-		// TODO: Calculate combo time
-		return 2f;
+		float x = (combo / 2f) + 0.5f;
+		float t = -(x * x) + 5f;
+
+		float minComboTime = 0.4f;
+
+		if (t < minComboTime) {
+			t = minComboTime;
+		}
+
+		return t;
 	}
 
 

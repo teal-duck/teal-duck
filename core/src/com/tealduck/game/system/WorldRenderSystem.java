@@ -463,8 +463,12 @@ public class WorldRenderSystem extends GameSystem {
 			SpriteComponent spriteComponent = entityManager.getComponent(entity, SpriteComponent.class);
 
 			if (entityManager.entityHasComponent(entity, MovementComponent.class)) {
-				if (entityManager.getComponent(entity, MovementComponent.class).velocity.len2() > 1) {
-					spriteComponent.stateTime += deltaTime;
+				MovementComponent movementComponent = entityManager.getComponent(entity,
+						MovementComponent.class);
+				if (movementComponent.velocity.len2() > 1) {
+					float sprintScale = movementComponent.sprinting ? movementComponent.sprintScale
+							: 1;
+					spriteComponent.stateTime += deltaTime * sprintScale;
 				}
 			} else {
 				spriteComponent.stateTime += deltaTime;

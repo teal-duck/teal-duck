@@ -23,8 +23,8 @@ public class MainMenuScreen extends DuckScreenBase {
 	private ButtonList buttons;
 
 
-	public MainMenuScreen(DuckGame game) {
-		super(game);
+	public MainMenuScreen(DuckGame game, Object data) {
+		super(game, data);
 
 		titleText = new GlyphLayout(getFont(), "Game Name Goes Here!");
 		buttons = new ButtonList(MainMenuScreen.BUTTON_TEXTS, getFont(), getGuiCamera(), getControlMap(),
@@ -34,12 +34,9 @@ public class MainMenuScreen extends DuckScreenBase {
 
 
 	private void setButtonLocations() {
-		buttons.setPositions((getWindowWidth() / 2) - (ButtonList.BUTTON_WIDTH / 2), //
-				200, //
-				ButtonList.BUTTON_WIDTH, //
-				ButtonList.BUTTON_HEIGHT, //
-				ButtonList.BUTTON_DIFFERENCE, //
-				ButtonList.BUTTON_TEXT_VERTICAL_OFFSET);
+		buttons.setPositionDefaultSize((getWindowWidth() / 2) - (ButtonList.BUTTON_WIDTH / 2), //
+				ButtonList.WINDOW_EDGE_OFFSET + ButtonList
+						.getHeightForDefaultButtonList(MainMenuScreen.BUTTON_TEXTS.length));
 	}
 
 

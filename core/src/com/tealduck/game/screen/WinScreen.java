@@ -11,8 +11,8 @@ import com.tealduck.game.engine.SystemManager;
 
 
 public class WinScreen extends DuckScreenBase {
-	public WinScreen(DuckGame game) {
-		super(game);
+	public WinScreen(DuckGame game, Object data) {
+		super(game, data);
 	}
 
 

@@ -32,8 +32,8 @@ public class AssetLoadingScreen extends DuckScreenBase {
 	private float timeToStayOnLoadingScreen = 0.0f;
 
 
-	public AssetLoadingScreen(DuckGame game) {
-		super(game);
+	public AssetLoadingScreen(DuckGame game, Object data) {
+		super(game, data);
 	}
 
 

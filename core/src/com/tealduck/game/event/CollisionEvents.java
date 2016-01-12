@@ -15,6 +15,7 @@ import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.pickup.Pickup;
+import com.tealduck.game.world.EntityConstants;
 
 
 public class CollisionEvents {
@@ -89,6 +90,7 @@ public class CollisionEvents {
 				// TODO: Defence component
 				// TODO: Maybe have invulnerability for a second after taking damage
 				healthComponent.health -= damageComponent.damage;
+
 				if (healthComponent.health <= 0) {
 					healthComponent.health = 0;
 
@@ -107,7 +109,7 @@ public class CollisionEvents {
 	public static void handleScoreForEntityDeath(EntityManager entityManager, int killerEntity, int deadEntity) {
 		if (entityManager.entityHasComponent(killerEntity, ScoreComponent.class)) {
 			ScoreComponent scoreComponent = entityManager.getComponent(killerEntity, ScoreComponent.class);
-			scoreComponent.increaseScoreWithComboGain(10);
+			scoreComponent.increaseScoreWithComboGain(EntityConstants.SCORE_FOR_KILL);
 
 		} else if (entityManager.entityHasComponent(killerEntity, BulletComponent.class)) {
 			int shooterEntity = entityManager.getComponent(killerEntity, BulletComponent.class).shooterId;

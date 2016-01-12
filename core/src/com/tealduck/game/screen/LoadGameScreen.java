@@ -18,8 +18,8 @@ public class LoadGameScreen extends DuckScreenBase {
 	private ButtonList backButton;
 
 
-	public LoadGameScreen(DuckGame game) {
-		super(game);
+	public LoadGameScreen(DuckGame game, Object data) {
+		super(game, data);
 		titleText = new GlyphLayout(getFont(), "Load Game");
 		backButton = new ButtonList(new String[] { "Back" }, getFont(), getGuiCamera(), getControlMap(),
 				getController());
@@ -28,11 +28,8 @@ public class LoadGameScreen extends DuckScreenBase {
 
 
 	private void setBackButtonPosition() {
-		backButton.setPositions(30, 32 + ButtonList.BUTTON_HEIGHT, //
-				ButtonList.BUTTON_WIDTH, //
-				ButtonList.BUTTON_HEIGHT, //
-				ButtonList.BUTTON_DIFFERENCE, //
-				ButtonList.BUTTON_TEXT_VERTICAL_OFFSET);
+		backButton.setPositionDefaultSize(ButtonList.WINDOW_EDGE_OFFSET,
+				ButtonList.WINDOW_EDGE_OFFSET + ButtonList.BUTTON_HEIGHT);
 	}
 
 

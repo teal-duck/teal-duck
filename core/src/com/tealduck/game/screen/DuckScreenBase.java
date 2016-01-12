@@ -21,7 +21,7 @@ public abstract class DuckScreenBase implements Screen {
 	private final DuckGame game;
 
 
-	public DuckScreenBase(DuckGame game) {
+	public DuckScreenBase(DuckGame game, Object data) {
 		this.game = game;
 	}
 
@@ -164,5 +164,10 @@ public abstract class DuckScreenBase implements Screen {
 
 	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass) {
 		return game.loadScreen(screenClass);
+	}
+
+
+	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass, Object data) {
+		return game.loadScreen(screenClass, data);
 	}
 }

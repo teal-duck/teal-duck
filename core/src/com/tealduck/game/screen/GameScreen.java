@@ -66,8 +66,8 @@ public class GameScreen extends DuckScreenBase {
 	private ShapeRenderer shapeRenderer;
 
 
-	public GameScreen(DuckGame game) {
-		super(game);
+	public GameScreen(DuckGame game, Object data) {
+		super(game, data);
 		paused = false;
 	}
 
@@ -133,12 +133,8 @@ public class GameScreen extends DuckScreenBase {
 
 
 	private void setButtonLocations() {
-		pauseButtons.setPositions((getWindowWidth() / 2) - (ButtonList.BUTTON_WIDTH / 2), //
-				(getWindowHeight() / 2) + pauseButtonsBackgroundYOffset, //
-				ButtonList.BUTTON_WIDTH, //
-				ButtonList.BUTTON_HEIGHT, //
-				ButtonList.BUTTON_DIFFERENCE, //
-				ButtonList.BUTTON_TEXT_VERTICAL_OFFSET);
+		pauseButtons.setPositionDefaultSize((getWindowWidth() / 2) - (ButtonList.BUTTON_WIDTH / 2), //
+				(getWindowHeight() / 2) + pauseButtonsBackgroundYOffset);
 	}
 
 
@@ -249,7 +245,7 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
-	private void handleScores(float deltaTime) {
+	private void handleScoreComboCountdown(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
 		Set<Integer> entities = entityManager.getEntitiesWithComponent(ScoreComponent.class);
 
@@ -289,15 +285,15 @@ public class GameScreen extends DuckScreenBase {
 			super.render(deltaTime);
 
 			// TODO: Move score combo countdown handling
-			handleScores(deltaTime);
+			handleScoreComboCountdown(deltaTime);
 
 			if (hasPlayerWon()) {
-				this.loadScreen(WinScreen.class);
+				winGame();
 				return;
 			}
 
 			if (hasPlayerDied()) {
-				this.loadScreen(GameOverScreen.class);
+				gameOver();
 				return;
 			}
 
@@ -310,6 +306,34 @@ public class GameScreen extends DuckScreenBase {
 			paused = !paused;
 		}
 		previousPauseState = (pauseState > 0);
+	}
+
+
+	private int getPlayerScore(boolean finishCombo) {
+		try {
+			int playerId = getEntityTagManager().getEntity(Tag.PLAYER);
+			ScoreComponent scoreComponent = getEntityManager().getComponent(playerId, ScoreComponent.class);
+			if (finishCombo) {
+				scoreComponent.finishCombo();
+			}
+			return scoreComponent.score;
+		} catch (NullPointerException e) {
+		} catch (IllegalArgumentException e) {
+		}
+		return -1;
+
+	}
+
+
+	private void winGame() {
+		int score = getPlayerScore(true);
+		this.loadScreen(WinScreen.class, score);
+	}
+
+
+	private void gameOver() {
+		int score = getPlayerScore(true);
+		this.loadScreen(GameOverScreen.class, score);
 	}
 
 

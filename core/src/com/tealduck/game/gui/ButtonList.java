@@ -42,6 +42,7 @@ public class ButtonList {
 	public static final int BUTTON_HEIGHT = 40;
 	public static final int BUTTON_DIFFERENCE = 10;
 	public static final int BUTTON_TEXT_VERTICAL_OFFSET = 30;
+	public static final int WINDOW_EDGE_OFFSET = 32;
 
 
 	public ButtonList(String[] buttonTexts, BitmapFont font, OrthographicCamera guiCamera, ControlMap controlMap,
@@ -58,11 +59,17 @@ public class ButtonList {
 		}
 
 		shapeRenderer = new ShapeRenderer();
-
 	}
 
 
-	public void setPositions(int topLeftX, int topLeftY, int buttonWidth, int buttonHeight, int buttonDifference,
+	public static int getHeightForDefaultButtonList(int buttonCount) {
+		// return 0;
+		return (buttonCount * (ButtonList.BUTTON_HEIGHT + ButtonList.BUTTON_DIFFERENCE))
+				- ButtonList.BUTTON_DIFFERENCE;
+	}
+
+
+	public void setDimensions(int topLeftX, int topLeftY, int buttonWidth, int buttonHeight, int buttonDifference,
 			int buttonTextVerticalOffset) {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
@@ -71,6 +78,12 @@ public class ButtonList {
 		this.buttonDifference = buttonDifference;
 		this.buttonTextVerticalOffset = buttonTextVerticalOffset;
 		halfButtonWidth = buttonWidth / 2;
+	}
+
+
+	public void setPositionDefaultSize(int topLeftX, int topLeftY) {
+		setDimensions(topLeftX, topLeftY, ButtonList.BUTTON_WIDTH, ButtonList.BUTTON_HEIGHT,
+				ButtonList.BUTTON_DIFFERENCE, ButtonList.BUTTON_TEXT_VERTICAL_OFFSET);
 	}
 
 

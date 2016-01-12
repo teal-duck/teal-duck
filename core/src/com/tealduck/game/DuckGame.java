@@ -21,7 +21,7 @@ import com.tealduck.game.input.ControlMapCreator;
 import com.tealduck.game.input.controller.ControllerHelper;
 import com.tealduck.game.screen.AssetLoadingScreen;
 import com.tealduck.game.screen.DuckScreenBase;
-import com.tealduck.game.screen.GameScreen;
+import com.tealduck.game.screen.MainMenuScreen;
 
 
 public class DuckGame extends Game {
@@ -73,8 +73,8 @@ public class DuckGame extends Game {
 		controller = ControllerHelper.getFirstControllerOrNull();
 		controlMap = ControlMapCreator.newDefaultControlMap(getControllerName(controller));
 
-		// loadScreen(MainMenuScreen.class);
-		loadScreen(GameScreen.class);
+		loadScreen(MainMenuScreen.class);
+		// loadScreen(GameScreen.class);
 	}
 
 
@@ -87,8 +87,13 @@ public class DuckGame extends Game {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass) {
+		return loadScreen(screenClass, null);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass, Object data) {
 		Gdx.app.log("Screen", "Changing screen to " + screenClass.getSimpleName());
 
 		getEntityEngine().clear();
@@ -97,7 +102,9 @@ public class DuckGame extends Game {
 
 		DuckScreenBase screen = null;
 		try {
-			screen = screenClass.getConstructor(DuckGame.class).newInstance(this);
+			// screen = screenClass.getConstructor(DuckGame.class).newInstance(this, data);
+			screen = screenClass.getDeclaredConstructor(new Class[] { DuckGame.class, Object.class })
+					.newInstance(this, data);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -105,7 +112,7 @@ public class DuckGame extends Game {
 		boolean requiresAssets = screen.startAssetLoading(assetManager);
 
 		if (requiresAssets) {
-			AssetLoadingScreen loadingScreen = new AssetLoadingScreen(this);
+			AssetLoadingScreen loadingScreen = new AssetLoadingScreen(this, null);
 			loadingScreen.setNextScreen(screen);
 			setScreen(loadingScreen);
 		} else {

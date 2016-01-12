@@ -19,8 +19,10 @@ public class EntityConstants {
 	public static final int PLAYER_MAX_HEALTH = 5;
 	public static final float PAUSE_TIME = 0.5f;
 
+	public static final int SCORE_FOR_KILL = 100;
+
 	public static final int MACHINE_GUN_CLIP_SIZE = 10;
-	public static final int START_AMMO_IN_CLIP = 10;
+	public static final int START_AMMO_IN_CLIP = EntityConstants.MACHINE_GUN_CLIP_SIZE;
 	public static final int START_CLIPS = 1;
 	public static final int START_EXTRA_AMMO = EntityConstants.START_AMMO_IN_CLIP * EntityConstants.START_CLIPS;
 	public static final float COOLDOWN_TIME = 0.15f;
