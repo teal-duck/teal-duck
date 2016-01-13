@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tealduck.game.DuckGame;
+import com.tealduck.game.LevelOverData;
 import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.gui.ButtonList;
 
@@ -15,17 +16,20 @@ import com.tealduck.game.gui.ButtonList;
 public class GameOverScreen extends DuckScreenBase {
 	private GlyphLayout gameOverText;
 	private GlyphLayout scoreText;
-	private int playerScore;
+	private LevelOverData levelOverData;
 	private ButtonList buttonList;
+
+	private int playerScore;
 
 
 	public GameOverScreen(DuckGame game, Object data) {
 		super(game, data);
-		if (data instanceof Integer) {
-			playerScore = (Integer) data;
+		if (data instanceof LevelOverData) {
+			levelOverData = (LevelOverData) data;
 		} else {
-			throw new IllegalArgumentException("Game over screen expects integer");
+			throw new IllegalArgumentException("Game over screen expects level over data");
 		}
+		playerScore = levelOverData.score;
 	}
 
 
@@ -69,9 +73,10 @@ public class GameOverScreen extends DuckScreenBase {
 		super.render(deltaTime);
 		buttonList.updateSelected();
 		if (buttonList.isSelectedSelected()) {
-			// int selected = buttonList.getSelected();
-			// selectOption(selected);
-			this.loadScreen(MainMenuScreen.class);
+			int selected = buttonList.getSelected();
+			if (selected == 0) {
+				this.loadScreen(MainMenuScreen.class);
+			}
 		}
 		draw();
 	}
@@ -87,8 +92,6 @@ public class GameOverScreen extends DuckScreenBase {
 		batch.setProjectionMatrix(getGuiCamera().combined);
 		batch.begin();
 		batch.enableBlending();
-		// font.draw(batch, "Game over. Your score: " + playerScore, (getWindowWidth() / 2) - 50,
-		// getWindowHeight() - 50);
 
 		float y = getWindowHeight() - 50;
 		font.draw(batch, gameOverText, (getWindowWidth() / 2) - (gameOverText.width / 2), y);

@@ -345,7 +345,7 @@ public class EntityLoader {
 		entityManager.addComponent(enemyId, new ViewconeComponent(EntityConstants.ENEMY_VIEW_HALF_FOV,
 				EntityConstants.ENEMY_VIEW_LENGTH));
 
-		entityManager.addComponent(enemyId, new HealthComponent(3));
+		entityManager.addComponent(enemyId, new HealthComponent(EntityConstants.ENEMY_HEALTH));
 
 		entityManager.addComponent(enemyId, new TeamComponent(Team.BAD));
 

@@ -19,6 +19,8 @@ public class EntityConstants {
 	public static final int PLAYER_MAX_HEALTH = 5;
 	public static final float PAUSE_TIME = 0.5f;
 
+	public static final int ENEMY_HEALTH = 3;
+
 	public static final int SCORE_FOR_KILL = 100;
 
 	public static final int MACHINE_GUN_CLIP_SIZE = 10;

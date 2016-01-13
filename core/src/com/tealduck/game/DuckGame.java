@@ -21,7 +21,7 @@ import com.tealduck.game.input.ControlMapCreator;
 import com.tealduck.game.input.controller.ControllerHelper;
 import com.tealduck.game.screen.AssetLoadingScreen;
 import com.tealduck.game.screen.DuckScreenBase;
-import com.tealduck.game.screen.MainMenuScreen;
+import com.tealduck.game.screen.GameScreen;
 
 
 public class DuckGame extends Game {
@@ -49,7 +49,7 @@ public class DuckGame extends Game {
 	public void create() {
 		Gdx.app.log("Game", "Starting game");
 
-		batch = new SpriteBatch(100);
+		batch = new SpriteBatch(1000);
 		// batch.disableBlending();
 
 		assetManager = new AssetManager();
@@ -73,8 +73,9 @@ public class DuckGame extends Game {
 		controller = ControllerHelper.getFirstControllerOrNull();
 		controlMap = ControlMapCreator.newDefaultControlMap(getControllerName(controller));
 
-		loadScreen(MainMenuScreen.class);
-		// loadScreen(GameScreen.class);
+		// loadScreen(MainMenuScreen.class);
+		loadScreen(GameScreen.class, 1);
+		// loadScreen(WinScreen.class, new LevelOverData(1, 1200));
 	}
 
 

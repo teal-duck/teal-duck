@@ -17,6 +17,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.AssetLocations;
 import com.tealduck.game.DuckGame;
+import com.tealduck.game.LevelOverData;
 import com.tealduck.game.Tag;
 import com.tealduck.game.TextureMap;
 import com.tealduck.game.collision.Collision;
@@ -65,10 +66,27 @@ public class GameScreen extends DuckScreenBase {
 
 	private ShapeRenderer shapeRenderer;
 
+	private int levelNumber;
+	private String levelAssetName;
+
 
 	public GameScreen(DuckGame game, Object data) {
 		super(game, data);
+
+		if (data instanceof Integer) {
+			levelNumber = (Integer) data;
+		} else {
+			throw new IllegalArgumentException("Game screen expects an integer");
+		}
+
+		levelAssetName = levelNumberToAssetName(levelNumber);
+
 		paused = false;
+	}
+
+
+	private String levelNumberToAssetName(int levelNumber) {
+		return MapNames.TEST_MAP;
 	}
 
 
@@ -93,7 +111,7 @@ public class GameScreen extends DuckScreenBase {
 		assetManager.load(AssetLocations.CONE_LIGHT, Texture.class, textureParameter);
 		// assetManager.load(AssetLocations.MUZZLE_FLASH, Texture.class, textureParameter);
 
-		assetManager.load(MapNames.TEST_MAP, TiledMap.class);
+		assetManager.load(levelAssetName, TiledMap.class);
 
 		return true;
 	}
@@ -124,7 +142,7 @@ public class GameScreen extends DuckScreenBase {
 		setButtonLocations();
 		pauseTextLayout = new GlyphLayout(getFont(), "Paused");
 
-		TiledMap tiledMap = assetManager.get(MapNames.TEST_MAP);
+		TiledMap tiledMap = assetManager.get(levelAssetName);
 		world = new World(getEntityEngine(), tiledMap);
 		world.addPatrolRoutes(EntityLoader.loadPatrolRoutes(tiledMap));
 
@@ -325,15 +343,18 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	private LevelOverData createLevelOverData() {
+		return new LevelOverData(levelNumber, getPlayerScore(true));
+	}
+
+
 	private void winGame() {
-		int score = getPlayerScore(true);
-		this.loadScreen(WinScreen.class, score);
+		this.loadScreen(WinScreen.class, createLevelOverData());
 	}
 
 
 	private void gameOver() {
-		int score = getPlayerScore(true);
-		this.loadScreen(GameOverScreen.class, score);
+		this.loadScreen(GameOverScreen.class, createLevelOverData());
 	}
 
 

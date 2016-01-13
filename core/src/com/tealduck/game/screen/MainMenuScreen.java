@@ -83,7 +83,7 @@ public class MainMenuScreen extends DuckScreenBase {
 
 
 	private void selectNewGame() {
-		this.loadScreen(GameScreen.class);
+		this.loadScreen(GameScreen.class, 1);
 	}
 
 

@@ -6,16 +6,10 @@ package com.tealduck.game.engine;
  * {@link EntityManager} so update method can access entities.
  */
 public abstract class GameSystem {
-	// protected EntityManager entityManager;
-	// protected EntityTagManager entityTagManager;
-	// protected EventManager eventManager;
 	private EntityEngine entityEngine;
 
 
 	public GameSystem(EntityManager entityManager, EntityTagManager entityTagManager, EventManager eventManager) {
-		// this.entityManager = entityManager;
-		// this.entityTagManager = entityTagManager;
-		// this.eventManager = eventManager;
 		this(new EntityEngine(entityManager, entityTagManager, eventManager));
 	}
 
