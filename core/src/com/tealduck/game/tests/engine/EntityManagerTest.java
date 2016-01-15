@@ -59,22 +59,6 @@ public class EntityManagerTest {
 		Assert.assertEquals(2, entityManager.getEntityCount());
 	}
 
-
-	@Test
-	public void testRemoveEntity() {
-		int entity1 = entityManager.createEntity();
-		int entity2 = entityManager.createEntity();
-		int removedEntity = entityManager.removeEntity(entity1);
-
-		// Removing entity should return the ID of the entity it removed
-		Assert.assertEquals(removedEntity, entity1);
-		// Test removed from set
-		Assert.assertEquals(1, entityManager.getEntityCount());
-		Assert.assertFalse(entityManager.getEntities().contains(entity1));
-		Assert.assertTrue(entityManager.getEntities().contains(entity2));
-	}
-
-
 	@Test
 	public void testRemoveEntityWithTag() {
 		int entity1 = entityManager.createEntityWithTag(entityTagManager, "TAG1");
@@ -100,7 +84,7 @@ public class EntityManagerTest {
 		entityManager.addComponent(entity1, movementComponent);
 		entityManager.addComponent(entity2, positionComponent2);
 
-		entityManager.removeEntity(entity1);
+		entityManager.removeEntityWithTag(entity1, entityTagManager);
 
 		Collection<PositionComponent> positionComponents = entityManager
 				.getAllComponentsOfType(PositionComponent.class);
@@ -116,7 +100,7 @@ public class EntityManagerTest {
 	public void testGetEntities() {
 		int entity1 = entityManager.createEntity();
 		int entity2 = entityManager.createEntity();
-		entityManager.removeEntity(entity2);
+		entityManager.removeEntityWithTag(entity2, entityTagManager);
 		Set<Integer> entities = entityManager.getEntities();
 
 		Assert.assertTrue(entities.contains(entity1));
@@ -133,7 +117,7 @@ public class EntityManagerTest {
 
 		int entityToRemove = entityManager.createEntity();
 		Assert.assertEquals(2, entityManager.getEntityCount());
-		entityManager.removeEntity(entityToRemove);
+		entityManager.removeEntityWithTag(entityToRemove, entityTagManager);
 		Assert.assertEquals(1, entityManager.getEntityCount());
 	}
 
@@ -143,7 +127,7 @@ public class EntityManagerTest {
 		int entity1 = entityManager.createEntity();
 		Assert.assertTrue(entityManager.entityExists(entity1));
 
-		entityManager.removeEntity(entity1);
+		entityManager.removeEntityWithTag(entity1, entityTagManager);
 		Assert.assertFalse(entityManager.entityExists(entity1));
 	}
 

@@ -61,39 +61,19 @@ public class EntityManager {
 		return id;
 	}
 
-
 	/**
-	 * Removes an entity and all its associated components.
-	 *
-	 * @param entity
-	 *                ID of the entity to remove
-	 * @return ID of entity removed
-	 */
-	// * @throws IllegalArgumentException
-	// * if entity isn't in set of entities
-	public int removeEntity(int entity) {
-		// if (!entityExists(entity)) {
-		// throw new IllegalArgumentException("entity " + entity + " doesn't exist");
-		// }
-		entities.remove(entity);
-
-		for (HashMap<Integer, ? extends Component> map : componentsMap.values()) {
-			map.remove(entity);
-		}
-
-		return entity;
-	}
-
-
-	/**
-	 * Removes an entity and its associated tags.
+	 * Removes an entity and its associated tags and components.
 	 *
 	 * @param entity
 	 * @param entityTagManager
 	 * @return
 	 */
 	public int removeEntityWithTag(int entity, EntityTagManager entityTagManager) {
-		removeEntity(entity);
+		entities.remove(entity);
+
+		for (HashMap<Integer, ? extends Component> map : componentsMap.values()) {
+			map.remove(entity);
+		}
 		entityTagManager.removeTagsAssociatedWithEntity(entity);
 
 		return entity;
