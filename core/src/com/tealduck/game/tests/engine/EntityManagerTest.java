@@ -83,7 +83,7 @@ public class EntityManagerTest {
 
 		Assert.assertEquals(entity1, removedEntity);
 
-		Assert.assertEquals(0, entityManager.getEntityCount());
+		Assert.assertEquals(1, entityManager.getEntityCount());
 		Assert.assertFalse(entityTagManager.getTags().contains("TAG1"));
 	}
 
