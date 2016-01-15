@@ -40,6 +40,8 @@ public class EntityManagerTest {
 
 		// Test added to set of entities
 		Assert.assertEquals(2, entityManager.getEntityCount());
+		Assert.assertTrue(entityManager.getEntities().contains(entity1));
+		Assert.assertTrue(entityManager.getEntities().contains(entity2));
 	}
 
 
@@ -107,7 +109,6 @@ public class EntityManagerTest {
 
 		Assert.assertEquals(1, positionComponents.size());
 		Assert.assertEquals(0, movementComponents.size());
-
 	}
 
 
