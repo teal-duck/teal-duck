@@ -45,7 +45,7 @@ public class EntityTagManager {
 	 * @throws NullPointerException
 	 *                 if tag isn't used
 	 */
-	public int removeTag(String tag) {
+	public int removeTag(String tag) throws NullPointerException{
 		return tags.remove(tag);
 	}
 
