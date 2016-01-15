@@ -2,6 +2,7 @@ package com.tealduck.game.engine;
 
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -54,10 +55,15 @@ public class EntityTagManager {
 	 * @param entity
 	 */
 	public void removeTagsAssociatedWithEntity(int entity) {
-		for (Entry<String, Integer> value : tags.entrySet()) {
-			if (value.getValue() == entity) {
-				tags.remove(value.getKey());
+		Set<String> tagsToRemove = new HashSet<String>();
+		for (Entry<String, Integer> tag : tags.entrySet()) {
+			if (tag.getValue() == entity) {
+				tagsToRemove.add(tag.getKey());
 			}
+		}
+		
+		for (String key : tagsToRemove) {
+			tags.remove(key);
 		}
 	}
 
