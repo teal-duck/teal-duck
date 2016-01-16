@@ -52,9 +52,9 @@ public class EntityManagerTest {
 
 		Assert.assertEquals(0, entity1);
 		Assert.assertEquals(1, entity2);
-
-		Assert.assertEquals("TAG1", entityTagManager.getTagAssociatedWithEntity(entity1));
-		Assert.assertEquals("TAG2", entityTagManager.getTagAssociatedWithEntity(entity2));
+		
+		Assert.assertTrue(entityTagManager.doesEntityIdHaveTag(entity1, "TAG1"));
+		Assert.assertTrue(entityTagManager.doesEntityIdHaveTag(entity2, "TAG2"));
 
 		Assert.assertEquals(2, entityManager.getEntityCount());
 	}
@@ -85,6 +85,7 @@ public class EntityManagerTest {
 
 		Assert.assertEquals(1, entityManager.getEntityCount());
 		Assert.assertFalse(entityTagManager.getTags().contains("TAG1"));
+		Assert.assertTrue(entityTagManager.getTags().contains("TAG2"));
 	}
 
 

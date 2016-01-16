@@ -67,10 +67,14 @@ public class EntityTagManager {
 		}
 	}
 
-
+	@Deprecated
 	/**
 	 * Null if no tag.
-	 *
+	 * 
+	 * This method should not be used, as an entity may have more than one tag,
+	 * but this method can only return one.
+	 * 
+	 * @deprecated
 	 * @param entity
 	 * @return
 	 */
