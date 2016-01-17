@@ -118,6 +118,7 @@ public class GameScreen extends DuckScreenBase {
 		assetManager.load(AssetLocations.AMMO_PICKUP, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.HEALTH_PICKUP, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.CONE_LIGHT, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.HEALTH_BAR, Texture.class, textureParameter);
 		// assetManager.load(AssetLocations.MUZZLE_FLASH, Texture.class, textureParameter);
 
 		assetManager.load(levelAssetName, TiledMap.class);
@@ -143,6 +144,7 @@ public class GameScreen extends DuckScreenBase {
 		textureMap.putTextureFromAssetManager(AssetLocations.AMMO_PICKUP, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.HEALTH_PICKUP, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.CONE_LIGHT, assetManager);
+		textureMap.putTextureFromAssetManager(AssetLocations.HEALTH_BAR, assetManager);
 
 		shapeRenderer = new ShapeRenderer();
 		pauseButtons = new ButtonList(GameScreen.PAUSE_BUTTON_TEXTS, getTextFont(), getGuiCamera(),
@@ -184,8 +186,8 @@ public class GameScreen extends DuckScreenBase {
 		systemManager.addSystem(worldRenderSystem, 7);
 		systemManager.addSystem(new InputLogicSystem(getEntityEngine(), worldRenderSystem.getCamera()), 0);
 
-		systemManager.addSystem(
-				new GuiRenderSystem(getEntityEngine(), getBatch(), getGuiCamera(), getTextFont()), 8);
+		systemManager.addSystem(new GuiRenderSystem(getEntityEngine(), getBatch(), getGuiCamera(),
+				getTextFont(), textureMap), 8);
 	}
 
 
@@ -302,7 +304,7 @@ public class GameScreen extends DuckScreenBase {
 
 	@Override
 	public void pause() {
-		paused = true;
+		// paused = true;
 	}
 
 

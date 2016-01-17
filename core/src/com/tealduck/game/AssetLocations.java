@@ -27,7 +27,9 @@ public class AssetLocations {
 
 	public static final String GRID = AssetLocations.WORLD + "grid_64x64.png";
 
-	public static final String LOADING_TEXT = AssetLocations.GUI + "loading_text.png";
+	public static final String AMMO_BAR = AssetLocations.GUI + "ammo_bar.png";
+	public static final String HEALTH_BAR = AssetLocations.GUI + "health_bar.png";
+	// public static final String LOADING_TEXT = AssetLocations.GUI + "loading_text.png";
 
 	public static final String FONTS = "fonts/";
 	public static final String BERLIN_SANS = AssetLocations.FONTS + "berlin-sans.fnt";

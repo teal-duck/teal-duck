@@ -11,7 +11,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.tealduck.game.AssetLocations;
 import com.tealduck.game.Tag;
+import com.tealduck.game.TextureMap;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.ScoreComponent;
@@ -62,20 +64,15 @@ public class GuiRenderSystem extends GameSystem {
 	 * @param camera
 	 * @param font
 	 */
-	public GuiRenderSystem(EntityEngine entityEngine, SpriteBatch batch, OrthographicCamera camera,
-			BitmapFont font) {
+	public GuiRenderSystem(EntityEngine entityEngine, SpriteBatch batch, OrthographicCamera camera, BitmapFont font,
+			TextureMap textureMap) {
 		super(entityEngine);
 		this.batch = batch;
 		this.camera = camera;
 		this.font = font;
 
 		healthText = new GlyphLayout(font, "Health:");
-
-		Pixmap healthHeartPixmap = new Pixmap(GuiRenderSystem.HEALTH_HEART_SIZE,
-				GuiRenderSystem.HEALTH_HEART_SIZE, Format.RGBA8888);
-		healthHeartPixmap.setColor(Color.RED);
-		healthHeartPixmap.fill();
-		healthHeartTexture = new Texture(healthHeartPixmap);
+		healthHeartTexture = textureMap.getTexture(AssetLocations.HEALTH_BAR);
 
 		// TODO: Replace gui backgrounds with 9-patch
 		int maxHealth = EntityConstants.PLAYER_MAX_HEALTH;
@@ -187,6 +184,9 @@ public class GuiRenderSystem extends GameSystem {
 
 		healthX += healthText.width + GuiRenderSystem.HEALTH_HEART_GAP;
 		healthY -= GuiRenderSystem.HEALTH_HEART_SIZE - 1;
+
+		healthX -= 22;
+		healthY -= 22;
 
 		for (int i = 0; i < health; i += 1) {
 			batch.draw(healthHeartTexture, healthX, healthY);

@@ -13,29 +13,19 @@ import com.tealduck.game.system.WorldCollisionSystem;
 
 
 public class SystemManagerTest {
-	// TODO: SystemManager tests
-
 	private SystemManager systemManager;
-	// private EntityManager entityManager;
-	// private EntityTagManager entityTagManager;
-	// private EventManager eventManager;
 	private EntityEngine entityEngine;
 
 
 	@Before
 	public void setup() {
 		systemManager = new SystemManager();
-		entityEngine = new EntityEngine(); // new EntityManager(), ne w EntityTagManager());
-		// entityManager = new EntityManager();
-		// entityTagManager = new EntityTagManager();
-		// eventManager = new EventManager(entityManager, entityTagManager);
+		entityEngine = new EntityEngine();
 	}
 
 
 	@Test
 	public void testAddSystem() {
-		// EntityEngine entityEngine = new EntityEngine(entityManager, entityTagManager, eventManager);
-
 		InputLogicSystem ils = new InputLogicSystem(entityEngine, null);
 		systemManager.addSystem(ils, 0);
 
