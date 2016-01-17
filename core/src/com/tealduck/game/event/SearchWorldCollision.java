@@ -7,6 +7,9 @@ import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.IEvent;
 
 
+/**
+ * Used by entities that are in random search mode. If they hit a wall they turn around to walk away from it.
+ */
 public class SearchWorldCollision implements IEvent {
 	public static final SearchWorldCollision instance = new SearchWorldCollision();
 

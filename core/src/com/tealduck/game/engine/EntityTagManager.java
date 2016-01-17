@@ -15,6 +15,9 @@ public class EntityTagManager {
 	private HashMap<String, Integer> tags;
 
 
+	/**
+	 * 
+	 */
 	public EntityTagManager() {
 		tags = new HashMap<String, Integer>();
 	}
@@ -46,7 +49,7 @@ public class EntityTagManager {
 	 * @throws NullPointerException
 	 *                 if tag isn't used
 	 */
-	public int removeTag(String tag) throws NullPointerException{
+	public int removeTag(String tag) throws NullPointerException {
 		return tags.remove(tag);
 	}
 
@@ -61,19 +64,19 @@ public class EntityTagManager {
 				tagsToRemove.add(tag.getKey());
 			}
 		}
-		
+
 		for (String key : tagsToRemove) {
 			tags.remove(key);
 		}
 	}
 
+
 	@Deprecated
 	/**
 	 * Null if no tag.
-	 * 
-	 * This method should not be used, as an entity may have more than one tag,
-	 * but this method can only return one.
-	 * 
+	 *
+	 * This method should not be used, as an entity may have more than one tag, but this method can only return one.
+	 *
 	 * @deprecated
 	 * @param entity
 	 * @return

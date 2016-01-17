@@ -18,6 +18,9 @@ import com.tealduck.game.pickup.Pickup;
 import com.tealduck.game.world.EntityConstants;
 
 
+/**
+ * Static methods for functions that are common between collision components.
+ */
 public class CollisionEvents {
 	private CollisionEvents() {
 	};
@@ -47,6 +50,12 @@ public class CollisionEvents {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param sender
+	 * @param receiver
+	 * @param intersection
+	 */
 	public static void handleKnockback(EntityManager entityManager, int sender, int receiver,
 			Intersection intersection) {
 		if (CollisionEvents.areEntitiesOnSameTeam(entityManager, sender, receiver)) {
@@ -66,6 +75,12 @@ public class CollisionEvents {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param sender
+	 * @param receiver
+	 * @param intersection
+	 */
 	private static void pushEntitiesApart(EntityManager entityManager, int sender, int receiver,
 			Intersection intersection) {
 		if (entityManager.entityHasComponent(receiver, MovementComponent.class)
@@ -77,6 +92,11 @@ public class CollisionEvents {
 	}
 
 
+	/**
+	 * @param entityEngine
+	 * @param sender
+	 * @param receiver
+	 */
 	public static void handleDamage(EntityEngine entityEngine, int sender, int receiver) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		if (!CollisionEvents.areEntitiesOnSameTeam(entityManager, sender, receiver)) {
@@ -106,6 +126,11 @@ public class CollisionEvents {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param killerEntity
+	 * @param deadEntity
+	 */
 	public static void handleScoreForEntityDeath(EntityManager entityManager, int killerEntity, int deadEntity) {
 		if (entityManager.entityHasComponent(killerEntity, ScoreComponent.class)) {
 			ScoreComponent scoreComponent = entityManager.getComponent(killerEntity, ScoreComponent.class);
@@ -118,6 +143,11 @@ public class CollisionEvents {
 	}
 
 
+	/**
+	 * @param entityEngine
+	 * @param sender
+	 * @param receiver
+	 */
 	public static void handlePickup(EntityEngine entityEngine, int sender, int receiver) {
 		// TODO: Animation on pick up
 		EntityManager entityManager = entityEngine.getEntityManager();

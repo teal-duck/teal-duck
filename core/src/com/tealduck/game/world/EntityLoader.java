@@ -349,7 +349,9 @@ public class EntityLoader {
 
 		entityManager.addComponent(enemyId, new TeamComponent(Team.BAD));
 
-		entityManager.addComponent(enemyId, new DropComponent(EntityLoader.randomPickup()));
+		if (MathUtils.randomBoolean()) {
+			entityManager.addComponent(enemyId, new DropComponent(EntityLoader.randomPickup()));
+		}
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(enemyId, EventName.COLLISION, EnemyCollision.instance);

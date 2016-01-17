@@ -73,6 +73,7 @@ public class GameScreen extends DuckScreenBase {
 	public GameScreen(DuckGame game, Object data) {
 		super(game, data);
 
+		// TODO: GameScreen data parameter should also include cumulative score from previous levels
 		if (data instanceof Integer) {
 			levelNumber = (Integer) data;
 		} else {

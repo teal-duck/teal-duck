@@ -9,6 +9,10 @@ import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.IEvent;
 
 
+/**
+ * @author ben
+ *
+ */
 public class PlayerCollision implements IEvent {
 	public static final PlayerCollision instance = new PlayerCollision();
 
@@ -19,13 +23,12 @@ public class PlayerCollision implements IEvent {
 
 	@Override
 	public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
-		// TODO: Maybe change how data is passed to events
 		if ((data == null) || !(data instanceof Intersection)) {
 			Gdx.app.log("Event", "Player collision event expected an intersection instance");
 			return false;
 		}
+		
 		Intersection intersection = (Intersection) data;
-
 		EntityManager entityManager = entityEngine.getEntityManager();
 
 		// Don't be harmed by own bullet
@@ -37,9 +40,7 @@ public class PlayerCollision implements IEvent {
 		}
 
 		CollisionEvents.handlePickup(entityEngine, sender, receiver);
-
 		CollisionEvents.handleKnockback(entityManager, sender, receiver, intersection);
-
 		CollisionEvents.handleDamage(entityEngine, sender, receiver);
 
 		return false;

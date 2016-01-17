@@ -37,7 +37,7 @@ public class GuiRenderSystem extends GameSystem {
 
 	private static final int RIGHT_EXTRA = 0; // 24;
 
-	private static final Color BACKGROUND_COLOUR = Color.BLUE;
+	private static final Color BACKGROUND_COLOUR = Color.DARK_GRAY; // Color.BLUE;
 
 	private final float backgroundWidth;
 	private final float backgroundHeight;
@@ -170,6 +170,7 @@ public class GuiRenderSystem extends GameSystem {
 
 
 	private void renderBackgroundWithTexture(float x, float y, float textX, float textY, String text) {
+		// batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 0.2f);
 		batch.draw(backgroundTexture, x, y);
 		font.draw(batch, text, textX, textY);
 	}

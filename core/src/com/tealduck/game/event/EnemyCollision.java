@@ -13,6 +13,10 @@ import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.IEvent;
 
 
+/**
+ * @author ben
+ *
+ */
 public class EnemyCollision implements IEvent {
 	public static final EnemyCollision instance = new EnemyCollision();
 
@@ -32,9 +36,9 @@ public class EnemyCollision implements IEvent {
 		EntityManager entityManager = entityEngine.getEntityManager();
 
 		CollisionEvents.handleKnockback(entityManager, sender, receiver, intersection);
-
 		CollisionEvents.handleDamage(entityEngine, sender, receiver);
 
+		// If the enemy was hit by a bullet, look in the direction the bullet came from
 		if (entityManager.entityHasComponent(sender, BulletComponent.class)) {
 			BulletComponent bulletComponent = entityManager.getComponent(sender, BulletComponent.class);
 			if (!entityManager.entityHasComponent(receiver, ChaseComponent.class)) {
@@ -47,6 +51,7 @@ public class EnemyCollision implements IEvent {
 					PositionComponent.class);
 			ChaseComponent chaseComponent = entityManager.getComponent(receiver, ChaseComponent.class);
 
+			// Direction to look is the reverse of the direction the bullet was travelling
 			Vector2 direction = movementComponent.velocity.cpy().nor().scl(-1);
 
 			chaseComponent.searchDirection.set(direction);

@@ -6,11 +6,18 @@ import com.tealduck.game.collision.CollisionShape;
 import com.tealduck.game.engine.Component;
 
 
+/**
+ *
+ */
 public class CollisionComponent extends Component {
 	public CollisionShape collisionShape;
 	public Vector2 offsetFromPosition;
 
 
+	/**
+	 * @param collisionShape
+	 * @param offsetFromPosition
+	 */
 	public CollisionComponent(CollisionShape collisionShape, Vector2 offsetFromPosition) {
 		this.collisionShape = collisionShape;
 		this.offsetFromPosition = offsetFromPosition;

@@ -52,7 +52,7 @@ public class EntityManagerTest {
 
 		Assert.assertEquals(0, entity1);
 		Assert.assertEquals(1, entity2);
-		
+
 		Assert.assertTrue(entityTagManager.doesEntityIdHaveTag(entity1, "TAG1"));
 		Assert.assertTrue(entityTagManager.doesEntityIdHaveTag(entity2, "TAG2"));
 
@@ -78,7 +78,7 @@ public class EntityManagerTest {
 	@Test
 	public void testRemoveEntityWithTag() {
 		int entity1 = entityManager.createEntityWithTag(entityTagManager, "TAG1");
-		int entity2 = entityManager.createEntityWithTag(entityTagManager, "TAG2");
+		// int entity2 = entityManager.createEntityWithTag(entityTagManager, "TAG2");
 		int removedEntity = entityManager.removeEntityWithTag(entity1, entityTagManager);
 
 		Assert.assertEquals(entity1, removedEntity);

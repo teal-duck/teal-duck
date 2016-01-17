@@ -16,6 +16,9 @@ public class EntityEngine {
 	private HashSet<Integer> entitiesToRemove;
 
 
+	/**
+	 * 
+	 */
 	public EntityEngine() {
 		entityManager = new EntityManager();
 		entityTagManager = new EntityTagManager();
@@ -25,6 +28,11 @@ public class EntityEngine {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param entityTagManager
+	 * @param eventManager
+	 */
 	public EntityEngine(EntityManager entityManager, EntityTagManager entityTagManager, EventManager eventManager) {
 		this.entityManager = entityManager;
 		this.entityTagManager = entityTagManager;
@@ -32,11 +40,19 @@ public class EntityEngine {
 	}
 
 
+	/**
+	 * Add the entity to the set of entities to remove at the end of the frame.
+	 * 
+	 * @param entity
+	 */
 	public void flagEntityToRemove(int entity) {
 		entitiesToRemove.add(entity);
 	}
 
 
+	/**
+	 * Removes the entities in the entitiesToRemove set.
+	 */
 	public void removeAllFlaggedEntities() {
 		for (int entity : entitiesToRemove) {
 			removeEntity(entity);
@@ -45,6 +61,9 @@ public class EntityEngine {
 	}
 
 
+	/**
+	 * @param entity
+	 */
 	private void removeEntity(int entity) {
 		entityManager.removeEntity(entity);
 		entityTagManager.removeTagsAssociatedWithEntity(entity);
@@ -52,6 +71,9 @@ public class EntityEngine {
 	}
 
 
+	/**
+	 * Calls clear on the entity manager, entity tag manager and event manager.
+	 */
 	public void clear() {
 		entityManager.clear();
 		entityTagManager.clear();
@@ -59,16 +81,25 @@ public class EntityEngine {
 	}
 
 
+	/**
+	 * @return
+	 */
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public EntityTagManager getEntityTagManager() {
 		return entityTagManager;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public EventManager getEventManager() {
 		return eventManager;
 	}

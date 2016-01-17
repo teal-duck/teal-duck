@@ -5,6 +5,9 @@ import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.IEvent;
 
 
+/**
+ * 
+ */
 public class BulletWorldCollision implements IEvent {
 	public static final BulletWorldCollision instance = new BulletWorldCollision();
 

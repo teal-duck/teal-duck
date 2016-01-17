@@ -1,6 +1,9 @@
 package com.tealduck.game;
 
 
+/**
+ * Constants for locating assets in the file system.
+ */
 public class AssetLocations {
 	public static final String TEXTURES = "textures/";
 	public static final String ENTITY = AssetLocations.TEXTURES + "entity/";

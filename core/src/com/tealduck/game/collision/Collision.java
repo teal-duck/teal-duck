@@ -5,11 +5,15 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 
+/**
+ * Static methods for detecting and resolving collisions
+ */
 public class Collision {
-	// TODO: Test collision detection
 	// TODO: Write detection functions that return bool instead of calculating resolution vectors
 
 	/**
+	 * Returns the overlap between two 1D ranges of numbers.
+	 * 
 	 * @param min1
 	 * @param max1
 	 * @param min2
@@ -22,12 +26,15 @@ public class Collision {
 
 
 	/**
+	 * Projects the points onto the line defined by lineDirection and calculates their overlap.
+	 * 
 	 * @param lineDirection
 	 * @param b0p0
 	 * @param b0p1
 	 * @param b1p0
 	 * @param b1p1
 	 * @return
+	 * @see {@link Collision#overlap(float, float, float, float)}
 	 */
 	public static float getOverlapForPointsOnLine(Vector2 lineDirection, Vector2 b0p0, Vector2 b0p1, Vector2 b1p0,
 			Vector2 b1p1) {
@@ -47,7 +54,8 @@ public class Collision {
 
 
 	/**
-	 * Closest and furthers vectors get mutated
+	 * Given an AABB and Circle, this calculates the points on the AABB for projection in collision detection.
+	 * Closest and furthers vector parameters get mutated.
 	 *
 	 * @param aabb
 	 * @param circle
@@ -167,11 +175,17 @@ public class Collision {
 			float y = (top < bot) ? top : 0 - bot;
 			float x = (right < left) ? right : 0 - left;
 
+			Vector2 normal = new Vector2();
+			float depth = 0;
 			if (Math.abs(y) < Math.abs(x)) {
-				return new Intersection(new Vector2(0, Math.signum(y)), y);
+				normal.set(0, Math.signum(y));
+				depth = y;
 			} else {
-				return new Intersection(new Vector2(Math.signum(x), 0), x);
+				normal.set(Math.signum(x), 0);
+				depth = x;
 			}
+
+			return new Intersection(normal, depth);
 		}
 
 		return null;
@@ -203,6 +217,14 @@ public class Collision {
 	}
 
 
+	/**
+	 * Calculate the intersection between 2 shapes. Intersection returned is for pushing s0 out of s1. Null if there
+	 * is no collision.
+	 * 
+	 * @param s0
+	 * @param s1
+	 * @return
+	 */
 	public static Intersection shapeToShape(CollisionShape s0, CollisionShape s1) {
 		if ((s0 instanceof Circle) && (s1 instanceof Circle)) {
 			return Collision.circleToCircle((Circle) s0, (Circle) s1);
@@ -212,7 +234,8 @@ public class Collision {
 
 		} else if ((s0 instanceof AABB) && (s1 instanceof Circle)) {
 			Intersection intersection = Collision.circleToAabb((Circle) s1, (AABB) s0);
-			// Need to flip because aabbToCircle resolution vector is in opposite direction
+			// Need to flip because aabbToCircle resolution vector pushes circle out of aabb
+			// But we have the aabb to be pushed out of circle
 			if (intersection != null) {
 				intersection = intersection.getFlippedCopy();
 			}

@@ -110,6 +110,7 @@ public class WorldCollisionSystem extends GameSystem {
 
 					entityShape.getPosition().add(fixVector);
 
+					// TODO: Move this out the loop so it only gets triggered once for each entity?
 					getEventManager().triggerEvent(-1, entity, EventName.WORLD_COLLISION);
 				} else {
 					break;

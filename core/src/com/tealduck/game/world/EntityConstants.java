@@ -6,7 +6,8 @@ import com.badlogic.gdx.math.Vector3;
 
 
 public class EntityConstants {
-	// TODO: Clean up constants
+	public static final int TILE_SIZE = 64;
+	
 	public static final float PLAYER_SPEED = 2400.0f;
 	public static final float PLAYER_SPRINT = 1.8f;
 	public static final float PLAYER_SPRINT_TIME = 3f;

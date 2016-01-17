@@ -7,6 +7,9 @@ From assessment doc:
 
 
 Required to do for assessment 2:
+- Game should pause when window loses focus
+- WorldCollisionSystem, move event trigger out of loop
+
 - Menu
 	- Game over screen
 	- Game continue screen

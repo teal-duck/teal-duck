@@ -7,8 +7,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.engine.Component;
 
 
+/**
+ * 
+ */
 public class PatrolRouteComponent extends Component {
-	// TODO: Maybe separate PatrolRouteComponent into 2 objects
 	public ArrayList<Vector2> route;
 	public int targetVertex;
 	public Vector2 previousPosition = null;
@@ -22,6 +24,10 @@ public class PatrolRouteComponent extends Component {
 	public float rotPerSecond = 0f;
 
 
+	/**
+	 * @param route
+	 * @param maxPauseTime
+	 */
 	public PatrolRouteComponent(ArrayList<Vector2> route, float maxPauseTime) {
 		this.route = route;
 		this.maxPauseTime = maxPauseTime;
@@ -29,17 +35,28 @@ public class PatrolRouteComponent extends Component {
 	}
 
 
+	/**
+	 * @return
+	 */
 	public ArrayList<Vector2> getRoute() {
 		return route;
 	}
 
 
+	/**
+	 * @return the location of the next target in the route
+	 */
 	public Vector2 peekNextTarget() {
 		int index = (targetVertex + 1) % route.size();
 		return route.get(index);
 	}
 
 
+	/**
+	 * Increment the targetIndex, update previousTarget and return the new target location.
+	 * 
+	 * @return the location of the new target
+	 */
 	public Vector2 advanceTarget() {
 		previousTarget = route.get(targetVertex);
 		targetVertex = (targetVertex + 1) % route.size();
@@ -47,11 +64,18 @@ public class PatrolRouteComponent extends Component {
 	}
 
 
+	/**
+	 * @return
+	 */
 	public Vector2 getTarget() {
 		return route.get(targetVertex);
 	}
 
 
+	/**
+	 * @param index
+	 * @return
+	 */
 	public Vector2 getElementByIndex(int index) {
 		return route.get(index);
 	}
