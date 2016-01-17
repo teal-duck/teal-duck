@@ -5,7 +5,7 @@ package com.tealduck.game;
  * Groups together the number of the level that was passed and the score the player got in the level. Used for passing
  * information from GameScreen to WinScreen and back to GameScreen for the continue button.
  */
-public class LevelOverData {
+public class GameProgress {
 	public int levelNumber;
 	public int score;
 
@@ -14,7 +14,7 @@ public class LevelOverData {
 	 * @param levelNumber
 	 * @param score
 	 */
-	public LevelOverData(int levelNumber, int score) {
+	public GameProgress(int levelNumber, int score) {
 		this.levelNumber = levelNumber;
 		this.score = score;
 	}

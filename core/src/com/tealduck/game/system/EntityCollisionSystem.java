@@ -16,7 +16,13 @@ import com.tealduck.game.engine.GameSystem;
 import com.tealduck.game.event.EventName;
 
 
+/**
+ *
+ */
 public class EntityCollisionSystem extends GameSystem {
+	/**
+	 * @param entityEngine
+	 */
 	public EntityCollisionSystem(EntityEngine entityEngine) {
 		super(entityEngine);
 	}
@@ -32,6 +38,7 @@ public class EntityCollisionSystem extends GameSystem {
 		List<Integer> entities = new ArrayList<Integer>(entitiesSet);
 
 		// Only test entity N with entity K when K > N
+		// Stops reporting collisions twice, and less collision checks to perform
 		while (!entities.isEmpty()) {
 			int entity = entities.get(0);
 			entities.remove(0);
@@ -49,6 +56,7 @@ public class EntityCollisionSystem extends GameSystem {
 					continue;
 				}
 
+				// If the entities collided, send a message from one to the other
 				eventManager.triggerEvent(other, entity, EventName.COLLISION, intersection);
 				eventManager.triggerEvent(entity, other, EventName.COLLISION,
 						intersection.getFlippedCopy());

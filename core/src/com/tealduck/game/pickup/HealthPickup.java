@@ -6,15 +6,28 @@ import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.engine.EntityManager;
 
 
+/**
+ *
+ */
 public class HealthPickup extends Pickup {
 	public int health;
 
 
+	/**
+	 * @param health
+	 */
 	public HealthPickup(int health) {
 		this.health = health;
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tealduck.game.pickup.Pickup#applyToEntity(com.tealduck.game.engine.EntityManager, int)
+	 *
+	 * Only applyable if the entity has a health component and is not already at full health.
+	 */
 	@Override
 	public boolean applyToEntity(EntityManager entityManager, int entity) {
 		if (entityManager.entityHasComponent(entity, HealthComponent.class)) {

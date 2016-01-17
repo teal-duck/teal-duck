@@ -1,6 +1,9 @@
 package com.tealduck.game.input.controller;
 
 
+/**
+ *
+ */
 public class PS3 {
 	public static final String NAME = "Sony PLAYSTATION(R)3 Controller";
 

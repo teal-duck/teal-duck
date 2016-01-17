@@ -1,6 +1,9 @@
 package com.tealduck.game.input.controller;
 
 
+/**
+ *
+ */
 public class Xbox360 {
 	public static final String NAME = "Microsoft X-Box 360 pad";
 

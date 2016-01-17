@@ -17,7 +17,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.AssetLocations;
 import com.tealduck.game.DuckGame;
-import com.tealduck.game.LevelOverData;
+import com.tealduck.game.GameProgress;
 import com.tealduck.game.Tag;
 import com.tealduck.game.TextureMap;
 import com.tealduck.game.collision.Collision;
@@ -44,6 +44,9 @@ import com.tealduck.game.world.MapNames;
 import com.tealduck.game.world.World;
 
 
+/**
+ *
+ */
 public class GameScreen extends DuckScreenBase {
 	private static final int RESUME = 0;
 	private static final int SAVE = 1;
@@ -63,31 +66,37 @@ public class GameScreen extends DuckScreenBase {
 	private World world;
 
 	private boolean paused = false;
+	private boolean previousPauseState = false;
 
 	private ShapeRenderer shapeRenderer;
 
 	private int levelNumber;
+	private int previousScore;
 	private String levelAssetName;
+	// Number of levels in the game
 
 
+	/**
+	 * @param game
+	 * @param data
+	 */
 	public GameScreen(DuckGame game, Object data) {
 		super(game, data);
 
-		// TODO: GameScreen data parameter should also include cumulative score from previous levels
-		if (data instanceof Integer) {
-			levelNumber = (Integer) data;
+		if (data instanceof GameProgress) {
+			GameProgress gameProgress = (GameProgress) data;
+			levelNumber = gameProgress.levelNumber;
+			previousScore = gameProgress.score;
 		} else {
 			throw new IllegalArgumentException("Game screen expects an integer");
 		}
 
-		levelAssetName = levelNumberToAssetName(levelNumber);
+		levelAssetName = MapNames.levelNumberToAssetName(levelNumber);
+		if (levelAssetName == null) {
+			System.out.println("Null");
+		}
 
 		paused = false;
-	}
-
-
-	private String levelNumberToAssetName(int levelNumber) {
-		return MapNames.TEST_MAP;
 	}
 
 
@@ -108,7 +117,6 @@ public class GameScreen extends DuckScreenBase {
 		assetManager.load(AssetLocations.BULLET, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.AMMO_PICKUP, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.HEALTH_PICKUP, Texture.class, textureParameter);
-		assetManager.load(AssetLocations.POINT_LIGHT, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.CONE_LIGHT, Texture.class, textureParameter);
 		// assetManager.load(AssetLocations.MUZZLE_FLASH, Texture.class, textureParameter);
 
@@ -134,14 +142,13 @@ public class GameScreen extends DuckScreenBase {
 		textureMap.putTextureFromAssetManager(AssetLocations.BULLET, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.AMMO_PICKUP, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.HEALTH_PICKUP, assetManager);
-		textureMap.putTextureFromAssetManager(AssetLocations.POINT_LIGHT, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.CONE_LIGHT, assetManager);
 
 		shapeRenderer = new ShapeRenderer();
-		pauseButtons = new ButtonList(GameScreen.PAUSE_BUTTON_TEXTS, getFont(), getGuiCamera(), getControlMap(),
-				getController());
+		pauseButtons = new ButtonList(GameScreen.PAUSE_BUTTON_TEXTS, getTextFont(), getGuiCamera(),
+				getControlMap(), getController());
 		setButtonLocations();
-		pauseTextLayout = new GlyphLayout(getFont(), "Paused");
+		pauseTextLayout = new GlyphLayout(getTitleFont(), "Paused");
 
 		TiledMap tiledMap = assetManager.get(levelAssetName);
 		world = new World(getEntityEngine(), tiledMap);
@@ -151,6 +158,9 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	/**
+	 *
+	 */
 	private void setButtonLocations() {
 		pauseButtons.setPositionDefaultSize((getWindowWidth() / 2) - (ButtonList.BUTTON_WIDTH / 2), //
 				(getWindowHeight() / 2) + pauseButtonsBackgroundYOffset);
@@ -174,8 +184,8 @@ public class GameScreen extends DuckScreenBase {
 		systemManager.addSystem(worldRenderSystem, 7);
 		systemManager.addSystem(new InputLogicSystem(getEntityEngine(), worldRenderSystem.getCamera()), 0);
 
-		systemManager.addSystem(new GuiRenderSystem(getEntityEngine(), getBatch(), getGuiCamera(), getFont()),
-				8);
+		systemManager.addSystem(
+				new GuiRenderSystem(getEntityEngine(), getBatch(), getGuiCamera(), getTextFont()), 8);
 	}
 
 
@@ -197,6 +207,9 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	/**
+	 * @return
+	 */
 	private boolean hasPlayerWon() {
 		EntityManager entityManager = getEntityManager();
 		try {
@@ -218,6 +231,10 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	/**
+	 * @param entityId
+	 * @return
+	 */
 	private boolean isEntityAlive(int entityId) {
 		EntityManager entityManager = getEntityManager();
 		if (entityManager.entityHasComponent(entityId, HealthComponent.class)) {
@@ -228,6 +245,9 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	/**
+	 * @return
+	 */
 	private boolean hasPlayerDied() {
 		try {
 			int playerId = getEntityTagManager().getEntity(Tag.PLAYER);
@@ -238,7 +258,10 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
-	private void removeDeadEntities() {
+	/**
+	 *
+	 */
+	private void flagDeadEntitiesAndDropPickups() {
 		EntityManager entityManager = getEntityManager();
 		Set<Integer> entities = entityManager.getEntitiesWithComponent(HealthComponent.class);
 
@@ -264,6 +287,9 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	/**
+	 * @param deltaTime
+	 */
 	private void handleScoreComboCountdown(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
 		Set<Integer> entities = entityManager.getEntitiesWithComponent(ScoreComponent.class);
@@ -274,7 +300,10 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
-	private boolean previousPauseState = false;
+	@Override
+	public void pause() {
+		paused = true;
+	}
 
 
 	@Override
@@ -291,10 +320,6 @@ public class GameScreen extends DuckScreenBase {
 					int selected = pauseButtons.getSelected();
 					selectPauseOption(selected);
 				}
-
-				// GuiRenderSystem guiRenderSystem =
-				// systemManager.getSystemOfType(GuiRenderSystem.class);
-				// guiRenderSystem.update(deltaTime);
 			} catch (IllegalArgumentException e) {
 			} catch (NullPointerException e) {
 			}
@@ -316,7 +341,7 @@ public class GameScreen extends DuckScreenBase {
 				return;
 			}
 
-			removeDeadEntities();
+			flagDeadEntitiesAndDropPickups();
 		}
 
 		float pauseState = getControlMap().getStateForAction(Action.PAUSE, getController());
@@ -328,6 +353,10 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	/**
+	 * @param finishCombo
+	 * @return
+	 */
 	private int getPlayerScore(boolean finishCombo) {
 		try {
 			int playerId = getEntityTagManager().getEntity(Tag.PLAYER);
@@ -344,21 +373,33 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
-	private LevelOverData createLevelOverData() {
-		return new LevelOverData(levelNumber, getPlayerScore(true));
+	/**
+	 * @return
+	 */
+	private GameProgress createGameProgressData() {
+		return new GameProgress(levelNumber, previousScore + getPlayerScore(true));
 	}
 
 
+	/**
+	 *
+	 */
 	private void winGame() {
-		this.loadScreen(WinScreen.class, createLevelOverData());
+		this.loadScreen(WinScreen.class, createGameProgressData());
 	}
 
 
+	/**
+	 *
+	 */
 	private void gameOver() {
-		this.loadScreen(GameOverScreen.class, createLevelOverData());
+		this.loadScreen(GameOverScreen.class, createGameProgressData());
 	}
 
 
+	/**
+	 * @param selected
+	 */
 	private void selectPauseOption(int selected) {
 		switch (selected) {
 		case RESUME:
@@ -374,16 +415,25 @@ public class GameScreen extends DuckScreenBase {
 	}
 
 
+	/**
+	 *
+	 */
 	private void saveGame() {
 		Gdx.app.log("Save", "Todo");
 	}
 
 
+	/**
+	 *
+	 */
 	private void quitGame() {
 		loadScreen(MainMenuScreen.class);
 	}
 
 
+	/**
+	 *
+	 */
 	private void renderPauseOverlay() {
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		shapeRenderer.setProjectionMatrix(getGuiCamera().combined);
@@ -417,7 +467,7 @@ public class GameScreen extends DuckScreenBase {
 		float textY = (y + height) - pauseButtonTextYOffset;
 
 		batch.begin();
-		getFont().draw(batch, pauseTextLayout, textX, textY);
+		getTitleFont().draw(batch, pauseTextLayout, textX, textY);
 		batch.end();
 
 		pauseButtons.render(batch);

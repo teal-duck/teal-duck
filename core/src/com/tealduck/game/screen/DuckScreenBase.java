@@ -17,10 +17,17 @@ import com.tealduck.game.engine.SystemManager;
 import com.tealduck.game.input.ControlMap;
 
 
+/**
+ * Base class for screens.
+ */
 public abstract class DuckScreenBase implements Screen {
 	private final DuckGame game;
 
 
+	/**
+	 * @param game
+	 * @param data
+	 */
 	public DuckScreenBase(DuckGame game, Object data) {
 		this.game = game;
 	}
@@ -35,9 +42,15 @@ public abstract class DuckScreenBase implements Screen {
 	public abstract boolean startAssetLoading(AssetManager assetManager);
 
 
+	/**
+	 *
+	 */
 	protected abstract void load();
 
 
+	/**
+	 * @param systemManager
+	 */
 	protected abstract void loadSystems(SystemManager systemManager);
 
 
@@ -87,86 +100,148 @@ public abstract class DuckScreenBase implements Screen {
 	}
 
 
+	/**
+	 * @return
+	 */
 	public DuckGame getGame() {
 		return game;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public SpriteBatch getBatch() {
 		return game.getBatch();
 	}
 
 
+	/**
+	 * @return
+	 */
 	public OrthographicCamera getGuiCamera() {
 		return game.getGuiCamera();
 	}
 
 
+	/**
+	 * @return
+	 */
 	public AssetManager getAssetManager() {
 		return game.getAssetManager();
 	}
 
 
+	/**
+	 * @return
+	 */
 	public SystemManager getSystemManager() {
 		return game.getSystemManager();
 	}
 
 
+	/**
+	 * @return
+	 */
 	public EntityEngine getEntityEngine() {
 		return game.getEntityEngine();
 	}
 
 
+	/**
+	 * @return
+	 */
 	public EntityManager getEntityManager() {
 		return getEntityEngine().getEntityManager();
 	}
 
 
+	/**
+	 * @return
+	 */
 	public EntityTagManager getEntityTagManager() {
 		return getEntityEngine().getEntityTagManager();
 	}
 
 
+	/**
+	 * @return
+	 */
 	public EventManager getEventManager() {
 		return getEntityEngine().getEventManager();
 	}
 
 
-	public BitmapFont getFont() {
-		return game.getFont();
+	/**
+	 * @return
+	 */
+	public BitmapFont getTextFont() {
+		return game.getTextFont();
 	}
 
 
+	/**
+	 * @return
+	 */
+	public BitmapFont getTitleFont() {
+		return game.getTitleFont();
+	}
+
+
+	/**
+	 * @return
+	 */
 	public int getWindowWidth() {
 		return game.getWindowWidth();
 	}
 
 
+	/**
+	 * @return
+	 */
 	public int getWindowHeight() {
 		return game.getWindowHeight();
 	}
 
 
+	/**
+	 * @return
+	 */
 	public ControlMap getControlMap() {
 		return game.getControlMap();
 	}
 
 
+	/**
+	 * @return
+	 */
 	public Controller getController() {
 		return game.getController();
 	}
 
 
+	/**
+	 * @param screen
+	 */
 	public void setScreen(Screen screen) {
 		game.setScreen(screen);
 	}
 
 
+	/**
+	 * @param screenClass
+	 * @return
+	 */
 	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass) {
 		return game.loadScreen(screenClass);
 	}
 
 
+	/**
+	 * @param screenClass
+	 * @param data
+	 * @return
+	 */
 	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass, Object data) {
 		return game.loadScreen(screenClass, data);
 	}

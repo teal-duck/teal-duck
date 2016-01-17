@@ -6,37 +6,46 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.tealduck.game.AssetLocations;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.tealduck.game.DuckGame;
 import com.tealduck.game.engine.SystemManager;
+import com.tealduck.game.gui.ButtonList;
 
 
 public class AssetLoadingScreen extends DuckScreenBase {
-	// TODO: Clean up AssetLoadingScreen
-
-	private int progressBarWidth;
+	private ShapeRenderer shapeRenderer;
+	private int progressBarFullWidth;
 	private int progressBarHeight;
-	private Pixmap progressBarPixmap;
-	private Texture progressBarTexture;
-	private Texture loadingText;
+	private int progressBarBottomOffset;
 
 	private Screen nextScreen;
 
+	private GlyphLayout loadingText;
+
 	private boolean loaded = false;
+	// For testing purposes, these keep the loading screen visible for a certain time
+	// So we can see what it looks like
 	private float time = 0;
-	private float slowDownLoading = 0.0f;
-	private float timeToStayOnLoadingScreen = 0.0f;
+	private float timeToStayOnLoadingScreenAfterLoadingFinished = 0.2f;
 
 
+	/**
+	 * @param game
+	 * @param data
+	 */
 	public AssetLoadingScreen(DuckGame game, Object data) {
 		super(game, data);
+		shapeRenderer = new ShapeRenderer();
 	}
 
 
+	/**
+	 * @param nextScreen
+	 */
 	public void setNextScreen(DuckScreenBase nextScreen) {
 		this.nextScreen = nextScreen;
 	}
@@ -50,11 +59,10 @@ public class AssetLoadingScreen extends DuckScreenBase {
 
 	@Override
 	protected void load() {
-		progressBarWidth = 100;
+		loadingText = new GlyphLayout(getTitleFont(), "Loading");
+		progressBarFullWidth = 128;
 		progressBarHeight = 16;
-		progressBarPixmap = new Pixmap(progressBarWidth, progressBarHeight, Format.RGBA8888);
-		progressBarTexture = new Texture(progressBarPixmap);
-		loadingText = new Texture(AssetLocations.LOADING_TEXT); // "textures/loading_text.png");
+		progressBarBottomOffset = ButtonList.WINDOW_EDGE_OFFSET;
 	}
 
 
@@ -71,35 +79,42 @@ public class AssetLoadingScreen extends DuckScreenBase {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		AssetManager assetManager = getAssetManager();
-
-		time += deltaTime;
+		if (!loaded && assetManager.update()) {
+			loaded = true;
+		}
 
 		if (loaded) {
-			if (time > timeToStayOnLoadingScreen) {
+			time += deltaTime;
+			if (time > timeToStayOnLoadingScreenAfterLoadingFinished) {
 				setScreen(nextScreen);
-			}
-		} else {
-			if (time > slowDownLoading) {
-				if (assetManager.update()) {
-					loaded = true;
-				}
-
-				time -= slowDownLoading;
 			}
 		}
 
 		float progress = assetManager.getProgress();
 
-		for (int x = 0; x < (int) (progress * progressBarWidth); x += 1) {
-			progressBarPixmap.setColor(Color.RED);
-			progressBarPixmap.drawLine(x, 0, x, progressBarHeight);
-		}
+		shapeRenderer.setProjectionMatrix(getGuiCamera().combined);
+		shapeRenderer.begin(ShapeType.Filled);
+		// Render the progress bar as green on red background
+		float x = (getWindowWidth() / 2) - (progressBarFullWidth / 2);
+		float y = progressBarBottomOffset + progressBarHeight;
+		float width = progress * progressBarFullWidth;
+		float height = progressBarHeight;
 
-		progressBarTexture.draw(progressBarPixmap, 0, 0);
+		shapeRenderer.setColor(Color.RED);
+		shapeRenderer.rect(x, y, progressBarFullWidth, progressBarHeight);
+
+		shapeRenderer.setColor(Color.GREEN);
+		shapeRenderer.rect(x, y, width, height);
+		shapeRenderer.end();
+
 		SpriteBatch batch = getBatch();
+		BitmapFont titleFont = getTitleFont();
+
+		batch.setProjectionMatrix(getGuiCamera().combined);
 		batch.begin();
-		batch.draw(progressBarTexture, 0, 0);
-		batch.draw(loadingText, (640 / 2) - (256 / 2), (512 / 2) - (256 / 2));
+		titleFont.draw(batch, loadingText, (getWindowWidth() / 2) - (loadingText.width / 2),
+				getWindowHeight() / 2);
+
 		batch.end();
 	}
 }

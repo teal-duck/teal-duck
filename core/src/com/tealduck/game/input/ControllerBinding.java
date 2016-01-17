@@ -9,8 +9,6 @@ import com.badlogic.gdx.controllers.PovDirection;
  * Describes a binding to some action on a gamepad.
  */
 public class ControllerBinding {
-	// TODO: Test what happens if libgdx controller API receives a wrong value
-	// I.e. what happens if index is out of the range of indices for the action (such as negative)
 	private ControllerBindingType controllerBindingType;
 	private int index;
 	private float deadzone;

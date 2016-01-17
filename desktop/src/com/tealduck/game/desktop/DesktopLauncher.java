@@ -10,7 +10,7 @@ public class DesktopLauncher {
 	public static void main(String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-		config.title = "Teal Duck Awesome Game";
+		config.title = DuckGame.GAME_TITLE; // "Teal Duck Awesome Game";
 		config.x = -1;
 		config.y = -1;
 		config.width = 64 * 10;

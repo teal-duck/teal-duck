@@ -163,7 +163,7 @@ public class WeaponComponent extends Component {
 	 * @return
 	 */
 	public boolean hasEnoughAmmoInClipToFire() {
-		return (ammoInClip >= weapon.ammoRequiredToFire());
+		return (ammoInClip >= weapon.getAmmoRequiredToFire());
 	}
 
 

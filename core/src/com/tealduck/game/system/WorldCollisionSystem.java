@@ -18,10 +18,17 @@ import com.tealduck.game.event.EventName;
 import com.tealduck.game.world.World;
 
 
+/**
+ *
+ */
 public class WorldCollisionSystem extends GameSystem {
 	private final World world;
 
 
+	/**
+	 * @param entityEngine
+	 * @param world
+	 */
 	public WorldCollisionSystem(EntityEngine entityEngine, World world) {
 		super(entityEngine);
 		this.world = world;
@@ -55,6 +62,12 @@ public class WorldCollisionSystem extends GameSystem {
 				AABB tileAABB = new AABB(new Vector2(0, 0), new Vector2(64, 64));
 
 				// TODO: Possibly change entity to world collision to use loops for large entities
+
+				// Find the intersections for the 4 corners (if they exist)
+				// Get the smallest of the 4
+				// Solve for that
+				// Repeat until no intersections or stop after X attempts
+
 				Intersection bottomLeft = null;
 				Intersection bottomRight = null;
 				Intersection topLeft = null;
@@ -110,12 +123,10 @@ public class WorldCollisionSystem extends GameSystem {
 
 					entityShape.getPosition().add(fixVector);
 
-					// TODO: Move this out the loop so it only gets triggered once for each entity?
 					getEventManager().triggerEvent(-1, entity, EventName.WORLD_COLLISION);
 				} else {
 					break;
 				}
-
 			}
 
 			position.set(entityShape.getPosition().cpy().sub(offsetFromPosition));

@@ -23,6 +23,9 @@ import com.tealduck.game.engine.GameSystem;
 import com.tealduck.game.world.EntityConstants;
 
 
+/**
+ *
+ */
 public class GuiRenderSystem extends GameSystem {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -53,6 +56,12 @@ public class GuiRenderSystem extends GameSystem {
 	private ShapeRenderer shapeRenderer;
 
 
+	/**
+	 * @param entityEngine
+	 * @param batch
+	 * @param camera
+	 * @param font
+	 */
 	public GuiRenderSystem(EntityEngine entityEngine, SpriteBatch batch, OrthographicCamera camera,
 			BitmapFont font) {
 		super(entityEngine);
@@ -83,6 +92,13 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param width
+	 * @param height
+	 * @param cornerRadius
+	 * @param colour
+	 * @return
+	 */
 	public Texture generateBackground(float width, float height, int cornerRadius, Color colour) {
 		Pixmap backgroundPixmap = new Pixmap((int) width + cornerRadius, (int) height + cornerRadius,
 				Format.RGBA8888);
@@ -105,12 +121,21 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param windowWidth
+	 * @param windowHeight
+	 */
 	public void resizeCamera(int windowWidth, int windowHeight) {
 		screenWidth = windowWidth;
 		screenHeight = windowHeight;
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tealduck.game.engine.GameSystem#update(float)
+	 */
 	@Override
 	public void update(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
@@ -141,6 +166,9 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param health
+	 */
 	public void renderHealthBar(int health) {
 		batch.begin();
 
@@ -169,13 +197,22 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param x
+	 * @param y
+	 * @param textX
+	 * @param textY
+	 * @param text
+	 */
 	private void renderBackgroundWithTexture(float x, float y, float textX, float textY, String text) {
-		// batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 0.2f);
 		batch.draw(backgroundTexture, x, y);
 		font.draw(batch, text, textX, textY);
 	}
 
 
+	/**
+	 * @param scoreComponent
+	 */
 	private void renderScore(ScoreComponent scoreComponent) {
 		batch.begin();
 
@@ -199,6 +236,9 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param weaponComponent
+	 */
 	private void renderWeaponAmmo(WeaponComponent weaponComponent) {
 		batch.begin();
 
@@ -223,6 +263,9 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param movementComponent
+	 */
 	private void renderSprint(MovementComponent movementComponent) {
 		batch.begin();
 
@@ -254,11 +297,7 @@ public class GuiRenderSystem extends GameSystem {
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeType.Filled);
-		// if (movementComponent.sprinting) {
 		shapeRenderer.setColor(Color.BLACK);
-		// } else {
-		// shapeRenderer.setColor(Color.BLACK);
-		// }
 		shapeRenderer.rect(sprintBarX, sprintBarY, sprintBarWidth, sprintBarHeight);
 
 		if (movementComponent.usedAllSprint) {
@@ -272,5 +311,4 @@ public class GuiRenderSystem extends GameSystem {
 
 		shapeRenderer.end();
 	}
-
 }

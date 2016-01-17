@@ -149,15 +149,14 @@ public class CollisionEvents {
 	 * @param receiver
 	 */
 	public static void handlePickup(EntityEngine entityEngine, int sender, int receiver) {
-		// TODO: Animation on pick up
 		EntityManager entityManager = entityEngine.getEntityManager();
+
 		if (!entityManager.entityHasComponent(sender, PickupComponent.class)) {
 			return;
 		}
-
 		PickupComponent pickupComponent = entityManager.getComponent(sender, PickupComponent.class);
-		Pickup contents = pickupComponent.contents;
 
+		Pickup contents = pickupComponent.contents;
 		boolean pickedUp = contents.applyToEntity(entityManager, receiver);
 
 		if (pickedUp) {
