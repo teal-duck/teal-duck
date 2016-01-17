@@ -11,9 +11,10 @@ import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
 
 
+/**
+ *
+ */
 public class MovementSystem extends GameSystem {
-	// private float worldFriction = 0.8f;
-
 	public MovementSystem(EntityEngine entityEngine) {
 		super(entityEngine);
 	}
@@ -35,9 +36,11 @@ public class MovementSystem extends GameSystem {
 			Vector2 position = positionComponent.position;
 			Vector2 velocity = movementComponent.velocity;
 			Vector2 acceleration = movementComponent.acceleration;
+
 			// TODO: Calculate friction based on surface (and mass?)
 			float friction = movementComponent.friction;
 
+			// Limit the maximum velocity of entities so they don't go through the world
 			float MAX_VELOCITY = 1500f;
 
 			velocity.mulAdd(acceleration, deltaTime);

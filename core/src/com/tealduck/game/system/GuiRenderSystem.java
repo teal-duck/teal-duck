@@ -11,7 +11,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.tealduck.game.AssetLocations;
 import com.tealduck.game.Tag;
+import com.tealduck.game.TextureMap;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.ScoreComponent;
@@ -23,6 +25,9 @@ import com.tealduck.game.engine.GameSystem;
 import com.tealduck.game.world.EntityConstants;
 
 
+/**
+ *
+ */
 public class GuiRenderSystem extends GameSystem {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -49,24 +54,28 @@ public class GuiRenderSystem extends GameSystem {
 
 	private Texture healthHeartTexture;
 	private Texture backgroundTexture;
+	private Texture ammoBulletTexture;
 
 	private ShapeRenderer shapeRenderer;
 
 
-	public GuiRenderSystem(EntityEngine entityEngine, SpriteBatch batch, OrthographicCamera camera,
-			BitmapFont font) {
+	/**
+	 * @param entityEngine
+	 * @param batch
+	 * @param camera
+	 * @param font
+	 */
+	public GuiRenderSystem(EntityEngine entityEngine, SpriteBatch batch, OrthographicCamera camera, BitmapFont font,
+			TextureMap textureMap) {
 		super(entityEngine);
 		this.batch = batch;
 		this.camera = camera;
 		this.font = font;
 
 		healthText = new GlyphLayout(font, "Health:");
+		healthHeartTexture = textureMap.getTexture(AssetLocations.HEALTH_BAR);
 
-		Pixmap healthHeartPixmap = new Pixmap(GuiRenderSystem.HEALTH_HEART_SIZE,
-				GuiRenderSystem.HEALTH_HEART_SIZE, Format.RGBA8888);
-		healthHeartPixmap.setColor(Color.RED);
-		healthHeartPixmap.fill();
-		healthHeartTexture = new Texture(healthHeartPixmap);
+		ammoBulletTexture = textureMap.getTexture(AssetLocations.AMMO_BAR);
 
 		// TODO: Replace gui backgrounds with 9-patch
 		int maxHealth = EntityConstants.PLAYER_MAX_HEALTH;
@@ -83,6 +92,13 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param width
+	 * @param height
+	 * @param cornerRadius
+	 * @param colour
+	 * @return
+	 */
 	public Texture generateBackground(float width, float height, int cornerRadius, Color colour) {
 		Pixmap backgroundPixmap = new Pixmap((int) width + cornerRadius, (int) height + cornerRadius,
 				Format.RGBA8888);
@@ -105,12 +121,21 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param windowWidth
+	 * @param windowHeight
+	 */
 	public void resizeCamera(int windowWidth, int windowHeight) {
 		screenWidth = windowWidth;
 		screenHeight = windowHeight;
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tealduck.game.engine.GameSystem#update(float)
+	 */
 	@Override
 	public void update(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
@@ -141,6 +166,9 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param health
+	 */
 	public void renderHealthBar(int health) {
 		batch.begin();
 
@@ -160,6 +188,9 @@ public class GuiRenderSystem extends GameSystem {
 		healthX += healthText.width + GuiRenderSystem.HEALTH_HEART_GAP;
 		healthY -= GuiRenderSystem.HEALTH_HEART_SIZE - 1;
 
+		healthX -= 22;
+		healthY -= 22;
+
 		for (int i = 0; i < health; i += 1) {
 			batch.draw(healthHeartTexture, healthX, healthY);
 			healthX += GuiRenderSystem.HEALTH_HEART_SIZE + GuiRenderSystem.HEALTH_HEART_GAP;
@@ -169,13 +200,22 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param x
+	 * @param y
+	 * @param textX
+	 * @param textY
+	 * @param text
+	 */
 	private void renderBackgroundWithTexture(float x, float y, float textX, float textY, String text) {
-		// batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 0.2f);
 		batch.draw(backgroundTexture, x, y);
 		font.draw(batch, text, textX, textY);
 	}
 
 
+	/**
+	 * @param scoreComponent
+	 */
 	private void renderScore(ScoreComponent scoreComponent) {
 		batch.begin();
 
@@ -199,6 +239,9 @@ public class GuiRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param weaponComponent
+	 */
 	private void renderWeaponAmmo(WeaponComponent weaponComponent) {
 		batch.begin();
 
@@ -219,10 +262,26 @@ public class GuiRenderSystem extends GameSystem {
 
 		renderBackgroundWithTexture(ammoX, ammoY, ammoTextX, ammoTextY, text);
 
+		float x = screenWidth - 50;
+		float y = 25;
+		for (int i = 0; i < weaponComponent.ammoInClip; i += 1) {
+			if (weaponComponent.isReloading()) {
+				batch.setColor(Color.RED);
+			} else {
+				batch.setColor(Color.WHITE);
+			}
+			batch.draw(ammoBulletTexture, x, y);
+			y += 30;
+		}
+		batch.setColor(Color.WHITE);
+
 		batch.end();
 	}
 
 
+	/**
+	 * @param movementComponent
+	 */
 	private void renderSprint(MovementComponent movementComponent) {
 		batch.begin();
 
@@ -254,11 +313,7 @@ public class GuiRenderSystem extends GameSystem {
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeType.Filled);
-		// if (movementComponent.sprinting) {
 		shapeRenderer.setColor(Color.BLACK);
-		// } else {
-		// shapeRenderer.setColor(Color.BLACK);
-		// }
 		shapeRenderer.rect(sprintBarX, sprintBarY, sprintBarWidth, sprintBarHeight);
 
 		if (movementComponent.usedAllSprint) {
@@ -272,5 +327,4 @@ public class GuiRenderSystem extends GameSystem {
 
 		shapeRenderer.end();
 	}
-
 }

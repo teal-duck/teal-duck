@@ -28,6 +28,7 @@ import com.tealduck.game.screen.MainMenuScreen;
  *
  */
 public class DuckGame extends Game {
+	public static final String GAME_TITLE = "Teal Duck Awesome Game!"; // "Game Name Goes Here!";
 	private SpriteBatch batch;
 	private AssetManager assetManager;
 	private SystemManager systemManager;
@@ -37,7 +38,8 @@ public class DuckGame extends Game {
 	private ControlMap controlMap;
 	private Controller controller;
 
-	private BitmapFont font;
+	private BitmapFont textFont;
+	private BitmapFont titleFont;
 
 	private int windowWidth;
 	private int windowHeight;
@@ -63,9 +65,15 @@ public class DuckGame extends Game {
 
 		guiCamera = new OrthographicCamera();
 
-		font = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS),
+		textFont = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS),
 				Gdx.files.internal(AssetLocations.BERLIN_SANS_PNG), false);
-		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		textFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+		// TODO: Second font for titles
+		titleFont = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS),
+				Gdx.files.internal(AssetLocations.BERLIN_SANS_PNG), false);
+		titleFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		titleFont.getData().setScale(1.5f);
 
 		setupControllers();
 
@@ -258,8 +266,16 @@ public class DuckGame extends Game {
 	/**
 	 * @return
 	 */
-	public BitmapFont getFont() {
-		return font;
+	public BitmapFont getTextFont() {
+		return textFont;
+	}
+
+
+	/**
+	 * @return
+	 */
+	public BitmapFont getTitleFont() {
+		return titleFont;
 	}
 
 

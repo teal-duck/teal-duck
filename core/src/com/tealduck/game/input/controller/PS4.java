@@ -1,6 +1,9 @@
 package com.tealduck.game.input.controller;
 
 
+/**
+ *
+ */
 public class PS4 {
 	public static final String NAME = "Sony Computer Entertainment Wireless Controller";
 

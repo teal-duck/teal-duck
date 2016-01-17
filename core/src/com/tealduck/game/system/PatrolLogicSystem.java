@@ -13,23 +13,21 @@ import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.GameSystem;
 
 
+/**
+ *
+ */
 public class PatrolLogicSystem extends GameSystem {
 	public PatrolLogicSystem(EntityEngine entityEngine) {
 		super(entityEngine);
 	}
 
 
+	/**
+	 * @param firstAngle
+	 * @param secondAngle
+	 * @return
+	 */
 	private float calculateDifferenceBetweenAngles(float firstAngle, float secondAngle) {
-		// TODO: Stop geese spinning 360
-		// float difference = secondAngle - firstAngle;
-		// while (difference < 0) {
-		// difference += 360;
-		// }
-		// while (difference > 360) {
-		// difference -= 360;
-		// }
-		// return difference;
-		// return ((((secondAngle - firstAngle) % 360) + 540) % 360) - 180;
 		return (((secondAngle - firstAngle) + 180) % 360) - 180;
 	}
 
@@ -55,10 +53,10 @@ public class PatrolLogicSystem extends GameSystem {
 			PatrolRouteComponent patrolRouteComponent = entityManager.getComponent(entity,
 					PatrolRouteComponent.class);
 
+			// If the entity is currently rotating, keep rotating
 			if (patrolRouteComponent.pauseTime > 0) {
 				patrolRouteComponent.pauseTime -= deltaTime;
 				positionComponent.lookAt.rotate(patrolRouteComponent.rotPerSecond * deltaTime);
-
 			} else {
 				float maxSpeed = movementComponent.maxSpeed;
 
@@ -89,6 +87,7 @@ public class PatrolLogicSystem extends GameSystem {
 				vecToTarget.nor();
 				vecToPreviousTarget.nor();
 
+				// Check if the enemy has gone past the target
 				float dot = vecToTarget.dot(previousVecToTarget);
 				if ((dot <= 0) && (distanceToTarget < (maxSpeed * deltaTime * 0.5f))
 						&& (distanceToPreviousTarget > (maxSpeed * deltaTime))) {

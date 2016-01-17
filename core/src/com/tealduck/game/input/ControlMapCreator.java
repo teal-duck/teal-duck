@@ -7,6 +7,9 @@ import com.tealduck.game.input.controller.PS4;
 import com.tealduck.game.input.controller.Xbox360;
 
 
+/**
+ * Helper class for creating new control maps.
+ */
 public class ControlMapCreator {
 	private ControlMapCreator() {
 	};
@@ -15,6 +18,12 @@ public class ControlMapCreator {
 	public static final float DEFAULT_DEADZONE = 0.2f;
 
 
+	/**
+	 * Applies the default keyboard control scheme to a control map.
+	 *
+	 * @param controlMap
+	 * @return the control map after changes
+	 */
 	public static ControlMap applyDefaultKeyControls(ControlMap controlMap) {
 		controlMap.addKeyForAction(Action.RIGHT, Keys.D, Keys.RIGHT);
 		controlMap.addKeyForAction(Action.LEFT, Keys.A, Keys.LEFT);
@@ -31,6 +40,13 @@ public class ControlMapCreator {
 	}
 
 
+	/**
+	 * Applies the default PS4 control scheme to a control map.
+	 *
+	 * @param controlMap
+	 * @param deadzone
+	 * @return the control map after changes
+	 */
 	public static ControlMap applyDefaultPs4Controls(ControlMap controlMap, float deadzone) {
 		Gdx.app.log("Controls", "Applying default PS4 controls");
 		controlMap.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE, PS4.AXIS_LEFT_X,
@@ -64,6 +80,13 @@ public class ControlMapCreator {
 	}
 
 
+	/**
+	 * Applies the default Xbox 360 control scheme to a control map.
+	 *
+	 * @param controlMap
+	 * @param deadzone
+	 * @return the control map after changes
+	 */
 	public static ControlMap applyDefaultXbox360Controls(ControlMap controlMap, float deadzone) {
 		Gdx.app.log("Controls", "Applying default Xbox 360 controls");
 		controlMap.addControllerForAction(Action.RIGHT, ControllerBindingType.AXIS_POSITIVE,
@@ -99,25 +122,38 @@ public class ControlMapCreator {
 	}
 
 
+	/**
+	 * @return
+	 */
 	public static ControlMap newDefaultControlMap() {
 		return ControlMapCreator.newDefaultControlMap(null, ControlMapCreator.DEFAULT_DEADZONE);
 	}
 
 
+	/**
+	 * @param deadzone
+	 * @return
+	 */
 	public static ControlMap newDefaultControlMap(float deadzone) {
 		return ControlMapCreator.newDefaultControlMap(null, deadzone);
 	}
 
 
+	/**
+	 * @param controllerName
+	 * @return
+	 */
 	public static ControlMap newDefaultControlMap(String controllerName) {
 		return ControlMapCreator.newDefaultControlMap(controllerName, ControlMapCreator.DEFAULT_DEADZONE);
 	}
 
 
 	/**
-	 * @param deadzone
+	 * Creates a new control map with default keyboard and controller controls.
+	 *
 	 * @param controllerName
 	 *                null if no controller plugged in
+	 * @param deadzone
 	 * @return
 	 */
 	public static ControlMap newDefaultControlMap(String controllerName, float deadzone) {
@@ -132,6 +168,17 @@ public class ControlMapCreator {
 	}
 
 
+	/**
+	 * Applies default controller controls to a control map if the controller is known. If the controller is not
+	 * known, no changes are made.
+	 * <p>
+	 * Known controllers: PS4, Xbox 360
+	 *
+	 * @param controlMap
+	 * @param controllerName
+	 * @param deadzone
+	 * @return
+	 */
 	public static ControlMap applyDefaultControllerControls(ControlMap controlMap, String controllerName,
 			float deadzone) {
 		if (controllerName != null) {

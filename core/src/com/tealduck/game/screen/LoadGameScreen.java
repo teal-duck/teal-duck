@@ -13,20 +13,30 @@ import com.tealduck.game.gui.ButtonList;
 import com.tealduck.game.input.Action;
 
 
+/**
+ *
+ */
 public class LoadGameScreen extends DuckScreenBase {
 	private GlyphLayout titleText;
 	private ButtonList backButton;
 
 
+	/**
+	 * @param game
+	 * @param data
+	 */
 	public LoadGameScreen(DuckGame game, Object data) {
 		super(game, data);
-		titleText = new GlyphLayout(getFont(), "Load Game");
-		backButton = new ButtonList(new String[] { "Back" }, getFont(), getGuiCamera(), getControlMap(),
+		titleText = new GlyphLayout(getTitleFont(), "Load Game");
+		backButton = new ButtonList(new String[] { "Back" }, getTextFont(), getGuiCamera(), getControlMap(),
 				getController());
 		setBackButtonPosition();
 	}
 
 
+	/**
+	 *
+	 */
 	private void setBackButtonPosition() {
 		backButton.setPositionDefaultSize(ButtonList.WINDOW_EDGE_OFFSET,
 				ButtonList.WINDOW_EDGE_OFFSET + ButtonList.BUTTON_HEIGHT);
@@ -54,23 +64,29 @@ public class LoadGameScreen extends DuckScreenBase {
 	}
 
 
+	/**
+	 *
+	 */
 	private void goBack() {
 		loadScreen(MainMenuScreen.class);
 	}
 
 
+	/**
+	 *
+	 */
 	public void draw() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		SpriteBatch batch = getBatch();
-		BitmapFont font = getFont();
+		BitmapFont titleFont = getTitleFont();
 
 		int windowMiddle = getWindowWidth() / 2;
 		int textHalfWidth = (int) (titleText.width / 2);
 
 		batch.begin();
-		font.draw(batch, titleText, windowMiddle - textHalfWidth, getWindowHeight() - 50);
+		titleFont.draw(batch, titleText, windowMiddle - textHalfWidth, getWindowHeight() - 50);
 		batch.end();
 
 		backButton.render(batch);
