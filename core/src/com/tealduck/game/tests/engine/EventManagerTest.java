@@ -3,16 +3,14 @@ package com.tealduck.game.tests.engine;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.engine.EventManager;
 import com.tealduck.game.engine.IEvent;
 
-import junit.framework.Assert;
 
-
-@SuppressWarnings("deprecation")
 public class EventManagerTest {
 	// TODO: EventManager tests
 	// private EntityManager entityManager;
@@ -55,6 +53,9 @@ public class EventManagerTest {
 			public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
 				System.out.println("[Test event 2] Receiver " + receiver + " got event from sender "
 						+ sender);
+				
+				// This event should never be triggered
+				Assert.fail();
 				return false;
 
 			}
@@ -62,14 +63,37 @@ public class EventManagerTest {
 		eventManager.addEvent(entity2, testEvent2Name, testEvent2);
 
 		eventManager.triggerEvent(entity2, entity1, testEvent1Name);
-		eventManager.triggerEvent(entity1, entity2, testEvent2Name);
+		
+		// Nothing should happen, as entity1 does not have an event of testEvent2Name
+		// Triggering a non-existent event is allowed
+		eventManager.triggerEvent(entity2, entity1, testEvent2Name);
+	}
+	
+	@Test
+	public void testRemoveEvent() {
+		EntityManager entityManager = entityEngine.getEntityManager();
+		EventManager eventManager = entityEngine.getEventManager();
 
-		// Try to trigger an event that doesn't exist
-		try {
-			eventManager.triggerEvent(entity2, entity1, testEvent2Name);
-			Assert.assertTrue(false);
-		} catch (IllegalArgumentException e) {
-			Assert.assertTrue(true);
-		}
+		int entity1 = entityManager.createEntity();
+		int entity2 = entityManager.createEntity();
+
+		String testEvent1Name = "TEST_EVENT_1";
+		IEvent testEvent1 = new IEvent() {
+			@Override
+			public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
+				System.out.println("[Test event 1] Receiver " + receiver + " got event from sender "
+						+ sender);
+				
+				// Event should not be called, as it should be deleted
+				Assert.fail();
+				return false;
+			}
+		};
+		eventManager.addEvent(entity1, testEvent1Name, testEvent1);
+		eventManager.removeEvent(entity1, testEvent1Name);
+		
+		// Event is removed, so test should not fail
+		eventManager.triggerEvent(entity2, entity1, testEvent1Name);
+		
 	}
 }
