@@ -6,7 +6,7 @@ import com.tealduck.game.engine.IEvent;
 
 
 /**
- * 
+ *
  */
 public class BulletRemove implements IEvent {
 	public static final BulletRemove instance = new BulletRemove();

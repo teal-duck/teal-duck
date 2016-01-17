@@ -147,7 +147,7 @@ public class DuckGame extends Game {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public void setupControllers() {
 		ControllerHelper controllerHelper = new ControllerHelper();

@@ -16,7 +16,7 @@ public class EntityTagManager {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public EntityTagManager() {
 		tags = new HashMap<String, Integer>();

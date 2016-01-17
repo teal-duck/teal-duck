@@ -6,7 +6,7 @@ import com.tealduck.game.engine.Component;
 
 
 /**
- * 
+ *
  */
 public class MovementComponent extends Component {
 	public Vector2 velocity;

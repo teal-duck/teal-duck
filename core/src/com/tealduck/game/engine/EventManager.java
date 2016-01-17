@@ -47,7 +47,7 @@ public class EventManager {
 
 	/**
 	 * Calls {@link EventManager#triggerEvent(int, int, String, Object)} with null data.
-	 * 
+	 *
 	 * @param senderEntity
 	 * @param receiverEntity
 	 * @param name

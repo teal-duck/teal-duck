@@ -88,6 +88,7 @@ public class Circle extends CollisionShape {
 		return new AABB(getBottomLeft(), getSize());
 	}
 
+
 	/**
 	 * Returns true if a point is within (not on the edge of) the area.
 	 */

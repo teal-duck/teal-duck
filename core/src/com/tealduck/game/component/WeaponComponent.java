@@ -9,7 +9,7 @@ import com.tealduck.game.weapon.Weapon;
 
 
 /**
- * 
+ *
  */
 public class WeaponComponent extends Component {
 	public Weapon weapon;
@@ -80,7 +80,7 @@ public class WeaponComponent extends Component {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public void stopReloading() {
 		reloadTime = 0;
@@ -89,7 +89,7 @@ public class WeaponComponent extends Component {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public void startReloading() {
 		if (isReloading()) {

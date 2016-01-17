@@ -15,7 +15,7 @@ public class Ray {
 
 	/**
 	 * Create a ray with origin at (0, 0).
-	 * 
+	 *
 	 * @param direction
 	 */
 	public Ray(Vector2 direction) {

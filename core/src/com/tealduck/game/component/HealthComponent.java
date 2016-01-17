@@ -5,7 +5,7 @@ import com.tealduck.game.engine.Component;
 
 
 /**
- * 
+ *
  */
 public class HealthComponent extends Component {
 	public int maxHealth;
@@ -14,7 +14,7 @@ public class HealthComponent extends Component {
 
 	/**
 	 * Sets starting health equal to maxHealth.
-	 * 
+	 *
 	 * @param maxHealth
 	 */
 	public HealthComponent(int maxHealth) {

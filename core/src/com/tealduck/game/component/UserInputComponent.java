@@ -7,7 +7,7 @@ import com.tealduck.game.input.ControlMap;
 
 
 /**
- * 
+ *
  */
 public class UserInputComponent extends Component {
 	public ControlMap controls;

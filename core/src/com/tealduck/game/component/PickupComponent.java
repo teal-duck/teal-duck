@@ -6,7 +6,7 @@ import com.tealduck.game.pickup.Pickup;
 
 
 /**
- * 
+ *
  */
 public class PickupComponent extends Component {
 	public Pickup contents;

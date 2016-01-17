@@ -17,7 +17,7 @@ public class EntityEngine {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public EntityEngine() {
 		entityManager = new EntityManager();
@@ -42,7 +42,7 @@ public class EntityEngine {
 
 	/**
 	 * Add the entity to the set of entities to remove at the end of the frame.
-	 * 
+	 *
 	 * @param entity
 	 */
 	public void flagEntityToRemove(int entity) {

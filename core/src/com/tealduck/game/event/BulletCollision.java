@@ -8,7 +8,7 @@ import com.tealduck.game.engine.IEvent;
 
 
 /**
- * 
+ *
  */
 public class BulletCollision implements IEvent {
 	public static final BulletCollision instance = new BulletCollision();
@@ -39,7 +39,7 @@ public class BulletCollision implements IEvent {
 			// Remove bullet if collided with an enemy's bullet
 			return (shooterId != otherShooterId);
 		}
-		
+
 		return false;
 	}
 }

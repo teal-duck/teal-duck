@@ -14,7 +14,7 @@ public class SystemManager implements Iterable<GameSystem> {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public SystemManager() {
 		systems = new ArrayList<SystemWithPriority<? extends GameSystem>>();

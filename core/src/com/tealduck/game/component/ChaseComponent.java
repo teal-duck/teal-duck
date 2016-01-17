@@ -29,7 +29,7 @@ public class ChaseComponent extends Component {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public ChaseComponent() {
 		this(-1);

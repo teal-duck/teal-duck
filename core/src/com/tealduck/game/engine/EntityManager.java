@@ -21,7 +21,7 @@ public class EntityManager {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public EntityManager() {
 		entities = new HashSet<Integer>();

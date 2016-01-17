@@ -27,7 +27,7 @@ public class PlayerCollision implements IEvent {
 			Gdx.app.log("Event", "Player collision event expected an intersection instance");
 			return false;
 		}
-		
+
 		Intersection intersection = (Intersection) data;
 		EntityManager entityManager = entityEngine.getEntityManager();
 

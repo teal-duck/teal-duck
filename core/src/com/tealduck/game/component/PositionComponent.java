@@ -7,7 +7,7 @@ import com.tealduck.game.world.EntityConstants;
 
 
 /**
- * 
+ *
  */
 public class PositionComponent extends Component {
 	public Vector2 position;
@@ -26,7 +26,7 @@ public class PositionComponent extends Component {
 
 	/**
 	 * Sets the size to be (64, 64) which is the default size for entities.
-	 * 
+	 *
 	 * @param position
 	 * @param lookAt
 	 */

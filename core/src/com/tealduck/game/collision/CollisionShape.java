@@ -27,6 +27,8 @@ public abstract class CollisionShape {
 
 
 	/**
+	 * Returns true if a point is within (not on the edge of) the area.
+	 *
 	 * @param point
 	 * @return
 	 */

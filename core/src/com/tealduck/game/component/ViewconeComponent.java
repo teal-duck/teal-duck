@@ -5,7 +5,7 @@ import com.tealduck.game.engine.Component;
 
 
 /**
- * 
+ *
  */
 public class ViewconeComponent extends Component {
 	public float halfFov;
@@ -15,7 +15,7 @@ public class ViewconeComponent extends Component {
 	/**
 	 * Half fov is cosine of half of the field of view. This is used in dot product calculations where a . b =
 	 * cos(t) (i.e. the dot product is the cosine of the angle between 2 vectors, scaled by their length).
-	 * 
+	 *
 	 * @param halfFov
 	 * @param length
 	 */

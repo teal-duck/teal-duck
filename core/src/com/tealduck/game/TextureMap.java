@@ -15,7 +15,7 @@ public class TextureMap {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public TextureMap() {
 		textures = new HashMap<String, Texture>();
@@ -24,7 +24,7 @@ public class TextureMap {
 
 	/**
 	 * Puts a texture into the map.
-	 * 
+	 *
 	 * @param name
 	 * @param texture
 	 */
@@ -36,7 +36,7 @@ public class TextureMap {
 	/**
 	 * Gets the texture from the asset manager and puts it into the map under the same key as used for the asset
 	 * manager.
-	 * 
+	 *
 	 * @param name
 	 * @param assetManager
 	 */
@@ -47,7 +47,7 @@ public class TextureMap {
 
 	/**
 	 * Gets the texture from the asset manager with key assetName, then puts it into the map with key textureName.
-	 * 
+	 *
 	 * @param textureName
 	 * @param assetName
 	 * @param assetManager
@@ -59,7 +59,7 @@ public class TextureMap {
 
 	/**
 	 * Gets a texture from the map. Returns null if there is no texture for the key.
-	 * 
+	 *
 	 * @param name
 	 * @return texture or null
 	 */

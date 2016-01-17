@@ -8,7 +8,7 @@ import com.tealduck.game.engine.Component;
 
 
 /**
- * 
+ *
  */
 public class PatrolRouteComponent extends Component {
 	public ArrayList<Vector2> route;
@@ -54,7 +54,7 @@ public class PatrolRouteComponent extends Component {
 
 	/**
 	 * Increment the targetIndex, update previousTarget and return the new target location.
-	 * 
+	 *
 	 * @return the location of the new target
 	 */
 	public Vector2 advanceTarget() {

@@ -13,7 +13,7 @@ public class Collision {
 
 	/**
 	 * Returns the overlap between two 1D ranges of numbers.
-	 * 
+	 *
 	 * @param min1
 	 * @param max1
 	 * @param min2
@@ -27,7 +27,7 @@ public class Collision {
 
 	/**
 	 * Projects the points onto the line defined by lineDirection and calculates their overlap.
-	 * 
+	 *
 	 * @param lineDirection
 	 * @param b0p0
 	 * @param b0p1
@@ -220,7 +220,7 @@ public class Collision {
 	/**
 	 * Calculate the intersection between 2 shapes. Intersection returned is for pushing s0 out of s1. Null if there
 	 * is no collision.
-	 * 
+	 *
 	 * @param s0
 	 * @param s1
 	 * @return

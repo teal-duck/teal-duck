@@ -81,7 +81,7 @@ public class ButtonList {
 
 	/**
 	 * Returns the height in pixels a button list with default sizes will take up if it had buttonCount buttons.
-	 * 
+	 *
 	 * @param buttonCount
 	 * @return
 	 */
@@ -113,7 +113,7 @@ public class ButtonList {
 
 	/**
 	 * Set the sizes for the buttons to the default, and position the buttons on the screen.
-	 * 
+	 *
 	 * @param topLeftX
 	 * @param topLeftY
 	 */
@@ -262,7 +262,7 @@ public class ButtonList {
 
 	/**
 	 * Renders the button list onto the batch.
-	 * 
+	 *
 	 * @param batch
 	 */
 	public void render(SpriteBatch batch) {

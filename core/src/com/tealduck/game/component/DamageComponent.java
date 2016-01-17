@@ -5,7 +5,7 @@ import com.tealduck.game.engine.Component;
 
 
 /**
- * 
+ *
  */
 public class DamageComponent extends Component {
 	public int damage;

@@ -16,7 +16,7 @@ public class ScoreComponent extends Component {
 
 
 	/**
-	 * 
+	 *
 	 */
 	public ScoreComponent() {
 		score = 0;
@@ -28,7 +28,7 @@ public class ScoreComponent extends Component {
 
 	/**
 	 * Add points to the workingScore, increment the combo and calculate the new comboTime.
-	 * 
+	 *
 	 * @param points
 	 */
 	public void increaseScoreWithComboGain(int points) {
@@ -40,7 +40,7 @@ public class ScoreComponent extends Component {
 
 	/**
 	 * Calculate how long until the combo ends for the given combo level.
-	 * 
+	 *
 	 * @param combo
 	 * @return time in seconds
 	 */
@@ -71,7 +71,7 @@ public class ScoreComponent extends Component {
 
 	/**
 	 * Decrement the combo time. If it reaches 0, finishes the combo.
-	 * 
+	 *
 	 * @param deltaTime
 	 */
 	public void comboCountdown(float deltaTime) {
