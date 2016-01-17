@@ -68,7 +68,9 @@ public class Circle extends CollisionShape {
 		return "Circle(" + position.toString() + ", " + radius + ")";
 	}
 
-
+	/**
+	 * Returns true if a point is within (not on the edge of) the area.
+	 */
 	@Override
 	public boolean containsPoint(Vector2 point) {
 		return (point.cpy().sub(position).len2() < (radius * radius));
