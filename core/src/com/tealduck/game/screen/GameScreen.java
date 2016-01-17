@@ -119,6 +119,8 @@ public class GameScreen extends DuckScreenBase {
 		assetManager.load(AssetLocations.HEALTH_PICKUP, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.CONE_LIGHT, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.HEALTH_BAR, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.AMMO_BAR, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.RELOADING, Texture.class, textureParameter);
 		// assetManager.load(AssetLocations.MUZZLE_FLASH, Texture.class, textureParameter);
 
 		assetManager.load(levelAssetName, TiledMap.class);
@@ -145,6 +147,8 @@ public class GameScreen extends DuckScreenBase {
 		textureMap.putTextureFromAssetManager(AssetLocations.HEALTH_PICKUP, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.CONE_LIGHT, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.HEALTH_BAR, assetManager);
+		textureMap.putTextureFromAssetManager(AssetLocations.AMMO_BAR, assetManager);
+		textureMap.putTextureFromAssetManager(AssetLocations.RELOADING, assetManager);
 
 		shapeRenderer = new ShapeRenderer();
 		pauseButtons = new ButtonList(GameScreen.PAUSE_BUTTON_TEXTS, getTextFont(), getGuiCamera(),

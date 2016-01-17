@@ -23,7 +23,7 @@ public class EntityConstants {
 	public static final float ENEMY_KNOCKBACK_FORCE = 60000;
 
 	public static final int PLAYER_MAX_HEALTH = 5;
-	public static final int ENEMY_DAMAGE = 1;
+	public static final int ENEMY_DAMAGE = 0; // 1;
 	public static final int ENEMY_HEALTH = 3;
 
 	public static final int SCORE_FOR_KILL = 100;

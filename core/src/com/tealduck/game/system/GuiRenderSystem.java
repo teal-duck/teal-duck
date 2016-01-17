@@ -54,6 +54,7 @@ public class GuiRenderSystem extends GameSystem {
 
 	private Texture healthHeartTexture;
 	private Texture backgroundTexture;
+	private Texture ammoBulletTexture;
 
 	private ShapeRenderer shapeRenderer;
 
@@ -73,6 +74,8 @@ public class GuiRenderSystem extends GameSystem {
 
 		healthText = new GlyphLayout(font, "Health:");
 		healthHeartTexture = textureMap.getTexture(AssetLocations.HEALTH_BAR);
+
+		ammoBulletTexture = textureMap.getTexture(AssetLocations.AMMO_BAR);
 
 		// TODO: Replace gui backgrounds with 9-patch
 		int maxHealth = EntityConstants.PLAYER_MAX_HEALTH;
@@ -258,6 +261,19 @@ public class GuiRenderSystem extends GameSystem {
 		}
 
 		renderBackgroundWithTexture(ammoX, ammoY, ammoTextX, ammoTextY, text);
+
+		float x = screenWidth - 50;
+		float y = 25;
+		for (int i = 0; i < weaponComponent.ammoInClip; i += 1) {
+			if (weaponComponent.isReloading()) {
+				batch.setColor(Color.RED);
+			} else {
+				batch.setColor(Color.WHITE);
+			}
+			batch.draw(ammoBulletTexture, x, y);
+			y += 30;
+		}
+		batch.setColor(Color.WHITE);
 
 		batch.end();
 	}

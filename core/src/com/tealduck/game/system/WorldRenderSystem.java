@@ -90,6 +90,8 @@ public class WorldRenderSystem extends GameSystem {
 	private float healthBarWidth = 32;
 	private float healthBarHeight = 4;
 
+	private Texture reloadingTexture;
+
 
 	public WorldRenderSystem(EntityEngine entityEngine, World world, TextureMap textureMap) {
 		super(entityEngine);
@@ -122,6 +124,8 @@ public class WorldRenderSystem extends GameSystem {
 				EntityConstants.AMBIENT_COLOUR.y, EntityConstants.AMBIENT_COLOUR.z,
 				EntityConstants.AMBIENT_INTENSITY);
 		renderWorldShader.end();
+
+		reloadingTexture = textureMap.getTexture(AssetLocations.RELOADING);
 	}
 
 
@@ -466,11 +470,11 @@ public class WorldRenderSystem extends GameSystem {
 	/**
 	 *
 	 */
+	@SuppressWarnings("unchecked")
 	private void renderHealthBars() {
 		EntityManager entityManager = getEntityManager();
 		shapeRenderer.begin(ShapeType.Filled);
 
-		@SuppressWarnings("unchecked")
 		Set<Integer> entities = entityManager.getEntitiesWithComponents(SpriteComponent.class,
 				HealthComponent.class);
 		for (int entity : entities) {
@@ -501,6 +505,29 @@ public class WorldRenderSystem extends GameSystem {
 			shapeRenderer.rect(healthBarX, healthBarY, greenBarWidth, healthBarHeight);
 		}
 		shapeRenderer.end();
+
+		entities = entityManager.getEntitiesWithComponents(SpriteComponent.class, WeaponComponent.class);
+
+		batch.begin();
+		batch.setColor(Color.RED);
+
+		for (int entity : entities) {
+			if (!entityManager.getComponent(entity, WeaponComponent.class).isReloading()) {
+				continue;
+			}
+			SpriteComponent spriteComponent = entityManager.getComponent(entity, SpriteComponent.class);
+			Sprite sprite = spriteComponent.sprite;
+
+			float spriteX = sprite.getX();
+			float spriteY = sprite.getY();
+
+			float reloadX = spriteX + 14;
+			float reloadY = spriteY + 48;
+
+			batch.draw(reloadingTexture, reloadX, reloadY, 32, 32);
+		}
+		batch.setColor(Color.WHITE);
+		batch.end();
 	}
 
 
