@@ -118,7 +118,9 @@ public class AABB extends CollisionShape {
 		return "AABB(" + position.toString() + ", " + size.toString() + ")";
 	}
 
-
+	/**
+	 * Returns true if a point is within (not on the edge of) the area.
+	 */
 	@Override
 	public boolean containsPoint(Vector2 point) {
 		return (point.x > getLeft()) && (point.x < getRight()) && (point.y > getBottom())
