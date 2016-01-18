@@ -112,7 +112,7 @@ public class EventManager {
 	 * @param entity
 	 * @return
 	 */
-	public HashMap<String, IEvent> removeEntity(int entity) {
+	public HashMap<String, IEvent> removeEventsForEntity(int entity) {
 		return events.remove(entity);
 	}
 

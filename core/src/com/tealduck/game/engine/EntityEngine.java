@@ -67,7 +67,7 @@ public class EntityEngine {
 	private void removeEntity(int entity) {
 		entityManager.removeEntity(entity);
 		entityTagManager.removeTagsAssociatedWithEntity(entity);
-		eventManager.removeEntity(entity);
+		eventManager.removeEventsForEntity(entity);
 	}
 
 

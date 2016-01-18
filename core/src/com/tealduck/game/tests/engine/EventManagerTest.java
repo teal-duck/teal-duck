@@ -12,7 +12,6 @@ import com.tealduck.game.engine.IEvent;
 
 
 public class EventManagerTest {
-	// TODO: EventManager tests
 	private EntityEngine entityEngine;
 
 
@@ -47,7 +46,7 @@ public class EventManagerTest {
 			public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
 				System.out.println("[Test event 2] Receiver " + receiver + " got event from sender "
 						+ sender);
-				
+
 				// This event should never be triggered
 				Assert.fail();
 				return false;
@@ -57,12 +56,13 @@ public class EventManagerTest {
 		eventManager.addEvent(entity2, testEvent2Name, testEvent2);
 
 		eventManager.triggerEvent(entity2, entity1, testEvent1Name);
-		
+
 		// Nothing should happen, as entity1 does not have an event of testEvent2Name
 		// Triggering a non-existent event is allowed
 		eventManager.triggerEvent(entity2, entity1, testEvent2Name);
 	}
-	
+
+
 	@Test
 	public void testRemoveEvent() {
 		EntityManager entityManager = entityEngine.getEntityManager();
@@ -77,7 +77,7 @@ public class EventManagerTest {
 			public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
 				System.out.println("[Test event 1] Receiver " + receiver + " got event from sender "
 						+ sender);
-				
+
 				// Event should not be called, as it should be deleted
 				Assert.fail();
 				return false;
@@ -85,9 +85,9 @@ public class EventManagerTest {
 		};
 		eventManager.addEvent(entity1, testEvent1Name, testEvent1);
 		eventManager.removeEvent(entity1, testEvent1Name);
-		
+
 		// Event is removed, so test should not fail
 		eventManager.triggerEvent(entity2, entity1, testEvent1Name);
-		
+
 	}
 }
