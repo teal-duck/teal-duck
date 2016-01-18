@@ -42,7 +42,7 @@ import com.tealduck.game.world.World;
 
 
 /**
- * 
+ *
  */
 public class WorldRenderSystem extends GameSystem {
 	// http://www.alcove-games.com/opengl-es-2-tutorials/lightmap-shader-fire-effect-glsl/

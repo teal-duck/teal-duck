@@ -73,7 +73,7 @@ public class GameScreen extends DuckScreenBase {
 	private int levelNumber;
 	private int previousScore;
 	private String levelAssetName;
-	
+
 	private boolean pauseOnLoseFocus = true;
 
 

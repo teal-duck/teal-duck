@@ -123,7 +123,8 @@ public class WorldCollisionSystem extends GameSystem {
 
 					entityShape.getPosition().add(fixVector);
 
-					getEventManager().triggerEvent(-1, entity, EventName.WORLD_COLLISION);
+					getEventManager().triggerEvent(-1, entity, EventName.WORLD_COLLISION,
+							fixIntersection);
 				} else {
 					break;
 				}
