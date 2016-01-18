@@ -385,9 +385,7 @@ public class EntityLoader {
 		entityManager.addComponent(enemyId, new HealthComponent(EntityConstants.ENEMY_HEALTH));
 		entityManager.addComponent(enemyId, new TeamComponent(Team.BAD));
 
-		if (MathUtils.randomBoolean()) {
-			entityManager.addComponent(enemyId, new DropComponent(EntityLoader.randomPickup()));
-		}
+		entityManager.addComponent(enemyId, new DropComponent(EntityLoader.randomPickup()));
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(enemyId, EventName.COLLISION, EnemyCollision.instance);
@@ -401,7 +399,7 @@ public class EntityLoader {
 	 * @return
 	 */
 	private static Pickup randomPickup() {
-		if (MathUtils.randomBoolean()) {
+		if (MathUtils.randomBoolean(0.7f)) {
 			return new AmmoPickup(EntityConstants.AMMO_PICKUP_DEFAULT_AMOUNT);
 		} else {
 			return new HealthPickup(EntityConstants.HEALTH_PICKUP_DEFAULT_AMOUNT);

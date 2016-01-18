@@ -11,6 +11,8 @@ import com.tealduck.game.engine.Component;
  */
 public class CollisionComponent extends Component {
 	public CollisionShape collisionShape;
+	// Vector from bottom left corner of position component to bottom left of collision shape
+	// This is because the hitboxes can be smaller than the sprite
 	public Vector2 offsetFromPosition;
 
 

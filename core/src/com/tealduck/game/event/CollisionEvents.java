@@ -4,11 +4,13 @@ package com.tealduck.game.event;
 import com.tealduck.game.Team;
 import com.tealduck.game.collision.Intersection;
 import com.tealduck.game.component.BulletComponent;
+import com.tealduck.game.component.ChaseComponent;
 import com.tealduck.game.component.DamageComponent;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.KnockbackComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PickupComponent;
+import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.component.TeamComponent;
 import com.tealduck.game.engine.EntityEngine;
@@ -44,8 +46,6 @@ public class CollisionEvents {
 			t1 = entityManager.getComponent(e1, TeamComponent.class).team;
 		}
 
-		// System.out.println("T0: " + ((t0 == null) ? "null" : t0.toString()) + "; T1: "
-		// + ((t1 == null) ? "null" : t1.toString()));
 		return ((t0 == null) || (t1 == null) || (t0 == t1));
 	}
 
@@ -71,6 +71,15 @@ public class CollisionEvents {
 			// TODO: Add randomness to knockback code
 			float knockbackAmount = knockbackComponent.knockbackForce;
 			movementComponent.acceleration.add(intersection.normal.cpy().scl(knockbackAmount));
+
+			if (entityManager.entityHasComponent(receiver, PositionComponent.class)) {
+				entityManager.getComponent(receiver, PositionComponent.class).lookAt
+						.set(intersection.normal).nor();
+			}
+			if (entityManager.entityHasComponent(receiver, ChaseComponent.class)) {
+				entityManager.getComponent(receiver, ChaseComponent.class).searchDirection
+						.set(intersection.normal).nor();
+			}
 		}
 	}
 

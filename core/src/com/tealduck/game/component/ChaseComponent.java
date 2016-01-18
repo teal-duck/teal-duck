@@ -7,7 +7,6 @@ import com.tealduck.game.world.EntityConstants;
 
 
 /**
- * @author ben
  *
  */
 public class ChaseComponent extends Component {

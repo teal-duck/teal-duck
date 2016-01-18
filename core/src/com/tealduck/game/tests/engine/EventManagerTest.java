@@ -15,16 +15,12 @@ import junit.framework.Assert;
 @SuppressWarnings("deprecation")
 public class EventManagerTest {
 	// TODO: EventManager tests
-	// private EntityManager entityManager;
-	// private EventManager eventManager;
 	private EntityEngine entityEngine;
 
 
 	@Before
 	public void setup() {
 		entityEngine = new EntityEngine();
-		// entityManager = new EntityManager();
-		// eventManager = new EventManager(entityManager, null);
 	}
 
 
@@ -39,8 +35,6 @@ public class EventManagerTest {
 		String testEvent1Name = "TEST_EVENT_1";
 		IEvent testEvent1 = new IEvent() {
 			@Override
-			// public boolean fire(EntityManager entityManager, EntityTagManager entityTagManager, int
-			// sender, int receiver) {
 			public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
 				System.out.println("[Test event 1] Receiver " + receiver + " got event from sender "
 						+ sender);

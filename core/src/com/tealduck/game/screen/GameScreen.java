@@ -73,7 +73,8 @@ public class GameScreen extends DuckScreenBase {
 	private int levelNumber;
 	private int previousScore;
 	private String levelAssetName;
-	// Number of levels in the game
+	
+	private boolean pauseOnLoseFocus = true;
 
 
 	/**
@@ -308,7 +309,9 @@ public class GameScreen extends DuckScreenBase {
 
 	@Override
 	public void pause() {
-		// paused = true;
+		if (pauseOnLoseFocus) {
+			paused = true;
+		}
 	}
 
 

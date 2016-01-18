@@ -3,7 +3,7 @@ package com.tealduck.game;
 
 /**
  * Groups together the number of the level that was passed and the score the player got in the level. Used for passing
- * information from GameScreen to WinScreen and back to GameScreen for the continue button.
+ * information from GameScreen to WinScreen and back to GameScreen from the continue button.
  */
 public class GameProgress {
 	public int levelNumber;

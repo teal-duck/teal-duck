@@ -10,9 +10,6 @@ import com.tealduck.game.world.EntityConstants;
 
 /**
  * Component containing the sprite for an entity.
- *
- * @author andrew
- *
  */
 public class SpriteComponent extends Component {
 	public Sprite sprite;

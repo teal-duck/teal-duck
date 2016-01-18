@@ -14,7 +14,7 @@ public class DesktopLauncher {
 		config.x = -1;
 		config.y = -1;
 		config.width = 64 * 10;
-		config.height = 64 * 8;
+		config.height = 64 * 8 + 0;
 		config.useGL30 = false;
 		config.allowSoftwareMode = true;
 		config.vSyncEnabled = true;

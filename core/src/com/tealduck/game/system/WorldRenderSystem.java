@@ -42,8 +42,7 @@ import com.tealduck.game.world.World;
 
 
 /**
- * @author ben
- *
+ * 
  */
 public class WorldRenderSystem extends GameSystem {
 	// http://www.alcove-games.com/opengl-es-2-tutorials/lightmap-shader-fire-effect-glsl/
@@ -506,11 +505,9 @@ public class WorldRenderSystem extends GameSystem {
 		}
 		shapeRenderer.end();
 
-		entities = entityManager.getEntitiesWithComponents(SpriteComponent.class, WeaponComponent.class);
-
+		// Reloading ! above head
 		batch.begin();
-		batch.setColor(Color.RED);
-
+		entities = entityManager.getEntitiesWithComponents(SpriteComponent.class, WeaponComponent.class);
 		for (int entity : entities) {
 			if (!entityManager.getComponent(entity, WeaponComponent.class).isReloading()) {
 				continue;
@@ -521,12 +518,11 @@ public class WorldRenderSystem extends GameSystem {
 			float spriteX = sprite.getX();
 			float spriteY = sprite.getY();
 
-			float reloadX = spriteX + 14;
-			float reloadY = spriteY + 48;
+			float reloadX = spriteX + 16;
+			float reloadY = spriteY + 52;
 
 			batch.draw(reloadingTexture, reloadX, reloadY, 32, 32);
 		}
-		batch.setColor(Color.WHITE);
 		batch.end();
 	}
 
