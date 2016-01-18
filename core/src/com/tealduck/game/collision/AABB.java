@@ -16,7 +16,12 @@ public class AABB extends CollisionShape {
 		this(new Vector2(0, 0), new Vector2(0, 0));
 	}
 
-
+	/**
+	 * 
+	 * @param position Bottom-left of box
+	 * @param size Length of sides
+	 */
+	
 	public AABB(Vector2 position, Vector2 size) {
 		this.position = position;
 		this.size = size;
