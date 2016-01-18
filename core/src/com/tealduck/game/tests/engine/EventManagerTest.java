@@ -88,6 +88,32 @@ public class EventManagerTest {
 
 		// Event is removed, so test should not fail
 		eventManager.triggerEvent(entity2, entity1, testEvent1Name);
+	}
+	
+	@Test
+	public void testRemoveEventsForEntity() {
+		EntityManager entityManager = entityEngine.getEntityManager();
+		EventManager eventManager = entityEngine.getEventManager();
 
+		int entity1 = entityManager.createEntity();
+		int entity2 = entityManager.createEntity();
+
+		String testEvent1Name = "TEST_EVENT_1";
+		IEvent testEvent1 = new IEvent() {
+			@Override
+			public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
+				System.out.println("[Test event 1] Receiver " + receiver + " got event from sender "
+						+ sender);
+
+				// Event should not be called, as it should be deleted
+				Assert.fail();
+				return false;
+			}
+		};
+		eventManager.addEvent(entity1, testEvent1Name, testEvent1);
+		eventManager.removeEventsForEntity(entity1);
+
+		// Event is removed, so test should not fail
+		eventManager.triggerEvent(entity2, entity1, testEvent1Name);
 	}
 }
