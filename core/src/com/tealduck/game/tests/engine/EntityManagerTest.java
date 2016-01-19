@@ -59,6 +59,7 @@ public class EntityManagerTest {
 		Assert.assertEquals(2, entityManager.getEntityCount());
 	}
 
+
 	@Test
 	public void testRemoveEntityWithTag() {
 		int entity1 = entityManager.createEntityWithTag(entityTagManager, "TAG1");

@@ -1,5 +1,6 @@
 package com.tealduck.game.tests.event;
 
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,29 +23,30 @@ public class EnemyCollisionTest {
 
 	@Test
 	public void testFire() {
-		
+
 		// first part is just returning methods that have already been tested
-		
+
 		EntityEngine entityEngine = new EntityEngine();
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int senderEntity = entityManager.createEntity();
 		int receiverEntity = entityManager.createEntity();
 		int shooterEntity = entityManager.createEntity();
-		Intersection intersection = new Intersection(new Vector2(0,1).nor(), 10f);
+		Intersection intersection = new Intersection(new Vector2(0, 1).nor(), 10f);
 		entityManager.addComponent(senderEntity, new DamageComponent(10));
 		entityManager.addComponent(receiverEntity, new HealthComponent(20));
 		entityManager.addComponent(senderEntity, new TeamComponent(Team.GOOD));
 		entityManager.addComponent(receiverEntity, new TeamComponent(Team.BAD));
-		entityManager.addComponent(receiverEntity, new PositionComponent(new Vector2(0,0)));
+		entityManager.addComponent(receiverEntity, new PositionComponent(new Vector2(0, 0)));
 		entityManager.addComponent(senderEntity, new BulletComponent(shooterEntity));
-		entityManager.addComponent(shooterEntity,  new ScoreComponent());
-		entityManager.addComponent(senderEntity, new MovementComponent(new Vector2(1,1), 0));
-		
+		entityManager.addComponent(shooterEntity, new ScoreComponent());
+		entityManager.addComponent(senderEntity, new MovementComponent(new Vector2(1, 1), 0));
+
 		EnemyCollision.instance.fire(entityEngine, senderEntity, receiverEntity, intersection);
-		
-		Assert.assertEquals(entityManager.getComponent(receiverEntity, PositionComponent.class).lookAt, new Vector2(-1,-1).nor());
+
+		Assert.assertEquals(entityManager.getComponent(receiverEntity, PositionComponent.class).lookAt,
+				new Vector2(-1, -1).nor());
 		// assert that the recieverEntity does turn to look in the opposite direction to the bullet that hit it.
-		
+
 	}
 
 }

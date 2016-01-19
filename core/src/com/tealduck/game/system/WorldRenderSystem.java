@@ -363,8 +363,6 @@ public class WorldRenderSystem extends GameSystem {
 			batch.draw(pointTexture, x, y, w, h);
 		}
 
-		
-
 		batch.end();
 		batch.setColor(Color.WHITE);
 		fbo.end();

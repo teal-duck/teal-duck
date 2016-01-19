@@ -13,6 +13,7 @@ public class PointLightComponent extends Component {
 	}
 
 
+	@Override
 	public String toString() {
 		return "PointLightComponent(" + radius + ")";
 	}

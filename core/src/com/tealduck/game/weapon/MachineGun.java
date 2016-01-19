@@ -1,7 +1,6 @@
 package com.tealduck.game.weapon;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.Team;
@@ -98,7 +97,7 @@ public class MachineGun extends Weapon {
 		if (bulletTexture != null) {
 			entityManager.addComponent(bulletId, new SpriteComponent(bulletTexture));
 		}
-		
+
 		entityManager.addComponent(bulletId, new BulletComponent(shooterId));
 		entityManager.addComponent(bulletId, new KnockbackComponent(EntityConstants.BULLET_KNOCKBACK_FORCE));
 		entityManager.addComponent(bulletId, new DamageComponent(1));
