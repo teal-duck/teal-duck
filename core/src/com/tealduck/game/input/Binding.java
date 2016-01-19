@@ -129,8 +129,6 @@ public class Binding {
 	}
 
 
-	// TODO: Add more setControllerBinding overloads for deadzone and povDirection
-
 	/**
 	 * Gets the key binding.
 	 *

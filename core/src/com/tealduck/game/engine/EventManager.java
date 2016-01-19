@@ -13,6 +13,9 @@ public class EventManager {
 	private EntityEngine entityEngine;
 
 
+	/**
+	 * @param entityEngine
+	 */
 	public EventManager(EntityEngine entityEngine) {
 		events = new HashMap<Integer, HashMap<String, IEvent>>();
 		this.entityEngine = entityEngine;
@@ -23,7 +26,6 @@ public class EventManager {
 	 * @param entity
 	 * @param name
 	 * @param function
-	 *
 	 */
 	public void addEvent(int entity, String name, IEvent function) {
 		if (name == null) {
@@ -43,6 +45,14 @@ public class EventManager {
 	}
 
 
+	/**
+	 * Calls {@link EventManager#triggerEvent(int, int, String, Object)} with null data.
+	 *
+	 * @param senderEntity
+	 * @param receiverEntity
+	 * @param name
+	 * @return
+	 */
 	public boolean triggerEvent(int senderEntity, int receiverEntity, String name) {
 		return triggerEvent(senderEntity, receiverEntity, name, null);
 	}
@@ -52,7 +62,9 @@ public class EventManager {
 	 * @param senderEntity
 	 * @param receiverEntity
 	 * @param name
-	 * @return
+	 * @return True if the receiver entity is to be removed, else false.
+	 * @throws IllegalArgumentException
+	 *                 if name is null
 	 */
 	public boolean triggerEvent(int senderEntity, int receiverEntity, String name, Object data) {
 		if (name == null) {
@@ -62,15 +74,11 @@ public class EventManager {
 		HashMap<String, IEvent> receiverEvents = events.get(receiverEntity);
 		if (receiverEvents == null) {
 			return false;
-			// throw new IllegalArgumentException(
-			// "Receiver entity " + receiverEntity + " doesn't have any events");
 		}
 
 		IEvent function = receiverEvents.get(name);
 		if (function == null) {
 			return false;
-			// throw new IllegalArgumentException(
-			// "Receiver entity " + receiverEntity + " can't respond to " + name);
 		}
 
 		boolean killEntity = function.fire(entityEngine, senderEntity, receiverEntity, data);
@@ -104,7 +112,7 @@ public class EventManager {
 	 * @param entity
 	 * @return
 	 */
-	public HashMap<String, IEvent> removeEntity(int entity) {
+	public HashMap<String, IEvent> removeEventsForEntity(int entity) {
 		return events.remove(entity);
 	}
 

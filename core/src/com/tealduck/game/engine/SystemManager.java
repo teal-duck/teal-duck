@@ -13,6 +13,9 @@ public class SystemManager implements Iterable<GameSystem> {
 	private List<SystemWithPriority<? extends GameSystem>> systems;
 
 
+	/**
+	 *
+	 */
 	public SystemManager() {
 		systems = new ArrayList<SystemWithPriority<? extends GameSystem>>();
 	}
@@ -171,6 +174,10 @@ public class SystemManager implements Iterable<GameSystem> {
 		public int priority;
 
 
+		/**
+		 * @param system
+		 * @param priority
+		 */
 		public SystemWithPriority(T system, int priority) {
 			this.system = system;
 			this.priority = priority;

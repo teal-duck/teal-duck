@@ -4,11 +4,13 @@ package com.tealduck.game.event;
 import com.tealduck.game.Team;
 import com.tealduck.game.collision.Intersection;
 import com.tealduck.game.component.BulletComponent;
+import com.tealduck.game.component.ChaseComponent;
 import com.tealduck.game.component.DamageComponent;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.KnockbackComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PickupComponent;
+import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.component.TeamComponent;
 import com.tealduck.game.engine.EntityEngine;
@@ -18,6 +20,9 @@ import com.tealduck.game.pickup.Pickup;
 import com.tealduck.game.world.EntityConstants;
 
 
+/**
+ * Static methods for functions that are common between collision components.
+ */
 public class CollisionEvents {
 	private CollisionEvents() {
 	};
@@ -41,12 +46,16 @@ public class CollisionEvents {
 			t1 = entityManager.getComponent(e1, TeamComponent.class).team;
 		}
 
-		// System.out.println("T0: " + ((t0 == null) ? "null" : t0.toString()) + "; T1: "
-		// + ((t1 == null) ? "null" : t1.toString()));
 		return ((t0 == null) || (t1 == null) || (t0 == t1));
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param sender
+	 * @param receiver
+	 * @param intersection
+	 */
 	public static void handleKnockback(EntityManager entityManager, int sender, int receiver,
 			Intersection intersection) {
 		if (CollisionEvents.areEntitiesOnSameTeam(entityManager, sender, receiver)) {
@@ -62,10 +71,25 @@ public class CollisionEvents {
 			// TODO: Add randomness to knockback code
 			float knockbackAmount = knockbackComponent.knockbackForce;
 			movementComponent.acceleration.add(intersection.normal.cpy().scl(knockbackAmount));
+
+			if (entityManager.entityHasComponent(receiver, PositionComponent.class)) {
+				entityManager.getComponent(receiver, PositionComponent.class).lookAt
+						.set(intersection.normal).nor();
+			}
+			if (entityManager.entityHasComponent(receiver, ChaseComponent.class)) {
+				entityManager.getComponent(receiver, ChaseComponent.class).searchDirection
+						.set(intersection.normal).nor();
+			}
 		}
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param sender
+	 * @param receiver
+	 * @param intersection
+	 */
 	private static void pushEntitiesApart(EntityManager entityManager, int sender, int receiver,
 			Intersection intersection) {
 		if (entityManager.entityHasComponent(receiver, MovementComponent.class)
@@ -77,6 +101,11 @@ public class CollisionEvents {
 	}
 
 
+	/**
+	 * @param entityEngine
+	 * @param sender
+	 * @param receiver
+	 */
 	public static void handleDamage(EntityEngine entityEngine, int sender, int receiver) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		if (!CollisionEvents.areEntitiesOnSameTeam(entityManager, sender, receiver)) {
@@ -106,6 +135,11 @@ public class CollisionEvents {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param killerEntity
+	 * @param deadEntity
+	 */
 	public static void handleScoreForEntityDeath(EntityManager entityManager, int killerEntity, int deadEntity) {
 		if (entityManager.entityHasComponent(killerEntity, ScoreComponent.class)) {
 			ScoreComponent scoreComponent = entityManager.getComponent(killerEntity, ScoreComponent.class);
@@ -118,16 +152,20 @@ public class CollisionEvents {
 	}
 
 
+	/**
+	 * @param entityEngine
+	 * @param sender
+	 * @param receiver
+	 */
 	public static void handlePickup(EntityEngine entityEngine, int sender, int receiver) {
-		// TODO: Animation on pick up
 		EntityManager entityManager = entityEngine.getEntityManager();
+
 		if (!entityManager.entityHasComponent(sender, PickupComponent.class)) {
 			return;
 		}
-
 		PickupComponent pickupComponent = entityManager.getComponent(sender, PickupComponent.class);
-		Pickup contents = pickupComponent.contents;
 
+		Pickup contents = pickupComponent.contents;
 		boolean pickedUp = contents.applyToEntity(entityManager, receiver);
 
 		if (pickedUp) {

@@ -5,16 +5,28 @@ import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.world.World;
 
 
+/**
+ * Represent a ray as 2 vectors: origin and direction.
+ */
 public class Ray {
 	public Vector2 origin;
 	public Vector2 direction;
 
 
+	/**
+	 * Create a ray with origin at (0, 0).
+	 *
+	 * @param direction
+	 */
 	public Ray(Vector2 direction) {
 		this(new Vector2(0, 0), direction);
 	}
 
 
+	/**
+	 * @param origin
+	 * @param direction
+	 */
 	public Ray(Vector2 origin, Vector2 direction) {
 		this.origin = origin;
 		this.direction = direction.cpy().nor();
@@ -35,7 +47,6 @@ public class Ray {
 	 * @return
 	 */
 	public Vector2 worldIntersection(World world, float maxLengthTiles) {
-		// TODO: Calculate ray-aabb intersection point
 		// http://www.cse.yorku.ca/~amana/research/grid.pdf
 		// http://stackoverflow.com/questions/12367071/how-do-i-initialize-the-t-variables-in-a-fast-voxel-traversal-algorithm-for-ray
 
@@ -90,6 +101,11 @@ public class Ray {
 	}
 
 
+	/**
+	 * @param s
+	 * @param ds
+	 * @return
+	 */
 	private float intbound(float s, float ds) {
 		if (ds < 0) {
 			if (mod(s, ds) == 0) {
@@ -103,6 +119,11 @@ public class Ray {
 	}
 
 
+	/**
+	 * @param value
+	 * @param modulus
+	 * @return
+	 */
 	private float mod(float value, float modulus) {
 		return ((value % modulus) + modulus) % modulus;
 	}

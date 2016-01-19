@@ -15,6 +15,9 @@ import com.tealduck.game.input.Action;
 import com.tealduck.game.input.ControlMap;
 
 
+/**
+ * Renders and provides logic for a list of GUI buttons for use in menus.
+ */
 public class ButtonList {
 	private String[] buttonTexts;
 	private GlyphLayout[] buttonLayouts;
@@ -35,16 +38,30 @@ public class ButtonList {
 	private int halfButtonWidth = buttonWidth / 2;
 
 	private int selected = 0;
-	private int previousDirection = 0;
+	private boolean justMoved = true;
 	private boolean enterJustPushed = true;
 
+	// Default button sizes
+	// Used for consistency between menus
+	// But setDimensions() allows you to change the sizes for a specific button list
 	public static final int BUTTON_WIDTH = 200;
 	public static final int BUTTON_HEIGHT = 40;
 	public static final int BUTTON_DIFFERENCE = 10;
 	public static final int BUTTON_TEXT_VERTICAL_OFFSET = 30;
 	public static final int WINDOW_EDGE_OFFSET = 32;
 
+	private Color selectedColour = Color.RED;
+	private Color deselectedColour = Color.BLUE;
+	private Color outlineColour = Color.BLACK;
 
+
+	/**
+	 * @param buttonTexts
+	 * @param font
+	 * @param guiCamera
+	 * @param controlMap
+	 * @param controller
+	 */
 	public ButtonList(String[] buttonTexts, BitmapFont font, OrthographicCamera guiCamera, ControlMap controlMap,
 			Controller controller) {
 		this.buttonTexts = buttonTexts;
@@ -62,13 +79,26 @@ public class ButtonList {
 	}
 
 
+	/**
+	 * Returns the height in pixels a button list with default sizes will take up if it had buttonCount buttons.
+	 *
+	 * @param buttonCount
+	 * @return
+	 */
 	public static int getHeightForDefaultButtonList(int buttonCount) {
-		// return 0;
 		return (buttonCount * (ButtonList.BUTTON_HEIGHT + ButtonList.BUTTON_DIFFERENCE))
 				- ButtonList.BUTTON_DIFFERENCE;
 	}
 
 
+	/**
+	 * @param topLeftX
+	 * @param topLeftY
+	 * @param buttonWidth
+	 * @param buttonHeight
+	 * @param buttonDifference
+	 * @param buttonTextVerticalOffset
+	 */
 	public void setDimensions(int topLeftX, int topLeftY, int buttonWidth, int buttonHeight, int buttonDifference,
 			int buttonTextVerticalOffset) {
 		this.topLeftX = topLeftX;
@@ -81,19 +111,41 @@ public class ButtonList {
 	}
 
 
+	/**
+	 * Set the sizes for the buttons to the default, and position the buttons on the screen.
+	 *
+	 * @param topLeftX
+	 * @param topLeftY
+	 */
 	public void setPositionDefaultSize(int topLeftX, int topLeftY) {
 		setDimensions(topLeftX, topLeftY, ButtonList.BUTTON_WIDTH, ButtonList.BUTTON_HEIGHT,
 				ButtonList.BUTTON_DIFFERENCE, ButtonList.BUTTON_TEXT_VERTICAL_OFFSET);
 	}
 
 
+	/**
+	 * @param selectedColour
+	 * @param deselectedColour
+	 * @param outlineColour
+	 */
+	public void setColours(Color selectedColour, Color deselectedColour, Color outlineColour) {
+		this.selectedColour = selectedColour;
+		this.deselectedColour = deselectedColour;
+		this.outlineColour = outlineColour;
+	}
+
+
+	/**
+	 * @return
+	 */
 	public int getSelected() {
 		return selected;
 	}
 
 
 	/**
-	 * True if enter key/controller button/mouse is pressed whilst over a button
+	 * True if enter key/controller button/mouse is pressed whilst over a button. Only call this once per frame as
+	 * it updates state for the previous frame.
 	 *
 	 * @return
 	 */
@@ -121,6 +173,9 @@ public class ButtonList {
 	}
 
 
+	/**
+	 * Update the selected property based on keys/controller up/down input or location of mouse.
+	 */
 	public void updateSelected() {
 		float upState = controlMap.getStateForAction(Action.UP, controller);
 		float downState = controlMap.getStateForAction(Action.DOWN, controller);
@@ -133,11 +188,11 @@ public class ButtonList {
 			directionToMove += 1;
 		}
 
-		if (previousDirection == 0) {
+		if (!justMoved) {
 			moveSelected(directionToMove);
 		}
 
-		previousDirection = directionToMove;
+		justMoved = (directionToMove != 0);
 		int over = getMouseOverButton();
 		if (over >= 0) {
 			selected = over;
@@ -146,7 +201,7 @@ public class ButtonList {
 
 
 	/**
-	 * Returns -1 if the mouse isn't over a button, else returns the index of the button
+	 * Returns -1 if the mouse isn't over a button, else returns the index of the button.
 	 *
 	 * @return
 	 */
@@ -205,6 +260,11 @@ public class ButtonList {
 	}
 
 
+	/**
+	 * Renders the button list onto the batch.
+	 *
+	 * @param batch
+	 */
 	public void render(SpriteBatch batch) {
 		shapeRenderer.setProjectionMatrix(guiCamera.combined);
 		shapeRenderer.begin(ShapeType.Filled);
@@ -213,12 +273,24 @@ public class ButtonList {
 
 		for (int i = 0; i < buttonTexts.length; i += 1) {
 			if (selected == i) {
-				shapeRenderer.setColor(Color.BLUE);
+				shapeRenderer.setColor(deselectedColour);
 			} else {
-				shapeRenderer.setColor(Color.RED);
+				shapeRenderer.setColor(selectedColour);
 			}
 
 			shapeRenderer.rect(topLeftX, y, buttonWidth, buttonHeight);
+
+			shapeRenderer.setColor(outlineColour);
+			float width = 2f;
+			shapeRenderer.rectLine(topLeftX, y, topLeftX + buttonWidth, y, width);
+			shapeRenderer.rectLine(topLeftX + buttonWidth, y, topLeftX + buttonWidth, y + buttonHeight,
+					width);
+			shapeRenderer.rectLine(topLeftX + buttonWidth, y + buttonHeight, topLeftX, y + buttonHeight,
+					width);
+			shapeRenderer.rectLine(topLeftX, y + buttonHeight, topLeftX, y, width);
+
+			// shapeRenderer.setColor(Color.BLACK);
+			// shapeRenderer.rectLine(topLeftX, y, topLeftX + buttonWidth, y + buttonHeight, 5);
 
 			y -= buttonDifference;
 			y -= buttonHeight;

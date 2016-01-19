@@ -55,6 +55,9 @@ import com.tealduck.game.pickup.Pickup;
 import com.tealduck.game.weapon.MachineGun;
 
 
+/**
+ * Static methods for loading entities into the world.
+ */
 public class EntityLoader {
 	private EntityLoader() {
 	};
@@ -85,6 +88,10 @@ public class EntityLoader {
 	}
 
 
+	/**
+	 * @param tiledMap
+	 * @return
+	 */
 	public static final HashMap<String, ArrayList<Vector2>> loadPatrolRoutes(TiledMap tiledMap) {
 		HashMap<String, ArrayList<Vector2>> patrolRoutes = new HashMap<String, ArrayList<Vector2>>();
 
@@ -116,6 +123,12 @@ public class EntityLoader {
 	}
 
 
+	/**
+	 * @param world
+	 * @param textureMap
+	 * @param controlMap
+	 * @param controller
+	 */
 	public static void loadEntities(World world, TextureMap textureMap, ControlMap controlMap,
 			Controller controller) {
 		int playerId = -1;
@@ -208,6 +221,11 @@ public class EntityLoader {
 	}
 
 
+	/**
+	 * @param t
+	 * @param defaultAmount
+	 * @return
+	 */
 	private static int getAmountForPickup(TiledMapTileMapObject t, int defaultAmount) {
 		int amount = defaultAmount;
 		if (t.getProperties().containsKey("amount")) {
@@ -226,9 +244,15 @@ public class EntityLoader {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param entityId
+	 * @param entityPosition
+	 * @param radius
+	 * @return
+	 */
 	public static CollisionComponent addEntityCircleCollisionComponent(EntityManager entityManager, int entityId,
 			Vector2 entityPosition, float radius) {
-		// TODO: addEntityCircleCollisionComponent offsetFromPosition
 		Vector2 offsetFromPosition = new Vector2(32, 32);
 		Circle circle = new Circle(entityPosition.cpy().add(offsetFromPosition), radius);
 		CollisionComponent collisionComponent = new CollisionComponent(circle, offsetFromPosition);
@@ -237,6 +261,13 @@ public class EntityLoader {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param entityId
+	 * @param entityPosition
+	 * @param entitySize
+	 * @return
+	 */
 	public static CollisionComponent addEntityAABBCollisionComponent(EntityManager entityManager, int entityId,
 			Vector2 entityPosition, Vector2 entitySize) {
 		Vector2 offsetFromPosition = (new Vector2(64, 64)).sub(entitySize).scl(0.5f);
@@ -247,6 +278,13 @@ public class EntityLoader {
 	}
 
 
+	/**
+	 * @param texture
+	 * @param frameWidth
+	 * @param frameHeight
+	 * @param frameDuration
+	 * @return
+	 */
 	private static Animation animationFromTexture(Texture texture, int frameWidth, int frameHeight,
 			float frameDuration) {
 		int textureWidth = texture.getWidth();
@@ -275,10 +313,12 @@ public class EntityLoader {
 
 
 	/**
-	 * @param entityManager
-	 * @param entityTagManager
+	 * @param entityEngine
 	 * @param texture
 	 * @param position
+	 * @param bulletTexture
+	 * @param controlMap
+	 * @param controller
 	 * @return
 	 */
 	private static int createPlayer(EntityEngine entityEngine, Texture texture, Vector2 position,
@@ -300,11 +340,8 @@ public class EntityLoader {
 
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, playerId, position,
 				EntityConstants.PLAYER_RADIUS);
-		// addEntityAABBCollisionComponent(entityManager, playerId, position, new Vector2(60,
-		// 60));
 
 		entityManager.addComponent(playerId, new HealthComponent(EntityConstants.PLAYER_MAX_HEALTH));
-
 		entityManager.addComponent(playerId, new KnockbackComponent(EntityConstants.PLAYER_KNOCKBACK_FORCE));
 
 		MachineGun weapon = new MachineGun(bulletTexture);
@@ -312,7 +349,6 @@ public class EntityLoader {
 				EntityConstants.START_EXTRA_AMMO));
 
 		entityManager.addComponent(playerId, new ScoreComponent());
-
 		entityManager.addComponent(playerId, new TeamComponent(Team.GOOD));
 
 		EventManager eventManager = entityEngine.getEventManager();
@@ -339,6 +375,7 @@ public class EntityLoader {
 				new MovementComponent(new Vector2(0, 0), EntityConstants.ENEMY_SPEED));
 		entityManager.addComponent(enemyId, new DamageComponent(EntityConstants.ENEMY_DAMAGE));
 		entityManager.addComponent(enemyId, new KnockbackComponent(EntityConstants.ENEMY_KNOCKBACK_FORCE));
+
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, enemyId, position,
 				EntityConstants.ENEMY_RADIUS);
 
@@ -346,22 +383,23 @@ public class EntityLoader {
 				EntityConstants.ENEMY_VIEW_LENGTH));
 
 		entityManager.addComponent(enemyId, new HealthComponent(EntityConstants.ENEMY_HEALTH));
-
 		entityManager.addComponent(enemyId, new TeamComponent(Team.BAD));
 
 		entityManager.addComponent(enemyId, new DropComponent(EntityLoader.randomPickup()));
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(enemyId, EventName.COLLISION, EnemyCollision.instance);
-
 		eventManager.addEvent(enemyId, EventName.WORLD_COLLISION, SearchWorldCollision.instance);
 
 		return enemyId;
 	}
 
 
+	/**
+	 * @return
+	 */
 	private static Pickup randomPickup() {
-		if (MathUtils.randomBoolean()) {
+		if (MathUtils.randomBoolean(0.7f)) {
 			return new AmmoPickup(EntityConstants.AMMO_PICKUP_DEFAULT_AMOUNT);
 		} else {
 			return new HealthPickup(EntityConstants.HEALTH_PICKUP_DEFAULT_AMOUNT);
@@ -369,6 +407,12 @@ public class EntityLoader {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param world
+	 * @param routeName
+	 * @param enemyId
+	 */
 	private static void addPatrolRouteToEnemy(EntityManager entityManager, World world, String routeName,
 			int enemyId) {
 		ArrayList<Vector2> patrolRoute = world.getPatrolRoute(routeName);
@@ -383,10 +427,15 @@ public class EntityLoader {
 	}
 
 
+	/**
+	 * @param entityManager
+	 * @param playerId
+	 */
 	private static void addChaseComponentToEnemies(EntityManager entityManager, int playerId) {
 		// Enemies that don't have patrol route should chase player
-
-		Set<Integer> entities = entityManager.getEntitiesWithComponent(TeamComponent.class);
+		@SuppressWarnings("unchecked")
+		Set<Integer> entities = entityManager.getEntitiesWithComponents(TeamComponent.class,
+				MovementComponent.class);
 		for (int entity : entities) {
 			if (entityManager.entityHasComponent(entity, PatrolRouteComponent.class)) {
 				continue;
@@ -402,6 +451,12 @@ public class EntityLoader {
 	}
 
 
+	/**
+	 * @param entityEngine
+	 * @param texture
+	 * @param position
+	 * @return
+	 */
 	private static int createGoal(EntityEngine entityEngine, Texture texture, Vector2 position) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int goalId = entityManager.createEntityWithTag(entityEngine.getEntityTagManager(), Tag.GOAL);
@@ -414,6 +469,12 @@ public class EntityLoader {
 	}
 
 
+	/**
+	 * @param entityEngine
+	 * @param texture
+	 * @param position
+	 * @param contents
+	 */
 	public static void createPickup(EntityEngine entityEngine, Texture texture, Vector2 position, Pickup contents) {
 		EntityManager entityManager = entityEngine.getEntityManager();
 
@@ -421,9 +482,7 @@ public class EntityLoader {
 		entityManager.addComponent(pickupId, new SpriteComponent(texture));
 		entityManager.addComponent(pickupId,
 				new PositionComponent(position, new Vector2(1, 0), new Vector2(64, 64)));
-
 		entityManager.addComponent(pickupId, new PickupComponent(contents));
-
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, pickupId, position,
 				EntityConstants.PICKUP_RADIUS);
 	}

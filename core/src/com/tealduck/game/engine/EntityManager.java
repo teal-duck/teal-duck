@@ -15,14 +15,14 @@ import java.util.Set;
  *
  */
 public class EntityManager {
-	// TODO: Fix type of getAllComponentsForEntity in the submitted diagram
-	// TODO: Maybe add a method that returns HashMap<Integer, ? extends Component>
-
 	private Set<Integer> entities;
 	private HashMap<Class<? extends Component>, HashMap<Integer, ? extends Component>> componentsMap;
 	private int nextEntityId = 0;
 
 
+	/**
+	 *
+	 */
 	public EntityManager() {
 		entities = new HashSet<Integer>();
 		componentsMap = new HashMap<Class<? extends Component>, HashMap<Integer, ? extends Component>>();

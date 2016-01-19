@@ -3,7 +3,6 @@ package com.tealduck.game.system;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
@@ -42,23 +41,20 @@ import com.tealduck.game.world.EntityConstants;
 import com.tealduck.game.world.World;
 
 
+/**
+ *
+ */
 public class WorldRenderSystem extends GameSystem {
-	// TODO: Lighting
 	// http://www.alcove-games.com/opengl-es-2-tutorials/lightmap-shader-fire-effect-glsl/
 	// http://gamedev.stackexchange.com/questions/104785/2d-smooth-lighting-with-shadows-for-a-tile-based-game
 	// http://ncase.me/sight-and-light/
 	// http://www.gamedev.net/page/reference/index.html/_/technical/graphics-programming-and-theory/dynamic-2d-soft-shadows-r2032
-	//
-	// https://www.filterforge.com/filters/2312.jpg
-
-	// TODO: Shadows
 
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
 	private Batch batch;
 
 	private Texture coneTexture;
-	private Texture pointTexture;
 	private FrameBuffer fbo;
 	private ShaderProgram renderLightShader;
 	private ShaderProgram renderWorldShader;
@@ -81,6 +77,7 @@ public class WorldRenderSystem extends GameSystem {
 
 	private float unitScale;
 
+	// Only render the floor and wall layers, not collision or objects
 	private final int[] mapRenderLayers = new int[] { 0, 1 };
 
 	private ShapeRenderer shapeRenderer;
@@ -88,6 +85,11 @@ public class WorldRenderSystem extends GameSystem {
 	private float pickupTime = 0;
 	private float pickupRotation = 0;
 	private float pickupY = 0;
+
+	private float healthBarWidth = 32;
+	private float healthBarHeight = 4;
+
+	private Texture reloadingTexture;
 
 
 	public WorldRenderSystem(EntityEngine entityEngine, World world, TextureMap textureMap) {
@@ -110,7 +112,6 @@ public class WorldRenderSystem extends GameSystem {
 		shapeRenderer = new ShapeRenderer();
 
 		coneTexture = textureMap.getTexture(AssetLocations.CONE_LIGHT);
-		pointTexture = textureMap.getTexture(AssetLocations.POINT_LIGHT);
 
 		ShaderProgram.pedantic = false;
 		renderLightShader = new ShaderProgram(vertexShader, renderLightPixelShader);
@@ -122,14 +123,25 @@ public class WorldRenderSystem extends GameSystem {
 				EntityConstants.AMBIENT_COLOUR.y, EntityConstants.AMBIENT_COLOUR.z,
 				EntityConstants.AMBIENT_INTENSITY);
 		renderWorldShader.end();
+
+		reloadingTexture = textureMap.getTexture(AssetLocations.RELOADING);
 	}
 
 
+	/**
+	 * @return
+	 */
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
 
 
+	/**
+	 * Resizes the camera, recreates the frame buffer and sends the new resolution to the shader.
+	 *
+	 * @param windowWidth
+	 * @param windowHeight
+	 */
 	public void resizeCamera(int windowWidth, int windowHeight) {
 		camera.setToOrtho(false, windowWidth * renderer.getUnitScale(), windowHeight * renderer.getUnitScale());
 		camera.update();
@@ -161,7 +173,7 @@ public class WorldRenderSystem extends GameSystem {
 
 
 	/**
-	 *
+	 * Clamp the camera to be within the bounds of the map
 	 */
 	private void clampCamera() {
 		float viewportWidth = camera.viewportWidth;
@@ -205,41 +217,14 @@ public class WorldRenderSystem extends GameSystem {
 		renderWorld();
 		renderEntities(deltaTime);
 		renderHealthBars();
-
-		// shapeRenderer.begin(ShapeType.Filled);
-		// shapeRenderer.setColor(Color.RED);
-		//
-		// EntityManager entityManager = getEntityManager();
-		// @SuppressWarnings("unchecked")
-		// Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class);
-		// for (int entity : entities) {
-		// if (!entityManager.entityHasComponent(entity, WeaponComponent.class)) { // &&
-		// // !entityManager.entityHasComponent(entity,
-		// // ViewconeComponent.class))
-		// // {
-		// continue;
-		// }
-		// PositionComponent positionComponent = entityManager.getComponent(entity,
-		// PositionComponent.class);
-		// Vector2 center = positionComponent.getCenter();
-		// Vector2 lookAt = positionComponent.lookAt;
-		//
-		// Ray ray = new Ray(center, lookAt.cpy());
-		// Vector2 intersection = ray.worldIntersection(world, 4f);
-		// if (intersection != null) {
-		// shapeRenderer.line(center, intersection);
-		// shapeRenderer.circle(intersection.x, intersection.y, 5f);
-		// }
-		//
-		// }
-		//
-		// shapeRenderer.end();
 	}
 
 
 	/**
 	 * For each entity that has a position and sprite, updates the position in the sprite to be the same as the
-	 * position.
+	 * position. Also rotates the pickup sprites.
+	 *
+	 * @param deltaTime
 	 */
 	private void updateSprites(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
@@ -279,21 +264,21 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param deltaTime
+	 */
 	@SuppressWarnings("unchecked")
 	private void renderLightsToFrameBuffer(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
 
 		fbo.begin();
+		
 		clearScreen();
 		batch.setProjectionMatrix(camera.combined);
 		batch.setShader(renderLightShader);
 		batch.begin();
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.setColor(1f, 1f, 1f, 1f);
-
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 
-		boolean cone = EntityConstants.USE_CONE_LIGHTS;
 		int lightSize = 512;
 		int halfLightSize = lightSize / 2;
 		float lightScale = 0.5f;
@@ -301,13 +286,9 @@ public class WorldRenderSystem extends GameSystem {
 		float coneOriginX = halfLightSize;
 		float coneOriginY = lightSize;
 
-		float circleOriginX = halfLightSize;
-		float circleOriginY = halfLightSize;
-
 		Set<Integer> entities = entityManager.getEntitiesWithComponents(PositionComponent.class,
 				ViewconeComponent.class);
 		for (int entity : entities) {
-			// TODO: Test if entity is on/near screen before rendering light
 			PositionComponent positionComponent = entityManager.getComponent(entity,
 					PositionComponent.class);
 			ViewconeComponent viewconeComponent = entityManager.getComponent(entity,
@@ -327,37 +308,23 @@ public class WorldRenderSystem extends GameSystem {
 
 			float drawX = (x + 32f) - halfLightSize;
 			float drawY = (y + 32f) - lightSize;
+			batch.draw(coneTexture, // texture
+					drawX, // x
+					drawY, // y
+					coneOriginX, // origin x
+					coneOriginY, // origin y
+					lightSize, // width
+					lightSize, // height
+					scaleX, // scale x
+					scaleY, // scale y
+					angle + 90f, // rotation
+					0, 0, lightSize, lightSize, // src
+					false, false // flip
+			);
 
-			// System.out.println("Fov: " + fov + "; Length: " + length + "; Half fov angle: " +
-			// halfFovAngle
-			// + "; X length: " + xLength);
-
-			if (cone) {
-				// void com.badlogic.gdx.graphics.g2d.Batch.draw(Texture texture, float x, float y,
-				// float originX, float originY, float width, float height, float scaleX, float scaleY,
-				// float rotation, int srcX, int srcY, int srcWidth, int srcHeight, boolean flipX,
-				// boolean flipY)
-				batch.draw(coneTexture, // texture
-						drawX, // x
-						drawY, // y
-						coneOriginX, // origin x
-						coneOriginY, // origin y
-						lightSize, // width
-						lightSize, // height
-						scaleX, // scale x
-						scaleY, // scale y
-						angle + 90f, // rotation
-						0, 0, lightSize, lightSize, // src
-						false, false // flip
-				);
-			} else {
-				// Point light for testing
-				batch.draw(pointTexture, drawX, drawY, circleOriginX, circleOriginY, lightSize,
-						lightSize, lightScale, lightScale, 0f, 0, 0, lightSize, lightSize,
-						false, false);
-			}
 		}
 
+		// Render muzzle flashes as smaller cones
 		lightScale = 0.1f;
 		entities = getEntityManager().getEntitiesWithComponents(PositionComponent.class, WeaponComponent.class);
 		for (int entity : entities) {
@@ -374,9 +341,6 @@ public class WorldRenderSystem extends GameSystem {
 				batch.draw(coneTexture, (x + 32f) - halfLightSize, (y + 32f) - lightSize, coneOriginX,
 						coneOriginY, lightSize, lightSize, lightScale, lightScale, angle + 90f,
 						0, 0, lightSize, lightSize, false, false);
-				// batch.draw(pointTexture, (x + 32f) - halfLightSize, (y + 32f) - halfLightSize,
-				// circleOriginX, circleOriginY, lightSize, lightSize, lightScale,
-				// lightScale, 0f, 0, 0, lightSize, lightSize, false, false);
 			}
 		}
 
@@ -386,12 +350,18 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 *
+	 */
 	private void clearScreen() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	}
 
 
+	/**
+	 *
+	 */
 	private void updateCamera() {
 		try {
 			centerCameraToEntity(getEntityTagManager().getEntity(Tag.PLAYER));
@@ -403,37 +373,40 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 *
+	 */
 	private void renderWorld() {
 		batch.setShader(renderWorldShader);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		renderer.setView(camera);
 		fbo.getColorBufferTexture().bind(1);
-		pointTexture.bind(0);
+		coneTexture.bind(0);
 		renderer.render(mapRenderLayers);
 		shapeRenderer.setProjectionMatrix(camera.combined);
 	}
 
 
+	/**
+	 * @param deltaTime
+	 */
 	private void renderEntities(float deltaTime) {
-		boolean useSortedRendering = false;
+		if (debugPatrol) {
+			renderPatrolRoutes();
+		}
 
-		if (useSortedRendering) {
-			renderEntitiesSorted();
-		} else {
-			if (debugPatrol) {
-				renderPatrolRoutes();
-			}
+		renderAllEntities(deltaTime);
 
-			renderAllEntities(deltaTime);
-
-			if (debugCollision) {
-				renderCollisionOverlay();
-			}
+		if (debugCollision) {
+			renderCollisionOverlay();
 		}
 	}
 
 
+	/**
+	 *
+	 */
 	private void renderPatrolRoutes() {
 		HashMap<String, ArrayList<Vector2>> patrolRoutes = world.getPatrolRoutes();
 		for (ArrayList<Vector2> patrolRoute : patrolRoutes.values()) {
@@ -452,6 +425,9 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 * @param deltaTime
+	 */
 	private void renderAllEntities(float deltaTime) {
 		EntityManager entityManager = getEntityManager();
 
@@ -462,10 +438,13 @@ public class WorldRenderSystem extends GameSystem {
 		for (int entity : entities) {
 			SpriteComponent spriteComponent = entityManager.getComponent(entity, SpriteComponent.class);
 
+			// Update the animation
+			// If the entity can move, only update when they are moving
 			if (entityManager.entityHasComponent(entity, MovementComponent.class)) {
 				MovementComponent movementComponent = entityManager.getComponent(entity,
 						MovementComponent.class);
 				if (movementComponent.velocity.len2() > 1) {
+					// Speed up animation when sprinting
 					float sprintScale = movementComponent.sprinting ? movementComponent.sprintScale
 							: 1;
 					spriteComponent.stateTime += deltaTime * sprintScale;
@@ -485,12 +464,14 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
+	/**
+	 *
+	 */
+	@SuppressWarnings("unchecked")
 	private void renderHealthBars() {
-		// TODO: Only render health bar when entity takes damage?
 		EntityManager entityManager = getEntityManager();
 		shapeRenderer.begin(ShapeType.Filled);
 
-		@SuppressWarnings("unchecked")
 		Set<Integer> entities = entityManager.getEntitiesWithComponents(SpriteComponent.class,
 				HealthComponent.class);
 		for (int entity : entities) {
@@ -510,9 +491,6 @@ public class WorldRenderSystem extends GameSystem {
 			float spriteWidth = sprite.getWidth();
 			float spriteHeight = sprite.getHeight();
 
-			float healthBarWidth = 32;
-			float healthBarHeight = 4;
-
 			float healthBarX = (spriteX + (spriteWidth / 2)) - (healthBarWidth / 2);
 			float healthBarY = (spriteY + spriteHeight) - healthBarHeight;
 
@@ -524,9 +502,32 @@ public class WorldRenderSystem extends GameSystem {
 			shapeRenderer.rect(healthBarX, healthBarY, greenBarWidth, healthBarHeight);
 		}
 		shapeRenderer.end();
+
+		// Reloading ! above head
+		batch.begin();
+		entities = entityManager.getEntitiesWithComponents(SpriteComponent.class, WeaponComponent.class);
+		for (int entity : entities) {
+			if (!entityManager.getComponent(entity, WeaponComponent.class).isReloading()) {
+				continue;
+			}
+			SpriteComponent spriteComponent = entityManager.getComponent(entity, SpriteComponent.class);
+			Sprite sprite = spriteComponent.sprite;
+
+			float spriteX = sprite.getX();
+			float spriteY = sprite.getY();
+
+			float reloadX = spriteX + 16;
+			float reloadY = spriteY + 52;
+
+			batch.draw(reloadingTexture, reloadX, reloadY, 32, 32);
+		}
+		batch.end();
 	}
 
 
+	/**
+	 *
+	 */
 	private void renderCollisionOverlay() {
 		EntityManager entityManager = getEntityManager();
 
@@ -578,56 +579,11 @@ public class WorldRenderSystem extends GameSystem {
 	}
 
 
-	// TODO: isSpriteOnScreen
+	/**
+	 * @param sprite
+	 * @return
+	 */
 	private boolean isSpriteOnScreen(Sprite sprite) {
 		return true;
-	}
-
-
-	// Possibly sort all entities so that ones with the same texture get rendered together
-	// Faster for the GPU to render lots of the same texture, then lots of a different
-	// Rather than constantly binding a different texture
-	// Possible implementation below
-	private void renderEntitiesSorted() {
-		EntityManager entityManager = getEntityManager();
-		// Gdx.gl.glClearColor(0.6f, 0, 0, 1);
-		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		// Use a map so that each sprite is categorised by the texture it uses
-		// Order of textures varies each time game is played
-		HashMap<Texture, ArrayList<Sprite>> textures = new HashMap<Texture, ArrayList<Sprite>>();
-
-		// Iterate through the entities
-		// Filter out the ones that aren't on the screen
-		// Put them into the map based on texture
-		Set<Integer> entities = entityManager.getEntitiesWithComponent(SpriteComponent.class);
-		for (int entity : entities) {
-			Sprite sprite = entityManager.getComponent(entity, SpriteComponent.class).sprite;
-			if (isSpriteOnScreen(sprite)) {
-				Texture texture = sprite.getTexture();
-				ArrayList<Sprite> sprites = textures.get(texture);
-				if (sprites == null) {
-					sprites = new ArrayList<Sprite>();
-				}
-				sprites.add(sprite);
-				textures.put(texture, sprites);
-			}
-		}
-
-		// Iterate through the map of texture to sprites
-		// Bind the texture, then render each sprite
-		for (Entry<Texture, ArrayList<Sprite>> entry : textures.entrySet()) {
-			Texture texture = entry.getKey();
-
-			Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
-			batch.begin();
-			batch.disableBlending();
-			texture.bind();
-			for (Sprite sprite : entry.getValue()) {
-
-				sprite.draw(batch);
-			}
-			batch.end();
-		}
 	}
 }

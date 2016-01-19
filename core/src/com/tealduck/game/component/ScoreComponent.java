@@ -4,6 +4,9 @@ package com.tealduck.game.component;
 import com.tealduck.game.engine.Component;
 
 
+/**
+ *
+ */
 public class ScoreComponent extends Component {
 	public int score;
 	public int combo;
@@ -12,6 +15,9 @@ public class ScoreComponent extends Component {
 	public float comboTime;
 
 
+	/**
+	 *
+	 */
 	public ScoreComponent() {
 		score = 0;
 		combo = 0;
@@ -20,6 +26,11 @@ public class ScoreComponent extends Component {
 	}
 
 
+	/**
+	 * Add points to the workingScore, increment the combo and calculate the new comboTime.
+	 *
+	 * @param points
+	 */
 	public void increaseScoreWithComboGain(int points) {
 		workingScore += points;
 		combo += 1;
@@ -27,6 +38,12 @@ public class ScoreComponent extends Component {
 	}
 
 
+	/**
+	 * Calculate how long until the combo ends for the given combo level.
+	 *
+	 * @param combo
+	 * @return time in seconds
+	 */
 	public float getComboTimeForCombo(int combo) {
 		float x = (combo / 2f) + 0.5f;
 		float t = -(x * x) + 5f;
@@ -41,6 +58,9 @@ public class ScoreComponent extends Component {
 	}
 
 
+	/**
+	 * Add workingScore * combo to the score and reset the combo.
+	 */
 	public void finishCombo() {
 		score += workingScore * combo;
 		workingScore = 0;
@@ -49,6 +69,11 @@ public class ScoreComponent extends Component {
 	}
 
 
+	/**
+	 * Decrement the combo time. If it reaches 0, finishes the combo.
+	 *
+	 * @param deltaTime
+	 */
 	public void comboCountdown(float deltaTime) {
 		if (comboTime <= 0) {
 			return;

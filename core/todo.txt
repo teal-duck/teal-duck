@@ -8,8 +8,6 @@ From assessment doc:
 
 Required to do for assessment 2:
 - Menu
-	- Game over screen
-	- Game continue screen
 	- Settings would be nice
 		- Shouldn't be too hard to make
 		- Input system already set up to allow rebinding
@@ -68,15 +66,12 @@ Required to do for assessment 2:
 		- Perhaps lock on
 
 Required assets:
-- Player gun, bullets, shooting animation
-- Ammo + health pickups, spinning animation? could possible just hardcode this as a hack
 - Turret texture
 - Gui + menu design
 - 2-3 level designs
 	- Could be 1 overworld
 		- Maybe use google maps, is that allowed?
 	- 1 indoors
-- Light cone texture
 - Sounds as semi-low priority
 	- Sfxr (might run under wine)
 

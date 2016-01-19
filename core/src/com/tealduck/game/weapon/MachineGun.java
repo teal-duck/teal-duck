@@ -22,10 +22,16 @@ import com.tealduck.game.world.EntityConstants;
 import com.tealduck.game.world.EntityLoader;
 
 
+/**
+ *
+ */
 public class MachineGun extends Weapon {
 	private Texture bulletTexture;
 
 
+	/**
+	 * @param bulletTexture
+	 */
 	public MachineGun(Texture bulletTexture) {
 		this.bulletTexture = bulletTexture;
 	}
@@ -44,7 +50,7 @@ public class MachineGun extends Weapon {
 
 
 	@Override
-	public int ammoRequiredToFire() {
+	public int getAmmoRequiredToFire() {
 		return 1;
 	}
 
@@ -58,7 +64,7 @@ public class MachineGun extends Weapon {
 
 		int bulletsFired = 0;
 
-		while (bulletsFired < ammoRequiredToFire()) {
+		while (bulletsFired < getAmmoRequiredToFire()) {
 			createBullet(entityEngine, shooterId, position, direction, bulletSize, team);
 			bulletsFired += 1;
 		}
@@ -67,9 +73,16 @@ public class MachineGun extends Weapon {
 	}
 
 
+	/**
+	 * @param entityEngine
+	 * @param shooterId
+	 * @param position
+	 * @param direction
+	 * @param bulletSize
+	 * @param team
+	 */
 	private void createBullet(EntityEngine entityEngine, int shooterId, Vector2 position, Vector2 direction,
 			Vector2 bulletSize, Team team) {
-
 		EntityManager entityManager = entityEngine.getEntityManager();
 		int bulletId = entityManager.createEntity();
 
@@ -81,15 +94,12 @@ public class MachineGun extends Weapon {
 				new MovementComponent(direction.cpy().scl(bulletSpeed), bulletSpeed, 1));
 
 		entityManager.addComponent(bulletId, new SpriteComponent(bulletTexture));
+		entityManager.addComponent(bulletId, new BulletComponent(shooterId));
+		entityManager.addComponent(bulletId, new KnockbackComponent(EntityConstants.BULLET_KNOCKBACK_FORCE));
+		entityManager.addComponent(bulletId, new DamageComponent(1));
 
 		int bulletRadius = EntityConstants.BULLET_RADIUS;
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, bulletId, position, bulletRadius);
-
-		entityManager.addComponent(bulletId, new BulletComponent(shooterId));
-
-		entityManager.addComponent(bulletId, new KnockbackComponent(EntityConstants.BULLET_KNOCKBACK_FORCE));
-
-		entityManager.addComponent(bulletId, new DamageComponent(1));
 
 		if (team != null) {
 			entityManager.addComponent(bulletId, new TeamComponent(team));
@@ -97,9 +107,7 @@ public class MachineGun extends Weapon {
 
 		EventManager eventManager = entityEngine.getEventManager();
 		eventManager.addEvent(bulletId, EventName.COLLISION, BulletCollision.instance);
-
 		eventManager.addEvent(bulletId, EventName.REMOVE, BulletRemove.instance);
-
 		eventManager.addEvent(bulletId, EventName.WORLD_COLLISION, BulletWorldCollision.instance);
 	}
 

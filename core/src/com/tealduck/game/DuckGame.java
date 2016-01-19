@@ -21,10 +21,16 @@ import com.tealduck.game.input.ControlMapCreator;
 import com.tealduck.game.input.controller.ControllerHelper;
 import com.tealduck.game.screen.AssetLoadingScreen;
 import com.tealduck.game.screen.DuckScreenBase;
-import com.tealduck.game.screen.GameScreen;
+import com.tealduck.game.screen.MainMenuScreen;
 
 
+// Regex for lines of code: \n[\s]*
+
+/**
+ *
+ */
 public class DuckGame extends Game {
+	public static final String GAME_TITLE = "Teal Duck Awesome Game!"; // "Game Name Goes Here!";
 	private SpriteBatch batch;
 	private AssetManager assetManager;
 	private SystemManager systemManager;
@@ -34,7 +40,8 @@ public class DuckGame extends Game {
 	private ControlMap controlMap;
 	private Controller controller;
 
-	private BitmapFont font;
+	private BitmapFont textFont;
+	private BitmapFont titleFont;
 
 	private int windowWidth;
 	private int windowHeight;
@@ -50,7 +57,6 @@ public class DuckGame extends Game {
 		Gdx.app.log("Game", "Starting game");
 
 		batch = new SpriteBatch(1000);
-		// batch.disableBlending();
 
 		assetManager = new AssetManager();
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
@@ -61,24 +67,29 @@ public class DuckGame extends Game {
 
 		guiCamera = new OrthographicCamera();
 
-		// TODO: Font size
-
-		font = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS),
+		textFont = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS),
 				Gdx.files.internal(AssetLocations.BERLIN_SANS_PNG), false);
-		font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		// safont.getData().setScale(1.5f);
+		textFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+		titleFont = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS_TITLE),
+				Gdx.files.internal(AssetLocations.BERLIN_SANS_TITLE_PNG), false);
+		titleFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		setupControllers();
 
 		controller = ControllerHelper.getFirstControllerOrNull();
 		controlMap = ControlMapCreator.newDefaultControlMap(getControllerName(controller));
 
-		// loadScreen(MainMenuScreen.class);
-		loadScreen(GameScreen.class, 1);
-		// loadScreen(WinScreen.class, new LevelOverData(1, 1200));
+		loadScreen(MainMenuScreen.class);
 	}
 
 
+	/**
+	 * Gets the name for a controller, or null if the controller is null.
+	 *
+	 * @param controller
+	 * @return name of controller or null is null
+	 */
 	private String getControllerName(Controller controller) {
 		if (controller == null) {
 			return null;
@@ -88,11 +99,30 @@ public class DuckGame extends Game {
 	}
 
 
+	/**
+	 * Load a screen with no extra data.
+	 *
+	 * @param <T>
+	 *                T extends {@link DuckScreenBase}
+	 * @param screenClass
+	 * @return the screen that was loaded
+	 * @see {@link DuckGame#loadScreen(Class, Object)}
+	 */
 	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass) {
 		return loadScreen(screenClass, null);
 	}
 
 
+	/**
+	 * Load a screen, pass extra data to it. If the screen requires the asset manager to load data, then a loading
+	 * screen shall be shown first whilst data loads in the background.
+	 *
+	 * @param <T>
+	 *                T extends {@link DuckScreenBase}
+	 * @param screenClass
+	 * @param data
+	 * @return the screen that was loaded
+	 */
 	@SuppressWarnings("unchecked")
 	public <T extends DuckScreenBase> T loadScreen(Class<T> screenClass, Object data) {
 		Gdx.app.log("Screen", "Changing screen to " + screenClass.getSimpleName());
@@ -124,8 +154,10 @@ public class DuckGame extends Game {
 	}
 
 
+	/**
+	 *
+	 */
 	public void setupControllers() {
-		// TODO: setupControllers and controller helper
 		ControllerHelper controllerHelper = new ControllerHelper();
 		Controllers.addListener(controllerHelper);
 		ControllerHelper.printControllers();
@@ -153,11 +185,9 @@ public class DuckGame extends Game {
 	}
 
 
-	public float getGameTime() {
-		return gameTime;
-	}
-
-
+	/**
+	 * @param deltaTime
+	 */
 	private void calculateFPS(float deltaTime) {
 		time += deltaTime;
 		frames += 1;
@@ -193,52 +223,99 @@ public class DuckGame extends Game {
 	}
 
 
+	/**
+	 * @return
+	 */
 	public SpriteBatch getBatch() {
 		return batch;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public OrthographicCamera getGuiCamera() {
 		return guiCamera;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public AssetManager getAssetManager() {
 		return assetManager;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public SystemManager getSystemManager() {
 		return systemManager;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public EntityEngine getEntityEngine() {
 		return entityEngine;
 	}
 
 
-	public BitmapFont getFont() {
-		return font;
+	/**
+	 * @return
+	 */
+	public BitmapFont getTextFont() {
+		return textFont;
 	}
 
 
+	/**
+	 * @return
+	 */
+	public BitmapFont getTitleFont() {
+		return titleFont;
+	}
+
+
+	/**
+	 * @return
+	 */
 	public int getWindowWidth() {
 		return windowWidth;
 	}
 
 
+	/**
+	 * @return
+	 */
+	public int getWindowHeight() {
+		return windowHeight;
+	}
+
+
+	/**
+	 * @return
+	 */
 	public ControlMap getControlMap() {
 		return controlMap;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public Controller getController() {
 		return controller;
 	}
 
 
-	public int getWindowHeight() {
-		return windowHeight;
+	/**
+	 * @return
+	 */
+	public float getGameTime() {
+		return gameTime;
 	}
+
 }

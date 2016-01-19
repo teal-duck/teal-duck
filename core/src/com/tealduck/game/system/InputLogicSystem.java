@@ -21,8 +21,10 @@ import com.tealduck.game.input.Action;
 import com.tealduck.game.input.ControlMap;
 
 
+/**
+ *
+ */
 public class InputLogicSystem extends GameSystem {
-	// TODO Clean up how InputLogicSystem knows camera
 	private final OrthographicCamera camera;
 
 
@@ -61,26 +63,34 @@ public class InputLogicSystem extends GameSystem {
 
 			int velocityLimit = 1;
 
+			// Sprinting logic:
+			// Amount of sprint left is number between 0 and maxSprintTime
+			// If the player is sprinting, decrease the number to 0
+			// If they aren't sprinting, increase the number back to full
 			if (movementComponent.sprinting) {
 				movementComponent.sprintTime -= deltaTime;
 			} else {
 				movementComponent.sprintTime += deltaTime;
 			}
-			if (movementComponent.sprintTime < 0) {
+			// If the number reaches 0, then all the sprint has been used
+			if (movementComponent.sprintTime <= 0) {
 				movementComponent.sprintTime = 0;
 				movementComponent.sprinting = false;
 				movementComponent.usedAllSprint = true;
 			}
-			if (movementComponent.sprintTime > movementComponent.maxSprintTime) {
+			// If the number reaches the max, then sprint fully recharged
+			if (movementComponent.sprintTime >= movementComponent.maxSprintTime) {
 				movementComponent.sprintTime = movementComponent.maxSprintTime;
 				movementComponent.usedAllSprint = false;
 			}
 
 			float sprintScale = 1;
 			if (controls.getStateForAction(Action.SPRINT, controller) > 0) {
+				// Player already sprinting
 				if (movementComponent.sprinting) {
 					sprintScale = movementComponent.sprintScale;
 				} else {
+					// Only allow sprinting to start if the player didn't use the charge
 					if ((movementComponent.sprintTime >= 0) && !movementComponent.usedAllSprint) {
 						movementComponent.sprinting = true;
 						sprintScale = movementComponent.sprintScale;
@@ -90,15 +100,16 @@ public class InputLogicSystem extends GameSystem {
 				movementComponent.sprinting = false;
 			}
 
+			// Add the input acceleration to the total acceleration
+			// Use limit so that if the player pressed e.g. up and right, the length of the vector is still
+			// 1, not sqrt(2)
 			Vector2 accelerationDelta = new Vector2(dx, dy);
 			accelerationDelta.limit(velocityLimit);
 			accelerationDelta.scl(movementComponent.maxSpeed * sprintScale);
 			movementComponent.acceleration.add(accelerationDelta);
 
-			// TODO: Perhaps put mouse into the input system instead of if (controller != null)
+			// Make the player look at the mouse or controller stick
 			if (controller != null) {
-				// TODO: Tidy up look at for controller
-				// TODO: Maybe smooth rotation?
 				float lookRightState = controls.getStateForAction(Action.LOOK_RIGHT, controller);
 				float lookLeftState = controls.getStateForAction(Action.LOOK_LEFT, controller);
 				float lookUpState = controls.getStateForAction(Action.LOOK_UP, controller);
@@ -118,14 +129,12 @@ public class InputLogicSystem extends GameSystem {
 				Vector2 posInWorld = new Vector2(posInWorld3.x, posInWorld3.y);
 
 				Vector2 entityCenter = positionComponent.getCenter();
-				// .position.cpy().add(32, 32);
 
 				positionComponent.lookAt.set(posInWorld.cpy().sub(entityCenter).nor());
 			}
 
 			positionComponent.lookAt.nor();
 
-			// TODO: Move weapon logic into its own system
 			if (entityManager.entityHasComponent(entity, WeaponComponent.class)) {
 				WeaponComponent weaponComponent = entityManager.getComponent(entity,
 						WeaponComponent.class);
@@ -134,11 +143,10 @@ public class InputLogicSystem extends GameSystem {
 
 				float fireState = controls.getStateForAction(Action.FIRE, controller);
 
-				if ((fireState != 0) || Gdx.input.isButtonPressed(0)) {
-					// TODO: Calculate position to shoot from
+				if ((fireState > 0) || Gdx.input.isButtonPressed(0)) {
 					Vector2 shootPosition = positionComponent.getCenter();
-					// .position.cpy();
 					Vector2 shootDirection = positionComponent.lookAt.cpy().nor();
+					// Add scaled direction to position so bullets come out of beak
 					shootPosition.mulAdd(shootDirection, 20f);
 
 					Team team = null;
@@ -151,7 +159,7 @@ public class InputLogicSystem extends GameSystem {
 				}
 
 				float reloadState = controls.getStateForAction(Action.RELOAD, controller);
-				if (reloadState != 0) {
+				if (reloadState > 0) {
 					weaponComponent.startReloading();
 				}
 			}

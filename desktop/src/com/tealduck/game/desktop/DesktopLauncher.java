@@ -10,16 +10,16 @@ public class DesktopLauncher {
 	public static void main(String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-		config.title = "Teal Duck Awesome Game";
+		config.title = DuckGame.GAME_TITLE; // "Teal Duck Awesome Game";
 		config.x = -1;
 		config.y = -1;
 		config.width = 64 * 10;
-		config.height = 64 * 8;
+		config.height = 64 * 8 + 0;
 		config.useGL30 = false;
 		config.allowSoftwareMode = true;
 		config.vSyncEnabled = true;
 		config.foregroundFPS = 60;
-		config.backgroundFPS = 30;
+		config.backgroundFPS = 60;
 
 		// config.resizable = false;
 		// FileType fileType = FileType.Local;

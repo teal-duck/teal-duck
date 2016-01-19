@@ -13,6 +13,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.tealduck.game.engine.EntityEngine;
 
 
+/**
+ *
+ */
 public class World {
 	private final EntityEngine entityEngine;
 	private final TiledMap tiledMap;
@@ -25,6 +28,10 @@ public class World {
 	private HashMap<String, ArrayList<Vector2>> patrolRoutes;
 
 
+	/**
+	 * @param entityEngine
+	 * @param tiledMap
+	 */
 	public World(EntityEngine entityEngine, TiledMap tiledMap) {
 		this.entityEngine = entityEngine;
 		this.tiledMap = tiledMap;
@@ -39,16 +46,26 @@ public class World {
 	}
 
 
+	/**
+	 * @param routeName
+	 * @return
+	 */
 	public ArrayList<Vector2> getPatrolRoute(String routeName) {
 		return patrolRoutes.get(routeName);
 	}
 
 
+	/**
+	 * @return
+	 */
 	public HashMap<String, ArrayList<Vector2>> getPatrolRoutes() {
 		return patrolRoutes;
 	}
 
 
+	/**
+	 * @param patrolRoutes
+	 */
 	public void addPatrolRoutes(HashMap<String, ArrayList<Vector2>> patrolRoutes) {
 		this.patrolRoutes.putAll(patrolRoutes);
 	}
@@ -79,51 +96,94 @@ public class World {
 	}
 
 
+	/**
+	 * @param pixelX
+	 * @return
+	 */
 	public int xPixelToTile(float pixelX) {
 		return MathUtils.floor(pixelX / tileWidth);
 	}
 
 
+	/**
+	 * @param pixelY
+	 * @return
+	 */
 	public int yPixelToTile(float pixelY) {
 		return MathUtils.floor(pixelY / tileHeight);
 	}
 
 
+	/**
+	 * @param pixelX
+	 * @return
+	 */
 	public float xPixelToTileExact(float pixelX) {
 		return pixelX / tileWidth;
 	}
 
 
+	/**
+	 * @param pixelY
+	 * @return
+	 */
 	public float yPixelToTileExact(float pixelY) {
 		return pixelY / tileHeight;
 	}
 
 
+	/**
+	 * @param tileX
+	 * @return
+	 */
 	public float xTileToPixel(float tileX) {
 		return tileX * tileWidth;
 	}
 
 
+	/**
+	 * @param tileY
+	 * @return
+	 */
 	public float yTileToPixel(float tileY) {
 		return tileY * tileHeight;
 	}
 
 
+	/**
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public Vector2 pixelToTile(float x, float y) {
 		return new Vector2(xPixelToTile(x), yPixelToTile(y));
 	}
 
 
+	/**
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public Vector2 pixelToTileExact(float x, float y) {
 		return new Vector2(xPixelToTileExact(x), yPixelToTileExact(y));
 	}
 
 
+	/**
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public Vector2 tileToPixel(float x, float y) {
 		return new Vector2(xTileToPixel(x), yTileToPixel(y));
 	}
 
 
+	/**
+	 * @param pixel
+	 * @return
+	 */
 	public Vector2 pixelToTile(Vector2 pixel) {
 		if (pixel == null) {
 			throw new IllegalArgumentException("pixel is null");
@@ -132,6 +192,10 @@ public class World {
 	}
 
 
+	/**
+	 * @param pixel
+	 * @return
+	 */
 	public Vector2 pixelToTileExact(Vector2 pixel) {
 		if (pixel == null) {
 			throw new IllegalArgumentException("pixel is null");
@@ -140,6 +204,10 @@ public class World {
 	}
 
 
+	/**
+	 * @param tile
+	 * @return
+	 */
 	public Vector2 tileToPixel(Vector2 tile) {
 		if (tile == null) {
 			throw new IllegalArgumentException("tile is null");
@@ -148,41 +216,68 @@ public class World {
 	}
 
 
+	/**
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public boolean isPixelCollidable(float x, float y) {
 		return isTileCollidable(xPixelToTile(x), yPixelToTile(y));
 	}
 
 
+	/**
+	 * @param pixel
+	 * @return
+	 */
 	public boolean isPixelCollidable(Vector2 pixel) {
 		return isPixelCollidable(pixel.x, pixel.y);
 	}
 
 
+	/**
+	 * @return
+	 */
 	public TiledMap getTiledMap() {
 		return tiledMap;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public EntityEngine getEntityEngine() {
 		return entityEngine;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public int getMapWidth() {
 		return mapWidth;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public int getMapHeight() {
 		return mapHeight;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public int getTileWidth() {
 		return tileWidth;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public int getTileHeight() {
 		return tileHeight;
 	}

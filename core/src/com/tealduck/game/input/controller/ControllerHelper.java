@@ -9,7 +9,14 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 
+/**
+ *
+ */
 public class ControllerHelper extends ControllerAdapter {
+	/**
+	 * @param controller
+	 * @return
+	 */
 	public int indexOf(Controller controller) {
 		return Controllers.getControllers().indexOf(controller, true);
 	}
@@ -54,33 +61,38 @@ public class ControllerHelper extends ControllerAdapter {
 
 	@Override
 	public boolean povMoved(Controller controller, int povIndex, PovDirection value) {
-		System.out.println("Controller #" + indexOf(controller) + ", pov " + povIndex + ": " + value);
+		// System.out.println("Controller #" + indexOf(controller) + ", pov " + povIndex + ": " + value);
 		return false;
 	}
 
 
 	@Override
 	public boolean xSliderMoved(Controller controller, int sliderIndex, boolean value) {
-		System.out.println("Controller #" + indexOf(controller) + ", X slider " + sliderIndex + ": " + value);
+		// System.out.println("Controller #" + indexOf(controller) + ", X slider " + sliderIndex + ": " +
+		// value);
 		return false;
 	}
 
 
 	@Override
 	public boolean ySliderMoved(Controller controller, int sliderIndex, boolean value) {
-		System.out.println("Controller #" + indexOf(controller) + ", Y slider " + sliderIndex + ": " + value);
+		// System.out.println("Controller #" + indexOf(controller) + ", Y slider " + sliderIndex + ": " +
+		// value);
 		return false;
 	}
 
 
 	@Override
 	public boolean accelerometerMoved(Controller controller, int accelerometerIndex, Vector3 value) {
-		System.out.println("Controller #" + indexOf(controller) + ", accelerometer " + accelerometerIndex + ": "
-				+ value);
+		// System.out.println("Controller #" + indexOf(controller) + ", accelerometer " + accelerometerIndex +
+		// ": " + value);
 		return false;
 	}
 
 
+	/**
+	 *
+	 */
 	public static void printControllers() {
 		int i = 0;
 		for (Controller c : Controllers.getControllers()) {
@@ -94,6 +106,9 @@ public class ControllerHelper extends ControllerAdapter {
 	}
 
 
+	/**
+	 * @return
+	 */
 	public static Controller getFirstControllerOrNull() {
 		Array<Controller> controllers = Controllers.getControllers();
 		Controller controller = (controllers.size > 0) ? controllers.first() : null;

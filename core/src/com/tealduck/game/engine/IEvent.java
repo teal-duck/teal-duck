@@ -1,6 +1,9 @@
 package com.tealduck.game.engine;
 
 
+/**
+ *
+ */
 public interface IEvent {
 	/**
 	 * @param entityEngine
