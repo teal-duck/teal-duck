@@ -9,7 +9,11 @@ import com.tealduck.game.collision.AABB;
 import com.tealduck.game.collision.Circle;
 import com.tealduck.game.collision.Collision;
 
-
+/* 
+ * This test class fails, due to known bugs.
+ * We were unfortunately unable to fix bugs in time for ship date,
+ * but from visual tests, these bugs do not seem to impact game in current state.
+ */
 public class CollisionTest {
 	private static final double DELTA = 1e-4;
 
@@ -132,8 +136,8 @@ public class CollisionTest {
 		circle = new Circle(new Vector2(), 1);
 		
 		// These tests fail. due to bug. See TODO in Collision.java at line 73
-		//Assert.assertEquals(1, Collision.circleToAabb(circle, aabb).normal.x, DELTA);
-		//Assert.assertEquals(0, Collision.circleToAabb(circle, aabb).normal.y, DELTA);
+		Assert.assertEquals(1, Collision.circleToAabb(circle, aabb).normal.x, DELTA);
+		Assert.assertEquals(0, Collision.circleToAabb(circle, aabb).normal.y, DELTA);
 	}
 
 
