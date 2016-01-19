@@ -71,16 +71,19 @@ public class DuckGame extends Game {
 				Gdx.files.internal(AssetLocations.BERLIN_SANS_PNG), false);
 		textFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-		// TODO: Second font for titles
-		titleFont = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS),
-				Gdx.files.internal(AssetLocations.BERLIN_SANS_PNG), false);
+		titleFont = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS_TITLE),
+				Gdx.files.internal(AssetLocations.BERLIN_SANS_TITLE_PNG), false);
 		titleFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		titleFont.getData().setScale(1.5f);
 
 		setupControllers();
 
 		controller = ControllerHelper.getFirstControllerOrNull();
-		controlMap = ControlMapCreator.newDefaultControlMap(getControllerName(controller));
+		String controllerName = getControllerName(controller);
+		controlMap = ControlMapCreator.newDefaultControlMap(controllerName);
+		if (!ControlMapCreator.isControllerKnown(controllerName)) {
+			controller = null;
+			Gdx.app.log("Controller", "Controller not known");
+		}
 
 		loadScreen(MainMenuScreen.class);
 	}

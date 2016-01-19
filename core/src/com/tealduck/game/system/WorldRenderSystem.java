@@ -272,6 +272,7 @@ public class WorldRenderSystem extends GameSystem {
 		EntityManager entityManager = getEntityManager();
 
 		fbo.begin();
+
 		clearScreen();
 		batch.setProjectionMatrix(camera.combined);
 		batch.setShader(renderLightShader);

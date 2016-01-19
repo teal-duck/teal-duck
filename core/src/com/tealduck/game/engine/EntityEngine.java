@@ -49,7 +49,7 @@ public class EntityEngine {
 		entitiesToRemove.add(entity);
 	}
 	
-	
+
 	/**
 	 * @param entity
 	 * @return
@@ -74,8 +74,7 @@ public class EntityEngine {
 	 * @param entity
 	 */
 	private void removeEntity(int entity) {
-		entityManager.removeEntity(entity);
-		entityTagManager.removeTagsAssociatedWithEntity(entity);
+		entityManager.removeEntityWithTag(entity, entityTagManager);
 		eventManager.removeEventsForEntity(entity);
 	}
 
