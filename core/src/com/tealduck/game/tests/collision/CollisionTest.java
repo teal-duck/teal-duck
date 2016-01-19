@@ -9,7 +9,11 @@ import com.tealduck.game.collision.AABB;
 import com.tealduck.game.collision.Circle;
 import com.tealduck.game.collision.Collision;
 
-
+/* 
+ * This test class fails, due to known bugs.
+ * We were unfortunately unable to fix bugs in time for ship date,
+ * but from visual tests, these bugs do not seem to impact game in current state.
+ */
 public class CollisionTest {
 	private static final double DELTA = 1e-4;
 

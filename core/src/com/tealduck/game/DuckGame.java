@@ -71,11 +71,9 @@ public class DuckGame extends Game {
 				Gdx.files.internal(AssetLocations.BERLIN_SANS_PNG), false);
 		textFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-		// TODO: Second font for titles
 		titleFont = new BitmapFont(Gdx.files.internal(AssetLocations.BERLIN_SANS_TITLE),
 				Gdx.files.internal(AssetLocations.BERLIN_SANS_TITLE_PNG), false);
 		titleFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		//titleFont.getData().setScale(1.5f);
 
 		setupControllers();
 
