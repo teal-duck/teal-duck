@@ -75,8 +75,7 @@ public class Collision {
 		// Bug here. If x == (left or right) or y == (top or bottom), closer and further will
 		// be equal. This can make methods calling this method believe
 		// objects do not intersect, when they actually do.
-		// This bug does not appear to negatively affect gameplay in current
-		// build.
+		// This bug does not appear to negatively affect gameplay in current build.
 
 		if (x < left) {
 			closer.x = left;
@@ -110,11 +109,15 @@ public class Collision {
 	public static Vector2 vectorFromCenterOfAABBToEdge(AABB aabb, Vector2 pointInAABB) {
 		// http://stackoverflow.com/questions/3180000/calculate-a-vector-from-a-point-in-a-rectangle-to-edge-based-on-angle
 
-		// TODO: Bug
-		// If pointInAABB == aabb.center, then method will return (0, 0)
-		// Might be correct functionality here, but results in bug in
-		// circleToAabb
-		Vector2 vec = pointInAABB.cpy().sub(aabb.getCenter());
+		Vector2 vec;
+		
+		if (aabb.getCenter().equals(pointInAABB)) {
+		    vec = new Vector2(1, 0);
+		}
+		else {
+		    vec = pointInAABB.cpy().sub(aabb.getCenter());
+		}
+		
 		float angle = vec.angleRad();
 
 		float cosAngle = Math.abs(MathUtils.cos(angle));
