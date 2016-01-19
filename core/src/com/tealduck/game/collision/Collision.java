@@ -69,15 +69,14 @@ public class Collision {
 		float right = aabb.getRight();
 		float top = aabb.getTop();
 		float bottom = aabb.getBottom();
-		
+
 		// TODO: FIX BUG
 		// Bug here. If x == left or y == bottom, closer and further will
-		// be equal. This can make methods calling this method believe 
+		// be equal. This can make methods calling this method believe
 		// objects do not intersect, when they actually do.
 		// This bug does not appear to negatively affect gameplay in current
 		// build.
-		
-		
+
 		if (x < left) {
 			closer.x = left;
 			further.x = right;
@@ -152,7 +151,7 @@ public class Collision {
 		Vector2 circleExtents = projection.cpy().scl(circle.getRadius());
 		Vector2 circleCloser = circle.getCenter().cpy().sub(circleExtents);
 		Vector2 circleFurther = circle.getCenter().cpy().add(circleExtents);
-		
+
 		float overlap = Collision.getOverlapForPointsOnLine(projection, furtherPoint, closerPoint, circleCloser,
 				circleFurther);
 

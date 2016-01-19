@@ -1,5 +1,6 @@
 package com.tealduck.game.tests.pickup;
 
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,11 +10,13 @@ import com.tealduck.game.engine.EntityManager;
 import com.tealduck.game.pickup.AmmoPickup;
 import com.tealduck.game.weapon.MachineGun;
 
+
 public class AmmoPickupTest {
 	private EntityManager entityManager;
 	private int entityWithWeapon;
 	private int entityWithoutWeapon;
 	private AmmoPickup ammoPickup;
+
 
 	@Before
 	public void setup() {
@@ -24,6 +27,7 @@ public class AmmoPickupTest {
 		ammoPickup = new AmmoPickup(5);
 		// sould add 5 ammo, 5 ammo in pickup, words.
 	}
+
 
 	@Test
 	public void testAmmoPickup() {
