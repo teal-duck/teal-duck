@@ -1,9 +1,9 @@
 package com.tealduck.game.tests.engine;
 
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import com.tealduck.game.engine.EntityEngine;
 import com.tealduck.game.engine.EntityManager;
@@ -89,7 +89,8 @@ public class EventManagerTest {
 		// Event is removed, so test should not fail
 		eventManager.triggerEvent(entity2, entity1, testEvent1Name);
 	}
-	
+
+
 	@Test
 	public void testRemoveEventsForEntity() {
 		EntityManager entityManager = entityEngine.getEntityManager();

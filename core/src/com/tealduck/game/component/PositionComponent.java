@@ -51,7 +51,7 @@ public class PositionComponent extends Component {
 	 * @return
 	 */
 	public Vector2 getCenter() {
-		return position.cpy().add(size.cpy().scl((float) 0.5));
+		return position.cpy().add(size.cpy().scl(0.5f));
 	}
 
 

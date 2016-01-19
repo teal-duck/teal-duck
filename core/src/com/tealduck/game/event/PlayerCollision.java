@@ -10,7 +10,7 @@ import com.tealduck.game.engine.IEvent;
 
 
 /**
- * 
+ *
  */
 public class PlayerCollision implements IEvent {
 	public static final PlayerCollision instance = new PlayerCollision();

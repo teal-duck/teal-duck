@@ -15,7 +15,7 @@ import com.tealduck.game.engine.IEvent;
 
 
 /**
- * 
+ *
  */
 public class EnemyCollision implements IEvent {
 	public static final EnemyCollision instance = new EnemyCollision();
