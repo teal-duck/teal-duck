@@ -167,12 +167,21 @@ public class CollisionTest {
 
 	@Test
 	public void testCircleToCircle() {
-
-	}
-
-
-	@Test
-	public void testShapeToShape() {
-
+		Circle c0 = new Circle(new Vector2(1.5f, 1), 1);
+		Circle c1 = new Circle(new Vector2(1, 1), 1);
+		
+		Assert.assertEquals(1, Collision.circleToCircle(c0, c1).normal.x, DELTA);
+		Assert.assertEquals(0, Collision.circleToCircle(c0, c1).normal.y, DELTA);
+		Assert.assertEquals(1.5, Collision.circleToCircle(c0, c1).distance, DELTA);
+		
+		c0 = new Circle(new Vector2(1, 1.5f), 1);
+		Assert.assertEquals(0, Collision.circleToCircle(c0, c1).normal.x, DELTA);
+		Assert.assertEquals(1, Collision.circleToCircle(c0, c1).normal.y, DELTA);
+		Assert.assertEquals(1.5, Collision.circleToCircle(c0, c1).distance, DELTA);
+		
+		c0 = new Circle(new Vector2(1.5f, 1.5f), 1);
+		Assert.assertEquals(Math.sqrt(2)/2, Collision.circleToCircle(c0, c1).normal.x, DELTA);
+		Assert.assertEquals(Math.sqrt(2)/2, Collision.circleToCircle(c0, c1).normal.x, DELTA);
+		Assert.assertEquals(2 - Math.sqrt(0.5), Collision.circleToCircle(c0, c1).distance, DELTA);
 	}
 }
