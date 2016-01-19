@@ -13,7 +13,7 @@ public class EntityConstants {
 
 	public static final float PLAYER_SPEED = 2400.0f;
 	public static final float PLAYER_SPRINT = 1.8f;
-	public static final float PLAYER_SPRINT_TIME = 1000; // 3f;
+	public static final float PLAYER_SPRINT_TIME = 3f;
 	public static final float PLAYER_RADIUS = 20;
 
 	public static final float ENEMY_SPEED = 1800.0f;
