@@ -171,6 +171,7 @@ public class Collision {
 
 	/**
 	 * Normal returned is for pushing b0 out of b1. Null if no intersection.
+	 * Never returns a diagonal vector. If distance to push is same in both axes, prefers x.
 	 *
 	 * @param b0
 	 * @param b1
