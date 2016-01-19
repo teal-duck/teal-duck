@@ -34,6 +34,8 @@ public class AssetLocations {
 	public static final String FONTS = "fonts/";
 	public static final String BERLIN_SANS = AssetLocations.FONTS + "berlin-sans.fnt";
 	public static final String BERLIN_SANS_PNG = AssetLocations.FONTS + "berlin-sans.png";
+	public static final String BERLIN_SANS_TITLE = AssetLocations.FONTS + "berlin-sans-title.fnt";
+	public static final String BERLIN_SANS_TITLE_PNG = AssetLocations.FONTS + "berlin-sans-title.png";
 
 
 	private AssetLocations() {
