@@ -34,6 +34,7 @@ import com.tealduck.game.component.KnockbackComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PatrolRouteComponent;
 import com.tealduck.game.component.PickupComponent;
+import com.tealduck.game.component.PointLightComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.ScoreComponent;
 import com.tealduck.game.component.SpriteComponent;
@@ -464,6 +465,8 @@ public class EntityLoader {
 		entityManager.addComponent(goalId,
 				new PositionComponent(position, new Vector2(1, 0), new Vector2(64, 64)));
 		EntityLoader.addEntityAABBCollisionComponent(entityManager, goalId, position, new Vector2(64, 64));
+
+		entityManager.addComponent(goalId, new PointLightComponent(256));
 
 		return goalId;
 	}

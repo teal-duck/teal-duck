@@ -24,6 +24,7 @@ public class AssetLocations {
 	public static final String HEALTH_PICKUP = AssetLocations.PICKUP_DIR + "health_64x64.png";
 
 	public static final String CONE_LIGHT = AssetLocations.LIGHT_DIR + "cone_light_test_512x512.png";
+	public static final String POINT_LIGHT = AssetLocations.LIGHT_DIR + "point_light_512x512.png";
 
 	public static final String GRID = AssetLocations.WORLD + "grid_64x64.png";
 
