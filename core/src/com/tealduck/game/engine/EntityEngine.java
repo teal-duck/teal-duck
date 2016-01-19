@@ -48,6 +48,15 @@ public class EntityEngine {
 	public void flagEntityToRemove(int entity) {
 		entitiesToRemove.add(entity);
 	}
+	
+	
+	/**
+	 * @param entity
+	 * @return
+	 */
+	public boolean isEntityFlaggedToRemove(int entity) {
+		return entitiesToRemove.contains(entity);
+	}
 
 
 	/**

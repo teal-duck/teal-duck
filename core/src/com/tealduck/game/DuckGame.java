@@ -48,7 +48,7 @@ public class DuckGame extends Game {
 
 	private float time = 0;
 	private int frames = 0;
-	private boolean logFPS = true;
+	private boolean logFPS = false;
 	private float gameTime = 0;
 
 
