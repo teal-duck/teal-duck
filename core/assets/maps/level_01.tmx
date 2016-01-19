@@ -39,6 +39,7 @@
  </layer>
  <objectgroup name="Entities" width="64" height="64">
   <object name="Player" type="Player" gid="73" x="1728" y="4096"/>
+  <object name="Goal" type="Goal" gid="75" x="1344" y="3456"/>
  </objectgroup>
  <objectgroup name="Lines" width="64" height="64"/>
 </map>
