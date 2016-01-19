@@ -93,7 +93,11 @@ public class MachineGun extends Weapon {
 		entityManager.addComponent(bulletId,
 				new MovementComponent(direction.cpy().scl(bulletSpeed), bulletSpeed, 1));
 
-		entityManager.addComponent(bulletId, new SpriteComponent(bulletTexture));
+		// Allows tests to work without having to load bullet texture
+		if (bulletTexture != null) {
+			entityManager.addComponent(bulletId, new SpriteComponent(bulletTexture));
+		}
+
 		entityManager.addComponent(bulletId, new BulletComponent(shooterId));
 		entityManager.addComponent(bulletId, new KnockbackComponent(EntityConstants.BULLET_KNOCKBACK_FORCE));
 		entityManager.addComponent(bulletId, new DamageComponent(1));

@@ -61,6 +61,7 @@ public class EntityManager {
 		return id;
 	}
 
+
 	/**
 	 * Removes an entity and its associated tags and components.
 	 *

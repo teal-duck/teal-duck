@@ -74,7 +74,7 @@ public class GameScreen extends DuckScreenBase {
 	private int previousScore;
 	private String levelAssetName;
 
-	private boolean pauseOnLoseFocus = true;
+	private boolean pauseOnLoseFocus = false;
 
 
 	/**
@@ -119,6 +119,7 @@ public class GameScreen extends DuckScreenBase {
 		assetManager.load(AssetLocations.AMMO_PICKUP, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.HEALTH_PICKUP, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.CONE_LIGHT, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.POINT_LIGHT, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.HEALTH_BAR, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.AMMO_BAR, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.RELOADING, Texture.class, textureParameter);
@@ -147,6 +148,7 @@ public class GameScreen extends DuckScreenBase {
 		textureMap.putTextureFromAssetManager(AssetLocations.AMMO_PICKUP, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.HEALTH_PICKUP, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.CONE_LIGHT, assetManager);
+		textureMap.putTextureFromAssetManager(AssetLocations.POINT_LIGHT, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.HEALTH_BAR, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.AMMO_BAR, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.RELOADING, assetManager);

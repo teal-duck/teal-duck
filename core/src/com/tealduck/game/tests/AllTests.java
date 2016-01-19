@@ -27,8 +27,7 @@ import com.tealduck.game.tests.pickup.HealthPickupTest;
 @SuiteClasses({ AABBTest.class, CircleTest.class, CollisionTest.class, IntersectionTest.class,
 		PatrolRouteComponentTest.class, PositionComponentTest.class, ScoreComponentTest.class,
 		WeaponComponentTest.class, EntityEngineTest.class, EntityManagerTest.class, EntityTagManagerTest.class,
-		EventManagerTest.class, SystemManagerTest.class, AmmoPickupTest.class, HealthPickupTest.class
-		})
+		EventManagerTest.class, SystemManagerTest.class, AmmoPickupTest.class, HealthPickupTest.class })
 
 public class AllTests {
 

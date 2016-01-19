@@ -90,7 +90,7 @@ public class CollisionEvents {
 	 * @param receiver
 	 * @param intersection
 	 */
-	private static void pushEntitiesApart(EntityManager entityManager, int sender, int receiver,
+	public static void pushEntitiesApart(EntityManager entityManager, int sender, int receiver,
 			Intersection intersection) {
 		if (entityManager.entityHasComponent(receiver, MovementComponent.class)
 				&& entityManager.entityHasComponent(sender, MovementComponent.class)) {
@@ -129,6 +129,8 @@ public class CollisionEvents {
 				if (entityManager.entityHasComponent(sender, BulletComponent.class)) {
 					EventManager eventManager = entityEngine.getEventManager();
 					eventManager.triggerEvent(receiver, sender, EventName.REMOVE);
+					// untestable due to time constraints. Works though, just look at what happens
+					// to bullets when they hit things.
 				}
 			}
 		}
@@ -148,7 +150,10 @@ public class CollisionEvents {
 		} else if (entityManager.entityHasComponent(killerEntity, BulletComponent.class)) {
 			int shooterEntity = entityManager.getComponent(killerEntity, BulletComponent.class).shooterId;
 			CollisionEvents.handleScoreForEntityDeath(entityManager, shooterEntity, deadEntity);
-		}
+		} // If entity that gets kill does not have a score component, if a bullet was responsible for the kill,
+			// get the shooterID from the bullet,
+			// and recurse to see if the shooter had a score component. If no score component, end without
+			// assigning score.
 	}
 
 

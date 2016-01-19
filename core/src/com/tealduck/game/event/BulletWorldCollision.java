@@ -27,7 +27,7 @@ public class BulletWorldCollision implements IEvent {
 	public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
 		if (reflectingBullets) {
 			if (data instanceof Intersection) {
-				// r = d − 2 * (d . n) * n
+				// r = d - 2 * (d . n) * n
 				Intersection intersection = (Intersection) data;
 
 				MovementComponent movementComponent = entityEngine.getEntityManager()

@@ -30,6 +30,7 @@ import com.tealduck.game.component.CollisionComponent;
 import com.tealduck.game.component.HealthComponent;
 import com.tealduck.game.component.MovementComponent;
 import com.tealduck.game.component.PickupComponent;
+import com.tealduck.game.component.PointLightComponent;
 import com.tealduck.game.component.PositionComponent;
 import com.tealduck.game.component.SpriteComponent;
 import com.tealduck.game.component.ViewconeComponent;
@@ -55,6 +56,7 @@ public class WorldRenderSystem extends GameSystem {
 	private Batch batch;
 
 	private Texture coneTexture;
+	private Texture pointTexture;
 	private FrameBuffer fbo;
 	private ShaderProgram renderLightShader;
 	private ShaderProgram renderWorldShader;
@@ -112,6 +114,7 @@ public class WorldRenderSystem extends GameSystem {
 		shapeRenderer = new ShapeRenderer();
 
 		coneTexture = textureMap.getTexture(AssetLocations.CONE_LIGHT);
+		pointTexture = textureMap.getTexture(AssetLocations.POINT_LIGHT);
 
 		ShaderProgram.pedantic = false;
 		renderLightShader = new ShaderProgram(vertexShader, renderLightPixelShader);
@@ -277,6 +280,8 @@ public class WorldRenderSystem extends GameSystem {
 		batch.setProjectionMatrix(camera.combined);
 		batch.setShader(renderLightShader);
 		batch.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.setColor(1, 1, 1, 1);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 
 		int lightSize = 512;
@@ -342,6 +347,20 @@ public class WorldRenderSystem extends GameSystem {
 						coneOriginY, lightSize, lightSize, lightScale, lightScale, angle + 90f,
 						0, 0, lightSize, lightSize, false, false);
 			}
+		}
+
+		entities = getEntityManager().getEntitiesWithComponents(PositionComponent.class,
+				PointLightComponent.class);
+		for (int entity : entities) {
+			Vector2 centre = getEntityManager().getComponent(entity, PositionComponent.class).getCenter();
+			float radius = getEntityManager().getComponent(entity, PointLightComponent.class).radius;
+			float x = centre.x - (radius / 2);
+			float y = centre.y - (radius / 2);
+			;
+			float w = radius;
+			float h = radius;
+
+			batch.draw(pointTexture, x, y, w, h);
 		}
 
 		batch.end();
