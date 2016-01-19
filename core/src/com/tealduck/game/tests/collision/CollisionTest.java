@@ -132,8 +132,8 @@ public class CollisionTest {
 		circle = new Circle(new Vector2(), 1);
 		
 		// These tests fail. due to bug. See TODO in Collision.java at line 73
-		//Assert.assertEquals(1, Collision.circleToAabb(circle, aabb).normal.x, DELTA);
-		//Assert.assertEquals(0, Collision.circleToAabb(circle, aabb).normal.y, DELTA);
+		Assert.assertEquals(1, Collision.circleToAabb(circle, aabb).normal.x, DELTA);
+		Assert.assertEquals(0, Collision.circleToAabb(circle, aabb).normal.y, DELTA);
 	}
 
 
