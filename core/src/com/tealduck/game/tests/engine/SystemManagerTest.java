@@ -41,7 +41,6 @@ public class SystemManagerTest {
 		String managerBeforeAdd = systemManager.toString();
 		systemManager.addSystem(testSystem, 0);
 		String managerAfterAdd = systemManager.toString();
-
 		Assert.assertNotEquals(managerBeforeAdd, managerAfterAdd);
 	}
 
@@ -50,7 +49,6 @@ public class SystemManagerTest {
 	public void testGetSystem() {
 		TestSystem testSystem = new TestSystem(entityEngine);
 		systemManager.addSystem(testSystem, 0);
-		System.out.println(systemManager);
 		Assert.assertEquals(testSystem, systemManager.getSystemOfType(TestSystem.class));
 
 	}

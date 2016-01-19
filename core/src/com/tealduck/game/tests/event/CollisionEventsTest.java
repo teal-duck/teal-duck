@@ -82,7 +82,6 @@ public class CollisionEventsTest {
 		Intersection intersection2 = new Intersection(new Vector2(0, 1), 15f);
 
 		entityManager.addComponent(e3, new ChaseComponent());
-		System.out.println(entityManager.getComponent(e3, ChaseComponent.class).searchDirection);
 		CollisionEvents.handleKnockback(entityManager, e2, e3, intersection2);
 		// System.out.println(entityManager.getComponent(e2, MovementComponent.class).acceleration);
 		// System.out.println(entityManager.getComponent(e3,MovementComponent.class).acceleration);

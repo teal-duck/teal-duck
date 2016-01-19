@@ -33,8 +33,6 @@ public class EventManagerTest {
 		IEvent testEvent1 = new IEvent() {
 			@Override
 			public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
-				System.out.println("[Test event 1] Receiver " + receiver + " got event from sender "
-						+ sender);
 				return false;
 			}
 		};
@@ -44,13 +42,9 @@ public class EventManagerTest {
 		IEvent testEvent2 = new IEvent() {
 			@Override
 			public boolean fire(EntityEngine entityEngine, int sender, int receiver, Object data) {
-				System.out.println("[Test event 2] Receiver " + receiver + " got event from sender "
-						+ sender);
-
 				// This event should never be triggered
 				Assert.fail();
 				return false;
-
 			}
 		};
 		eventManager.addEvent(entity2, testEvent2Name, testEvent2);
