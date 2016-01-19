@@ -280,6 +280,8 @@ public class WorldRenderSystem extends GameSystem {
 		batch.setProjectionMatrix(camera.combined);
 		batch.setShader(renderLightShader);
 		batch.begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.setColor(1, 1, 1, 1);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 
 		int lightSize = 512;

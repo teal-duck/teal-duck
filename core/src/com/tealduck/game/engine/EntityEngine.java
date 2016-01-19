@@ -48,7 +48,7 @@ public class EntityEngine {
 	public void flagEntityToRemove(int entity) {
 		entitiesToRemove.add(entity);
 	}
-
+	
 
 	/**
 	 * @param entity

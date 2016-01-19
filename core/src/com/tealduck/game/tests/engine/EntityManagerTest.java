@@ -62,6 +62,8 @@ public class EntityManagerTest {
 	@Test
 	public void testRemoveEntityWithTag() {
 		int entity1 = entityManager.createEntityWithTag(entityTagManager, "TAG1");
+		@SuppressWarnings("unused")
+		int entity2 = entityManager.createEntityWithTag(entityTagManager, "TAG2");
 		int removedEntity = entityManager.removeEntityWithTag(entity1, entityTagManager);
 
 		Assert.assertEquals(entity1, removedEntity);

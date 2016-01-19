@@ -5,7 +5,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector2;
+import com.tealduck.game.AssetLocations;
 import com.tealduck.game.Team;
 import com.tealduck.game.component.WeaponComponent;
 import com.tealduck.game.engine.EntityEngine;
@@ -27,6 +33,7 @@ public class WeaponComponentTest {
 
 	@Test
 	public void testFireWeapon() {
+		
 		MachineGun machineGun = new MachineGun(null);
 		WeaponComponent weaponComponent = new WeaponComponent(machineGun, 10, 10);
 		EntityEngine entityEngine = new EntityEngine();
@@ -34,23 +41,40 @@ public class WeaponComponentTest {
 		int shooter = entityManager.createEntity();
 		weaponComponent.cooldownTime = 0;
 		Team team = Team.GOOD;
-		Vector2 position = new Vector2(0, 0);
-		Vector2 direction = new Vector2(0, 9);
-
-		weaponComponent.fireWeapon(entityEngine, shooter, position, direction, team); // breaks here. Too tired
-												// to figure out. Ask
-												// Ben in morning.
-
-		Assert.assertEquals(weaponComponent.cooldownTime, 0.15f, WeaponComponentTest.DELTA);
+		Vector2 position = new Vector2(0,0);
+		Vector2 direction = new Vector2(0,9);
+		
+		weaponComponent.fireWeapon(entityEngine, shooter, position, direction, team); 
+		
+		Assert.assertEquals(weaponComponent.cooldownTime, 0.15f, DELTA);
 		Assert.assertEquals(weaponComponent.ammoInClip, 9);
-		Assert.assertEquals(weaponComponent.fireLocation, new Vector2(0, 0));
-		Assert.assertEquals(weaponComponent.fireDirection, new Vector2(0, 9));
+		// System.out.println(weaponComponent.fireLocation);
+		Assert.assertEquals(weaponComponent.fireLocation, new Vector2(-32, -32));
+		Assert.assertEquals(weaponComponent.fireDirection, new Vector2(0,9).nor());
+		
+		//check no fire when cooldown
+		weaponComponent.fireWeapon(entityEngine, shooter, position, direction, team); 
+		Assert.assertEquals(weaponComponent.cooldownTime, 0.15f, DELTA);
+		Assert.assertEquals(weaponComponent.ammoInClip, 9);
+		Assert.assertEquals(weaponComponent.fireLocation, new Vector2(-32, -32));
+		Assert.assertEquals(weaponComponent.fireDirection, new Vector2(0,9).nor());
+		
+		//test reloads when no ammo in clip
+		weaponComponent.cooldownTime = 0;
+		weaponComponent.ammoInClip = 0;
+		weaponComponent.reloadTime = 0;
+		weaponComponent.fireWeapon(entityEngine, shooter, position, direction, team); 
+		Assert.assertEquals(weaponComponent.reloadTime, 4f, DELTA);
+		
+		//test stops reloading to shoot
+		weaponComponent.cooldownTime = 0;
+		weaponComponent.ammoInClip = 3;
+		weaponComponent.reloadTime = 1;
+		weaponComponent.fireWeapon(entityEngine, shooter, position, direction, team); 
+		Assert.assertEquals(weaponComponent.reloadTime, 0f, DELTA);
 
-		// int shooterId = entityManager.createEntity();
-		// position etc here
-		// weapon.fire(entityEngine, ... );
 
-		// Assert.assertTrue(entityManager.getEntitiesWithComponent(BulletComponent.class).size() > 0);
+		
 
 	}
 
