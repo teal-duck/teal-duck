@@ -73,6 +73,7 @@ public class GameScreen extends DuckScreenBase {
 	private int levelNumber;
 	private int previousScore;
 	private String levelAssetName;
+	private String levelName;
 
 	private boolean pauseOnLoseFocus = false;
 
@@ -96,6 +97,7 @@ public class GameScreen extends DuckScreenBase {
 		if (levelAssetName == null) {
 			System.out.println("Null");
 		}
+		levelName = MapNames.levelNumberToName(levelNumber);
 
 		paused = false;
 	}
@@ -107,7 +109,7 @@ public class GameScreen extends DuckScreenBase {
 	 * @see com.tealduck.game.screen.DuckScreenBase#startAssetLoading(com.badlogic.gdx.assets.AssetManager)
 	 */
 	@Override
-	public boolean startAssetLoading(AssetManager assetManager) {
+	public String startAssetLoading(AssetManager assetManager) {
 		TextureParameter textureParameter = new TextureParameter();
 		textureParameter.minFilter = TextureFilter.Linear;
 		textureParameter.magFilter = TextureFilter.Linear;
@@ -120,6 +122,7 @@ public class GameScreen extends DuckScreenBase {
 		assetManager.load(AssetLocations.HEALTH_PICKUP, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.CONE_LIGHT, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.POINT_LIGHT, Texture.class, textureParameter);
+		assetManager.load(AssetLocations.LIGHT_ENTITY, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.HEALTH_BAR, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.AMMO_BAR, Texture.class, textureParameter);
 		assetManager.load(AssetLocations.RELOADING, Texture.class, textureParameter);
@@ -127,7 +130,7 @@ public class GameScreen extends DuckScreenBase {
 
 		assetManager.load(levelAssetName, TiledMap.class);
 
-		return true;
+		return levelName;
 	}
 
 
@@ -149,6 +152,7 @@ public class GameScreen extends DuckScreenBase {
 		textureMap.putTextureFromAssetManager(AssetLocations.HEALTH_PICKUP, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.CONE_LIGHT, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.POINT_LIGHT, assetManager);
+		textureMap.putTextureFromAssetManager(AssetLocations.LIGHT_ENTITY, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.HEALTH_BAR, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.AMMO_BAR, assetManager);
 		textureMap.putTextureFromAssetManager(AssetLocations.RELOADING, assetManager);

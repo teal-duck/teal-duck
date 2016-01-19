@@ -145,10 +145,10 @@ public class DuckGame extends Game {
 			e.printStackTrace();
 		}
 
-		boolean requiresAssets = screen.startAssetLoading(assetManager);
+		String loadingText = screen.startAssetLoading(assetManager);
 
-		if (requiresAssets) {
-			AssetLoadingScreen loadingScreen = new AssetLoadingScreen(this, null);
+		if (loadingText != null) {
+			AssetLoadingScreen loadingScreen = new AssetLoadingScreen(this, loadingText);
 			loadingScreen.setNextScreen(screen);
 			setScreen(loadingScreen);
 		} else {

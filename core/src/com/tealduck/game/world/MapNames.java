@@ -1,6 +1,9 @@
 package com.tealduck.game.world;
 
 
+import com.badlogic.gdx.Gdx;
+
+
 /**
  *
  */
@@ -16,7 +19,7 @@ public class MapNames {
 	 *                in range 1 to LEVEL_COUNT
 	 * @return null if the level number is out of bounds
 	 */
-	public static final String levelNumberToAssetName(int levelNumber) {
+	public static String levelNumberToAssetName(int levelNumber) {
 		if ((levelNumber < 1) || (levelNumber > MapNames.LEVEL_COUNT)) {
 			return null;
 		} else {
@@ -32,6 +35,22 @@ public class MapNames {
 	 */
 	public static boolean isLastLevel(int levelNumber) {
 		return (levelNumber == MapNames.LEVEL_COUNT);
+	}
+
+
+	public static String levelNumberToName(int levelNumber) {
+		String name = "";
+		switch (levelNumber) {
+		case 1:
+			name = "Computer Science";
+			break;
+		case 2:
+			name = "Test Level";
+			break;
+		default:
+			Gdx.app.log("Level", "Unknown level number for name");
+		}
+		return name;
 	}
 
 

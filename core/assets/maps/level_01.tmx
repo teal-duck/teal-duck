@@ -15,7 +15,7 @@
   <image source="../textures/world/entity_tiles.png" width="256" height="256"/>
   <tile id="3">
    <properties>
-    <property name="test" value=""/>
+    <property name="" value=""/>
    </properties>
   </tile>
  </tileset>
@@ -24,22 +24,63 @@
  </tileset>
  <layer name="Floor" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt0DEKwCAMQFGvoENP6OT9D9ClheJQirUE7BseCBnMT00pVQAAAAAAAAAAAAAAuCiH6D3069evP7J/9VuUl6L3168/8hbRO4/aOqM3iO6Y1X/S/+/+c567d578f7S7/nbR9/ezFbWHovfU/23/6PwLO7YPE1o=
+   eJzt2jtuwzAMBmBdwR16uA6ZHMTI/Q/QDhFAsKL4Uw9LtjgQfcBg9ZGUYTc6QgjHX+yLxuF+90+wDve73/3ud7/73e9+97vf/ef5rxYvIN5AjHa4f4yb+0fvQySiD7n2nfh5Zb9Ug7v6c3VZwb8t7v/6hFaDu/tTNVjdT2uwgj83A+5f0x9rMJsfefYt8UszMJu/df+3xf0r9j9lXskv9Z/X4Ez/g8SZ/rj/n58Y4X+Evv5U3hn6z901dskv5ebuEf1H7Mh9mq73BeYf2f9U3y1+ac28/xb/mf23zD1qL+3/puS7u3/m/ltmv9afyjm7n18f31ln77+2NkuPav0j9j8yA1b71fuvrU/LR/9nWeI/c/9b1mdx5/za3or9v4Jf+qxOyp/KMUP/cz2ia9E+oy35u/z+N6L/yPq0Ga/Nrz1PzODv4ZzZb7nvt7RfxZ/7vTXQ55/WNShZa038CIH2/25+6pVm7W5+ab+j/l73gW+Do6R2fI+n8qXWJZ1/a2WmgbridRv7WjNbkj13/q+lfw/2OiCGWrt2/nGkn/c/ZbG6uX1X/DV14PNP/fRs1hb+n9VCe4p4c3bU32ImqJ/m4t/XzLXVXuJvUQskZ6nTYq/1l9SiZ12t9pZ+xKC9b/SogfY+/QuHTqdM
   </data>
  </layer>
  <layer name="Walls" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt1lsKwjAQBdD4QFDwsRj3vzYtGBxDii1oxeQcGBhIPnLbJk1KAAAAAAAAAAAAAADwtB3peyF/ve+F/PW+VeuiLmHsXBkvC3pyDXX88Vo+Ie/j08T5MX9L52M+66Y+h0FL+bM5meRvz/5em0e/Sq/7YTjv4r//sOzSFlG+091IX5v7z2r3v3fi/ZDva+l7m+sGlUQCZQ==
+   eJztWgFuwyAMzLa009pt7Rv2hv7/bQtSLFmWAQM2EMUnoaaBGA5sY5Msi8PhcDgcDofD4XA4HA6Hw+FwHAc/W3nfyu/ogQzCuv8+lnPOAfB/beVrOd8cUP63gWMZgRVdB/7fy7w6YOGnVuZ65RpOAm0/dTT+AZpzwPE/wl6gtUZYztVAfg4Qf5SWp1L/MZ49+AfuWjxqgXleIvd79D0KdP8D/bLeB2dY+4CY/dM6y35HghvH317Oxv+SqNNEre5ze0WrjXL7v8b6p56tkRubsxCrtMwFxz/2vwTYl4aC86oauZJnWuWC/7NY/9bYqgd/DXkWcqX+opU/+D+L9W+JraTtW/nPav+S9rV7yuz2L+HVEkvObv+pthAPtMTRI+y/5HyBG4MGb06+pf3Tsdb4NE3enPxe8Z+knmtnEY9b5X9Ux9/If6kN9OQP0Mr/cvZUGtNp8cd5FLYl7fwvrPF94WMAqM/pgAZ/mjfG/EcqZqlFyr5on9xc1PCX8qWwOP/JycB94lyWGztXP+JsuARYx6l9zQar8x/wA59b+Yj0NRJgLzdyTzPOeBD5oMs1ZzavvdBvN0q+5eD2AOu9lvP31OdKxg78YYxX8huLmUH3QizCre2K2lqdzedigNx+kHoWywjPYj2R8IG+Ld9LUB1IzUdOB2G8eF3h3U2wNaonKfR8HyPNuVpyiFAn4W+RU+WA93EaY3H8ae5A/TWsO80vwr0700cs/h0BGtPEzsmuzLUkn4BveiziIwvg+ciNk/oSupfMzlUDJfPlaMM/nT8Pwg==
   </data>
  </layer>
- <layer name="Collision" width="64" height="64">
+ <layer name="Collision" width="64" height="64" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzt1kEKgCAURdG25f431kiKUCkhqOc5IHzQyQULtw0AAAAAAAAAAAAAAA6lM69Cf3tehf72nKo01mivdxZWkHb/n7ak9VczTUn9lf53zv7F+Ru48x5Ic20avQeT+mf/f6n3gG/ZAU5hDc8=
+   eJztlmGuhDAIhL2W97/Yiz828TVAoR0s1fkSs9WtwEArPQ5CCCGEEEIIIYQQQgjZh/N2fZHz9vvFHJzN+Gs5oP7/48o5yIit1d8+qwY6B7vpv0DmQNO/Qw7QdrRxJufEhfIfeY6kwjpbWf/V2i+0/pddmwq1v7Bqnq2/AlIcT9W/Aln1t94dzW1GH7D6f6b+EXu9tTpqV4trVr8W22ycM3OsdzLrv4N+hL0Mu95avLX+3vlv3f/e2r+x/p44ZmKtvv895whUnE/Wf2ZPI8+nK/Z/xLaUN+TZecX5z/O/NA+p22MfUX/vvWUHEY/H/v0ZYp318rlKv7cvI/T3vgGRfTLT46w4ovOivqWx5jP6vuZzRAe6/h4b2vddW5/eCwFK/72vVCaj/j87bW0q5cJaa2gfls+oLSmnkb5q1SSr12o9YDT2w/jVfPe+tejaSz5699He2D5H5DWDyJnDo19b/6PanwCp3/rPo/+Jmls+e7EdwjzPd8/ykXFWGMVaq72xp1+P7odVROLs1by6VolovDtrlZjRkK3/DwCgYfk=
   </data>
  </layer>
  <objectgroup name="Entities" width="64" height="64">
-  <object name="Player" type="Player" gid="73" x="1728" y="4096"/>
-  <object name="Goal" type="Goal" gid="75" x="1344" y="3456"/>
+  <object name="Player" type="Player" gid="73" x="1856" y="4032"/>
+  <object name="Goal" type="Goal" gid="75" x="3456" y="1408"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="1408" y="3840"/>
+  <object name="HealthPickup" type="Pickup" gid="77" x="1472" y="3840"/>
+  <object name="Light" type="Light" gid="78" x="1920" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="2176" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="1664" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="2432" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="2944" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="3200" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="3456" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="3712" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="3840"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="3328"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="3584"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="3072"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="2816"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="2560"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="2304"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="2048"/>
+  <object name="Light" type="Light" gid="78" x="3712" y="3840"/>
+  <object name="Light" type="Light" gid="78" x="2432" y="3136"/>
+  <object name="Light" type="Light" gid="78" x="2624" y="2880"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="2688"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="2432"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="1792"/>
+  <object name="Light" type="Light" gid="78" x="3840" y="1536"/>
+  <object name="Light" type="Light" gid="78" x="3712" y="1280"/>
+  <object name="Light" type="Light" gid="78" x="3392" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="3264" y="2432"/>
+  <object name="Light" type="Light" gid="78" x="3264" y="2688"/>
+  <object name="Light" type="Light" gid="78" x="3264" y="2944"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="2944"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="3072"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="2176"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="1920"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="1664"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="1408"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="3136" y="1216"/>
+  <object name="Goal" type="Goal" gid="75" x="2176" y="1856"/>
  </objectgroup>
  <objectgroup name="Lines" width="64" height="64"/>
 </map>

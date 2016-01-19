@@ -133,13 +133,15 @@ public class EntityLoader {
 	public static void loadEntities(World world, TextureMap textureMap, ControlMap controlMap,
 			Controller controller) {
 		int playerId = -1;
-		boolean loadedGoal = false;
+		// boolean loadedGoal = false;
 
 		TiledMap tiledMap = world.getTiledMap();
 		EntityEngine entityEngine = world.getEntityEngine();
 		MapLayer entityLayer = tiledMap.getLayers().get("Entities");
 		MapObjects objects = entityLayer.getObjects();
 		EntityManager entityManager = entityEngine.getEntityManager();
+
+		ArrayList<Vector2> goalLocations = new ArrayList<Vector2>();
 
 		for (MapObject object : objects) {
 			if (object instanceof TiledMapTileMapObject) {
@@ -174,12 +176,13 @@ public class EntityLoader {
 					}
 
 				} else if (name.equals("Goal")) {
-					if (loadedGoal) {
-						throw new IllegalArgumentException("More than 1 goal");
-					}
-					EntityLoader.createGoal(entityEngine,
-							textureMap.getTexture(AssetLocations.GOAL), new Vector2(x, y));
-					loadedGoal = true;
+					goalLocations.add(new Vector2(x, y));
+					// if (loadedGoal) {
+					// throw new IllegalArgumentException("More than 1 goal");
+					// }
+					// EntityLoader.createGoal(entityEngine,
+					// textureMap.getTexture(AssetLocations.GOAL), new Vector2(x, y));
+					// loadedGoal = true;
 				} else if (name.equals("AmmoPickup") || name.equals("HealthPickup")) {
 					int defaultAmount = 0;
 					if (name.equals("AmmoPickup")) {
@@ -204,6 +207,10 @@ public class EntityLoader {
 					}
 
 					EntityLoader.createPickup(entityEngine, texture, new Vector2(x, y), contents);
+				} else if (name.equals("Light")) {
+					EntityLoader.createLight(entityEngine,
+							textureMap.getTexture(AssetLocations.LIGHT_ENTITY),
+							new Vector2(x, y));
 				} else {
 					Gdx.app.log("Load", "Unknown entity name: " + name);
 				}
@@ -217,6 +224,13 @@ public class EntityLoader {
 			Gdx.app.log("Load", "No player exists in map");
 			return;
 		}
+
+		if (goalLocations.size() == 0) {
+			Gdx.app.log("Load", "No goal exists in map");
+		}
+
+		Vector2 goalLocation = goalLocations.get(MathUtils.random.nextInt(goalLocations.size()));
+		EntityLoader.createGoal(entityEngine, textureMap.getTexture(AssetLocations.GOAL), goalLocation);
 
 		EntityLoader.addChaseComponentToEnemies(entityManager, playerId);
 	}
@@ -466,7 +480,7 @@ public class EntityLoader {
 				new PositionComponent(position, new Vector2(1, 0), new Vector2(64, 64)));
 		EntityLoader.addEntityAABBCollisionComponent(entityManager, goalId, position, new Vector2(64, 64));
 
-		entityManager.addComponent(goalId, new PointLightComponent(256));
+		// entityManager.addComponent(goalId, new PointLightComponent(256));
 
 		return goalId;
 	}
@@ -488,5 +502,16 @@ public class EntityLoader {
 		entityManager.addComponent(pickupId, new PickupComponent(contents));
 		EntityLoader.addEntityCircleCollisionComponent(entityManager, pickupId, position,
 				EntityConstants.PICKUP_RADIUS);
+	}
+
+
+	public static void createLight(EntityEngine entityEngine, Texture texture, Vector2 position) {
+		EntityManager entityManager = entityEngine.getEntityManager();
+
+		int lightId = entityManager.createEntity();
+		entityManager.addComponent(lightId,
+				new PositionComponent(position, new Vector2(1, 0), new Vector2(64, 64)));
+		entityManager.addComponent(lightId, new SpriteComponent(texture));
+		entityManager.addComponent(lightId, new PointLightComponent(EntityConstants.LIGHT_RADIUS));
 	}
 }

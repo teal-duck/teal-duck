@@ -19,6 +19,7 @@ public class AssetLocations {
 	public static final String BULLET = AssetLocations.DUCK_DIR + "beak_bullet_outline.png";
 	public static final String ENEMY = AssetLocations.ENEMY_DIR + "goose_w.png";
 	public static final String GOAL = AssetLocations.ENTITY + "goal_64x64.png";
+	public static final String LIGHT_ENTITY = AssetLocations.ENTITY + "outside_light_64x64.png";
 
 	public static final String AMMO_PICKUP = AssetLocations.PICKUP_DIR + "ammo_64x64.png";
 	public static final String HEALTH_PICKUP = AssetLocations.PICKUP_DIR + "health_64x64.png";

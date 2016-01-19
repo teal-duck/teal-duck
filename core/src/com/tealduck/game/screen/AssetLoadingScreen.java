@@ -30,7 +30,9 @@ public class AssetLoadingScreen extends DuckScreenBase {
 	// For testing purposes, these keep the loading screen visible for a certain time
 	// So we can see what it looks like
 	private float time = 0;
-	private float timeToStayOnLoadingScreenAfterLoadingFinished = 0.2f;
+	private float timeToStayOnLoadingScreenAfterLoadingFinished = 1f;
+	private GlyphLayout loadingExtraText;
+	private String loadingExtraString;
 
 
 	/**
@@ -39,6 +41,11 @@ public class AssetLoadingScreen extends DuckScreenBase {
 	 */
 	public AssetLoadingScreen(DuckGame game, Object data) {
 		super(game, data);
+		if (data instanceof String) {
+			loadingExtraString = (String) data;
+		} else {
+			loadingExtraString = "";
+		}
 		shapeRenderer = new ShapeRenderer();
 	}
 
@@ -52,8 +59,8 @@ public class AssetLoadingScreen extends DuckScreenBase {
 
 
 	@Override
-	public boolean startAssetLoading(AssetManager assetManager) {
-		return false;
+	public String startAssetLoading(AssetManager assetManager) {
+		return null;
 	}
 
 
@@ -63,6 +70,8 @@ public class AssetLoadingScreen extends DuckScreenBase {
 		progressBarFullWidth = 128;
 		progressBarHeight = 16;
 		progressBarBottomOffset = ButtonList.WINDOW_EDGE_OFFSET;
+
+		loadingExtraText = new GlyphLayout(getTextFont(), loadingExtraString);
 	}
 
 
@@ -109,11 +118,14 @@ public class AssetLoadingScreen extends DuckScreenBase {
 
 		SpriteBatch batch = getBatch();
 		BitmapFont titleFont = getTitleFont();
+		BitmapFont textFont = getTextFont();
 
 		batch.setProjectionMatrix(getGuiCamera().combined);
 		batch.begin();
 		titleFont.draw(batch, loadingText, (getWindowWidth() / 2) - (loadingText.width / 2),
 				getWindowHeight() / 2);
+		textFont.draw(batch, loadingExtraText, (getWindowWidth() / 2) - (loadingExtraText.width / 2),
+				(getWindowHeight() / 2) - 50);
 
 		batch.end();
 	}

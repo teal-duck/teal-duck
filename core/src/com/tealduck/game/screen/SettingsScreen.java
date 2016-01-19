@@ -94,8 +94,8 @@ public class SettingsScreen extends DuckScreenBase {
 
 
 	@Override
-	public boolean startAssetLoading(AssetManager assetManager) {
-		return false;
+	public String startAssetLoading(AssetManager assetManager) {
+		return null;
 	}
 
 

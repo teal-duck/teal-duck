@@ -37,9 +37,9 @@ public abstract class DuckScreenBase implements Screen {
 	 * Starts the asset manager loading the assets needed for this screen.
 	 *
 	 * @param assetManager
-	 * @return true if there are assets to load, else false
+	 * @return the string to display on the loading screen, or null if no loading required
 	 */
-	public abstract boolean startAssetLoading(AssetManager assetManager);
+	public abstract String startAssetLoading(AssetManager assetManager);
 
 
 	/**
