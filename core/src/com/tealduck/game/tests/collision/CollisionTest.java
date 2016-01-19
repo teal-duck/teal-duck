@@ -128,6 +128,23 @@ public class CollisionTest {
 	
 	@Test
 	public void testAabbToAabb() {
+		AABB aabb1 = new AABB(new Vector2(), new Vector2(2,2));
+		
+		AABB aabb2 = new AABB(new Vector2(1.1f, 0), new Vector2(2,2));
+		
+		Assert.assertEquals(1, Collision.aabbToAabb(aabb2, aabb1).normal.x, DELTA);
+		Assert.assertEquals(0, Collision.aabbToAabb(aabb2, aabb1).normal.y, DELTA);
+		Assert.assertEquals(0.9, Collision.aabbToAabb(aabb2, aabb1).distance, DELTA);
+		
+		aabb2 = new AABB(new Vector2(0, 1.1f), new Vector2(2,2));
+		Assert.assertEquals(0, Collision.aabbToAabb(aabb2, aabb1).normal.x, DELTA);
+		Assert.assertEquals(1, Collision.aabbToAabb(aabb2, aabb1).normal.y, DELTA);
+		Assert.assertEquals(0.9, Collision.aabbToAabb(aabb2, aabb1).distance, DELTA);
+		
+		aabb2 = new AABB(new Vector2(0.9f, 0.9f), new Vector2(2,2));
+		Assert.assertEquals(Math.sqrt(2)/2, Collision.aabbToAabb(aabb2, aabb1).normal.x, DELTA);
+		Assert.assertEquals(Math.sqrt(2)/2, Collision.aabbToAabb(aabb2, aabb1).normal.y, DELTA);
+		Assert.assertEquals(Math.sqrt(1.62), Collision.aabbToAabb(aabb2, aabb1).distance, DELTA);
 		
 	}
 	
