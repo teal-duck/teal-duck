@@ -26,7 +26,7 @@ public class AmmoPickup extends Pickup {
 	 *
 	 * @see com.tealduck.game.pickup.Pickup#applyToEntity(com.tealduck.game.engine.EntityManager, int)
 	 *
-	 * Only applyable if the entity has a weapon component.
+	 * Only applicable if the entity has a weapon component.
 	 */
 	@Override
 	public boolean applyToEntity(EntityManager entityManager, int entity) {
