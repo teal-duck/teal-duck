@@ -9,7 +9,8 @@ import com.tealduck.game.collision.AABB;
 import com.tealduck.game.collision.Circle;
 import com.tealduck.game.collision.Collision;
 
-/* 
+
+/*
  * This test class fails, due to known bugs.
  * We were unfortunately unable to fix bugs in time for ship date,
  * but from visual tests, these bugs do not seem to impact game in current state.
@@ -94,78 +95,82 @@ public class CollisionTest {
 		Assert.assertEquals(0, Collision.vectorFromCenterOfAABBToEdge(aabb, left).y, CollisionTest.DELTA);
 
 		Vector2 diagonalUpRight = new Vector2(0.6f, 0.6f);
-		Assert.assertEquals(0.5, Collision.vectorFromCenterOfAABBToEdge(aabb, diagonalUpRight).x, DELTA);
-		Assert.assertEquals(0.5, Collision.vectorFromCenterOfAABBToEdge(aabb, diagonalUpRight).y, DELTA);
-		
+		Assert.assertEquals(0.5, Collision.vectorFromCenterOfAABBToEdge(aabb, diagonalUpRight).x,
+				CollisionTest.DELTA);
+		Assert.assertEquals(0.5, Collision.vectorFromCenterOfAABBToEdge(aabb, diagonalUpRight).y,
+				CollisionTest.DELTA);
+
 		// This test fails. See bug note in Collision.vectorFromCenterOfAABBToEdge
 		Vector2 center = new Vector2(0.5f, 0.5f);
-		Assert.assertNotEquals(0, Collision.vectorFromCenterOfAABBToEdge(aabb, center).x, DELTA);
-		Assert.assertNotEquals(0, Collision.vectorFromCenterOfAABBToEdge(aabb, center).y, DELTA);
-		
-		aabb = new AABB(new Vector2(), new Vector2(2,2));
+		Assert.assertNotEquals(0, Collision.vectorFromCenterOfAABBToEdge(aabb, center).x, CollisionTest.DELTA);
+		Assert.assertNotEquals(0, Collision.vectorFromCenterOfAABBToEdge(aabb, center).y, CollisionTest.DELTA);
+
+		aabb = new AABB(new Vector2(), new Vector2(2, 2));
 		left = new Vector2(0.5f, 1f);
-		
-		Assert.assertEquals(-1, Collision.vectorFromCenterOfAABBToEdge(aabb, left).x, DELTA);
-		Assert.assertEquals(0, Collision.vectorFromCenterOfAABBToEdge(aabb, left).y, DELTA);
+
+		Assert.assertEquals(-1, Collision.vectorFromCenterOfAABBToEdge(aabb, left).x, CollisionTest.DELTA);
+		Assert.assertEquals(0, Collision.vectorFromCenterOfAABBToEdge(aabb, left).y, CollisionTest.DELTA);
 	}
 
 
 	@Test
 	public void testCircleToAabb() {
 
-		AABB aabb = new AABB(new Vector2(), new Vector2(1,1));
+		AABB aabb = new AABB(new Vector2(), new Vector2(1, 1));
 		Circle circle = new Circle(new Vector2(1.1f, 0.5f), 0.5f);
-		
-		Assert.assertEquals(1, Collision.circleToAabb(circle, aabb).normal.x, DELTA);
-		Assert.assertEquals(0, Collision.circleToAabb(circle, aabb).normal.y, DELTA);
-		Assert.assertEquals(0.4, Collision.circleToAabb(circle, aabb).distance, DELTA);
-		
+
+		Assert.assertEquals(1, Collision.circleToAabb(circle, aabb).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(0, Collision.circleToAabb(circle, aabb).normal.y, CollisionTest.DELTA);
+		Assert.assertEquals(0.4, Collision.circleToAabb(circle, aabb).distance, CollisionTest.DELTA);
+
 		circle = new Circle(new Vector2(0.4f, 0.4f), 0.5f);
-		
-		Assert.assertEquals(-Math.sqrt(2)/2, Collision.circleToAabb(circle, aabb).normal.x, DELTA);
-		Assert.assertEquals(-Math.sqrt(2)/2, Collision.circleToAabb(circle, aabb).normal.y, DELTA);
+
+		Assert.assertEquals(-Math.sqrt(2) / 2, Collision.circleToAabb(circle, aabb).normal.x,
+				CollisionTest.DELTA);
+		Assert.assertEquals(-Math.sqrt(2) / 2, Collision.circleToAabb(circle, aabb).normal.y,
+				CollisionTest.DELTA);
 		Assert.assertEquals(Math.sqrt(0.32) + 0.5, Collision.circleToAabb(circle, aabb).distance, 0.001);
-		
+
 		circle = new Circle(new Vector2(0.5f, 0.5f), 0.5f);
-		
+
 		// These tests fail due to bug. See failed test in testVectorFromCenterOfAABBToEdge
 		// and bug note in Collision.vectorFromCenterOfAABBToEdge
-		Assert.assertNotEquals(0, Collision.circleToAabb(circle, aabb).normal.x, DELTA);
-		Assert.assertNotEquals(0, Collision.circleToAabb(circle, aabb).normal.y, DELTA);
-		
+		Assert.assertNotEquals(0, Collision.circleToAabb(circle, aabb).normal.x, CollisionTest.DELTA);
+		Assert.assertNotEquals(0, Collision.circleToAabb(circle, aabb).normal.y, CollisionTest.DELTA);
+
 		circle = new Circle(new Vector2(), 1);
-		
+
 		// These tests fail. due to bug. See TODO in Collision.java at line 73
-		Assert.assertEquals(1, Collision.circleToAabb(circle, aabb).normal.x, DELTA);
-		Assert.assertEquals(0, Collision.circleToAabb(circle, aabb).normal.y, DELTA);
+		Assert.assertEquals(1, Collision.circleToAabb(circle, aabb).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(0, Collision.circleToAabb(circle, aabb).normal.y, CollisionTest.DELTA);
 	}
 
 
 	@Test
 	public void testAabbToAabb() {
-		AABB aabb1 = new AABB(new Vector2(), new Vector2(2,2));
-		
-		AABB aabb2 = new AABB(new Vector2(1.1f, 0), new Vector2(2,2));
-		
-		Assert.assertEquals(1, Collision.aabbToAabb(aabb2, aabb1).normal.x, DELTA);
-		Assert.assertEquals(0, Collision.aabbToAabb(aabb2, aabb1).normal.y, DELTA);
-		Assert.assertEquals(0.9, Collision.aabbToAabb(aabb2, aabb1).distance, DELTA);
-		
-		aabb2 = new AABB(new Vector2(0, 1.1f), new Vector2(2,2));
-		Assert.assertEquals(0, Collision.aabbToAabb(aabb2, aabb1).normal.x, DELTA);
-		Assert.assertEquals(1, Collision.aabbToAabb(aabb2, aabb1).normal.y, DELTA);
-		Assert.assertEquals(0.9, Collision.aabbToAabb(aabb2, aabb1).distance, DELTA);
-		
-		aabb2 = new AABB(new Vector2(0.9f, 0.9f), new Vector2(2,2));
-		Assert.assertEquals(1, Collision.aabbToAabb(aabb2, aabb1).normal.x, DELTA);
-		Assert.assertEquals(0, Collision.aabbToAabb(aabb2, aabb1).normal.y, DELTA);
-		Assert.assertEquals(1.1, Collision.aabbToAabb(aabb2, aabb1).distance, DELTA);
-		
-		aabb2 = new AABB(new Vector2(), new Vector2(2,2));
-		Assert.assertEquals(1, Collision.aabbToAabb(aabb2, aabb1).normal.x, DELTA);
-		Assert.assertEquals(0, Collision.aabbToAabb(aabb2, aabb1).normal.y, DELTA);
-		Assert.assertEquals(2, Collision.aabbToAabb(aabb2, aabb1).distance, DELTA);
-		
+		AABB aabb1 = new AABB(new Vector2(), new Vector2(2, 2));
+
+		AABB aabb2 = new AABB(new Vector2(1.1f, 0), new Vector2(2, 2));
+
+		Assert.assertEquals(1, Collision.aabbToAabb(aabb2, aabb1).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(0, Collision.aabbToAabb(aabb2, aabb1).normal.y, CollisionTest.DELTA);
+		Assert.assertEquals(0.9, Collision.aabbToAabb(aabb2, aabb1).distance, CollisionTest.DELTA);
+
+		aabb2 = new AABB(new Vector2(0, 1.1f), new Vector2(2, 2));
+		Assert.assertEquals(0, Collision.aabbToAabb(aabb2, aabb1).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(1, Collision.aabbToAabb(aabb2, aabb1).normal.y, CollisionTest.DELTA);
+		Assert.assertEquals(0.9, Collision.aabbToAabb(aabb2, aabb1).distance, CollisionTest.DELTA);
+
+		aabb2 = new AABB(new Vector2(0.9f, 0.9f), new Vector2(2, 2));
+		Assert.assertEquals(1, Collision.aabbToAabb(aabb2, aabb1).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(0, Collision.aabbToAabb(aabb2, aabb1).normal.y, CollisionTest.DELTA);
+		Assert.assertEquals(1.1, Collision.aabbToAabb(aabb2, aabb1).distance, CollisionTest.DELTA);
+
+		aabb2 = new AABB(new Vector2(), new Vector2(2, 2));
+		Assert.assertEquals(1, Collision.aabbToAabb(aabb2, aabb1).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(0, Collision.aabbToAabb(aabb2, aabb1).normal.y, CollisionTest.DELTA);
+		Assert.assertEquals(2, Collision.aabbToAabb(aabb2, aabb1).distance, CollisionTest.DELTA);
+
 	}
 
 
@@ -173,19 +178,19 @@ public class CollisionTest {
 	public void testCircleToCircle() {
 		Circle c0 = new Circle(new Vector2(1.5f, 1), 1);
 		Circle c1 = new Circle(new Vector2(1, 1), 1);
-		
-		Assert.assertEquals(1, Collision.circleToCircle(c0, c1).normal.x, DELTA);
-		Assert.assertEquals(0, Collision.circleToCircle(c0, c1).normal.y, DELTA);
-		Assert.assertEquals(1.5, Collision.circleToCircle(c0, c1).distance, DELTA);
-		
+
+		Assert.assertEquals(1, Collision.circleToCircle(c0, c1).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(0, Collision.circleToCircle(c0, c1).normal.y, CollisionTest.DELTA);
+		Assert.assertEquals(1.5, Collision.circleToCircle(c0, c1).distance, CollisionTest.DELTA);
+
 		c0 = new Circle(new Vector2(1, 1.5f), 1);
-		Assert.assertEquals(0, Collision.circleToCircle(c0, c1).normal.x, DELTA);
-		Assert.assertEquals(1, Collision.circleToCircle(c0, c1).normal.y, DELTA);
-		Assert.assertEquals(1.5, Collision.circleToCircle(c0, c1).distance, DELTA);
-		
+		Assert.assertEquals(0, Collision.circleToCircle(c0, c1).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(1, Collision.circleToCircle(c0, c1).normal.y, CollisionTest.DELTA);
+		Assert.assertEquals(1.5, Collision.circleToCircle(c0, c1).distance, CollisionTest.DELTA);
+
 		c0 = new Circle(new Vector2(1.5f, 1.5f), 1);
-		Assert.assertEquals(Math.sqrt(2)/2, Collision.circleToCircle(c0, c1).normal.x, DELTA);
-		Assert.assertEquals(Math.sqrt(2)/2, Collision.circleToCircle(c0, c1).normal.x, DELTA);
-		Assert.assertEquals(2 - Math.sqrt(0.5), Collision.circleToCircle(c0, c1).distance, DELTA);
+		Assert.assertEquals(Math.sqrt(2) / 2, Collision.circleToCircle(c0, c1).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(Math.sqrt(2) / 2, Collision.circleToCircle(c0, c1).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(2 - Math.sqrt(0.5), Collision.circleToCircle(c0, c1).distance, CollisionTest.DELTA);
 	}
 }

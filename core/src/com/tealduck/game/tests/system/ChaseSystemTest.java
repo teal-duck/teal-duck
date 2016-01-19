@@ -7,7 +7,6 @@ import org.junit.Test;
 public class ChaseSystemTest {
 	// private static final double DELTA = 1e-15;
 
-
 	@Test
 	public void testChase() {
 

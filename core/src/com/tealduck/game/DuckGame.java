@@ -78,7 +78,12 @@ public class DuckGame extends Game {
 		setupControllers();
 
 		controller = ControllerHelper.getFirstControllerOrNull();
-		controlMap = ControlMapCreator.newDefaultControlMap(getControllerName(controller));
+		String controllerName = getControllerName(controller);
+		controlMap = ControlMapCreator.newDefaultControlMap(controllerName);
+		if (!ControlMapCreator.isControllerKnown(controllerName)) {
+			controller = null;
+			Gdx.app.log("Controller", "Controller not known");
+		}
 
 		loadScreen(MainMenuScreen.class);
 	}

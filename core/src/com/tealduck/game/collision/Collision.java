@@ -141,7 +141,7 @@ public class Collision {
 	public static Intersection circleToAabb(Circle circle, AABB aabb) {
 		if (aabb.containsPoint(circle.getCenter())) {
 			Vector2 vec = Collision.vectorFromCenterOfAABBToEdge(aabb, circle.getCenter());
-			return new Intersection(vec.cpy().nor(), vec.len() + circle.getRadius()
+			return new Intersection(vec.cpy().nor(), (vec.len() + circle.getRadius())
 					- (circle.getCenter().cpy().sub(aabb.getCenter()).len()));
 		}
 

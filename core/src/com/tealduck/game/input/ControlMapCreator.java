@@ -192,4 +192,21 @@ public class ControlMapCreator {
 		}
 		return controlMap;
 	}
+
+
+	/**
+	 * @param controllerName
+	 * @return
+	 */
+	public static boolean isControllerKnown(String controllerName) {
+		if (controllerName == null) {
+			return false;
+		}
+		if (controllerName.equals(PS4.NAME)) {
+			return true;
+		} else if (controllerName.equals(Xbox360.NAME)) {
+			return true;
+		}
+		return false;
+	}
 }
