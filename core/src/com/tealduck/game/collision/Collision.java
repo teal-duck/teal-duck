@@ -186,8 +186,8 @@ public class Collision {
 			float left = b0.getRight() - b1.getLeft();
 			float right = b1.getRight() - b0.getLeft();
 
-			float y = (top < bot) ? top : 0 - bot;
-			float x = (right < left) ? right : 0 - left;
+			float y = (top <= bot) ? top : 0 - bot;
+			float x = (right <= left) ? right : 0 - left;
 
 			Vector2 normal = new Vector2();
 			float depth = 0;
