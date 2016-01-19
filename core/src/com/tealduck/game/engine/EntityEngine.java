@@ -51,6 +51,15 @@ public class EntityEngine {
 
 
 	/**
+	 * @param entity
+	 * @return
+	 */
+	public boolean isEntityFlaggedToRemove(int entity) {
+		return entitiesToRemove.contains(entity);
+	}
+
+
+	/**
 	 * Removes the entities in the entitiesToRemove set.
 	 */
 	public void removeAllFlaggedEntities() {
