@@ -79,6 +79,14 @@ public class CollisionTest {
 		Assert.assertEquals(0, further.y, CollisionTest.DELTA);
 		Assert.assertEquals(1, closer.x, CollisionTest.DELTA);
 		Assert.assertEquals(1, closer.y, CollisionTest.DELTA);
+		
+		// Test fails due to known bug in Collision.getCloserAndFurtherPoints().
+		// See comment in Collision.getCloserAndFurtherPoints().
+		circle = new Circle(new Vector2(), 1);
+		closer = new Vector2();
+		further = new Vector2();
+		Collision.getCloserAndFurtherPoints(aabb, circle, closer, further);
+		Assert.assertFalse(closer.equals(further));
 	}
 
 
@@ -100,10 +108,9 @@ public class CollisionTest {
 		Assert.assertEquals(0.5, Collision.vectorFromCenterOfAABBToEdge(aabb, diagonalUpRight).y,
 				CollisionTest.DELTA);
 
-		// This test fails. See bug note in Collision.vectorFromCenterOfAABBToEdge
 		Vector2 center = new Vector2(0.5f, 0.5f);
-		Assert.assertNotEquals(0, Collision.vectorFromCenterOfAABBToEdge(aabb, center).x, CollisionTest.DELTA);
-		Assert.assertNotEquals(0, Collision.vectorFromCenterOfAABBToEdge(aabb, center).y, CollisionTest.DELTA);
+		Assert.assertEquals(0.5, Collision.vectorFromCenterOfAABBToEdge(aabb, center).x, CollisionTest.DELTA);
+		Assert.assertEquals(0, Collision.vectorFromCenterOfAABBToEdge(aabb, center).y, CollisionTest.DELTA);
 
 		aabb = new AABB(new Vector2(), new Vector2(2, 2));
 		left = new Vector2(0.5f, 1f);
@@ -133,10 +140,8 @@ public class CollisionTest {
 
 		circle = new Circle(new Vector2(0.5f, 0.5f), 0.5f);
 
-		// These tests fail due to bug. See failed test in testVectorFromCenterOfAABBToEdge
-		// and bug note in Collision.vectorFromCenterOfAABBToEdge
-		Assert.assertNotEquals(0, Collision.circleToAabb(circle, aabb).normal.x, CollisionTest.DELTA);
-		Assert.assertNotEquals(0, Collision.circleToAabb(circle, aabb).normal.y, CollisionTest.DELTA);
+		Assert.assertEquals(1, Collision.circleToAabb(circle, aabb).normal.x, CollisionTest.DELTA);
+		Assert.assertEquals(0, Collision.circleToAabb(circle, aabb).normal.y, CollisionTest.DELTA);
 
 		circle = new Circle(new Vector2(), 1);
 
