@@ -20,7 +20,7 @@ import com.tealduck.game.world.MapNames;
 public class WinScreen extends DuckScreenBase {
 	private static final int CONTINUE = 0;
 	private static final int SAVE_QUIT = 1;
-	private static final String[] BUTTON_TEXTS = new String[] { "Continue", "Save and Quit" };
+	private final String[] BUTTON_TEXTS;
 	private GlyphLayout winText;
 	private GlyphLayout scoreText;
 	private ButtonList buttonList;
@@ -36,6 +36,7 @@ public class WinScreen extends DuckScreenBase {
 	 */
 	public WinScreen(DuckGame game, Object data) {
 		super(game, data);
+		BUTTON_TEXTS = new String[] { "Continue", "Save and Quit" };
 
 		if (data instanceof GameProgress) {
 			levelOverData = (GameProgress) data;
@@ -60,13 +61,13 @@ public class WinScreen extends DuckScreenBase {
 
 		if (MapNames.isLastLevel(levelNumber)) {
 			winTextString = "Game Complete!";
-			WinScreen.BUTTON_TEXTS[WinScreen.CONTINUE] = "Finish!";
+			BUTTON_TEXTS[WinScreen.CONTINUE] = "Finish!";
 		}
 
 		winText = new GlyphLayout(getTitleFont(), winTextString);
 		scoreText = new GlyphLayout(getTextFont(), "Your score: " + playerScore);
 
-		buttonList = new ButtonList(WinScreen.BUTTON_TEXTS, getTextFont(), getGuiCamera(), getControlMap(),
+		buttonList = new ButtonList(BUTTON_TEXTS, getTextFont(), getGuiCamera(), getControlMap(),
 				getController());
 		setButtonLocations();
 	}
@@ -77,8 +78,8 @@ public class WinScreen extends DuckScreenBase {
 	 */
 	private void setButtonLocations() {
 		buttonList.setPositionDefaultSize((getWindowWidth() / 2) - (ButtonList.BUTTON_WIDTH / 2), //
-				ButtonList.WINDOW_EDGE_OFFSET + ButtonList
-						.getHeightForDefaultButtonList(WinScreen.BUTTON_TEXTS.length));
+				ButtonList.WINDOW_EDGE_OFFSET
+						+ ButtonList.getHeightForDefaultButtonList(BUTTON_TEXTS.length));
 	}
 
 
