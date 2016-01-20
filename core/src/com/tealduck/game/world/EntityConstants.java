@@ -56,7 +56,7 @@ public class EntityConstants {
 	public static final float PAUSE_TIME = 0.5f;
 
 	public static final float LIGHT_RADIUS = 256f;
-	
+
 	public static final float AMBIENT_INTENSITY = 0.2f;
 	private static final float COLOUR = 0.8f;
 	public static final Vector3 AMBIENT_COLOUR = new Vector3(EntityConstants.COLOUR, EntityConstants.COLOUR,

@@ -110,14 +110,13 @@ public class Collision {
 		// http://stackoverflow.com/questions/3180000/calculate-a-vector-from-a-point-in-a-rectangle-to-edge-based-on-angle
 
 		Vector2 vec;
-		
+
 		if (aabb.getCenter().equals(pointInAABB)) {
-		    vec = new Vector2(1, 0);
+			vec = new Vector2(1, 0);
+		} else {
+			vec = pointInAABB.cpy().sub(aabb.getCenter());
 		}
-		else {
-		    vec = pointInAABB.cpy().sub(aabb.getCenter());
-		}
-		
+
 		float angle = vec.angleRad();
 
 		float cosAngle = Math.abs(MathUtils.cos(angle));

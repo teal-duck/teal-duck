@@ -79,7 +79,7 @@ public class CollisionTest {
 		Assert.assertEquals(0, further.y, CollisionTest.DELTA);
 		Assert.assertEquals(1, closer.x, CollisionTest.DELTA);
 		Assert.assertEquals(1, closer.y, CollisionTest.DELTA);
-		
+
 		// Test fails due to known bug in Collision.getCloserAndFurtherPoints().
 		// See comment in Collision.getCloserAndFurtherPoints().
 		circle = new Circle(new Vector2(), 1);

@@ -296,11 +296,15 @@ public class WorldRenderSystem extends GameSystem {
 		for (int entity : entities) {
 			PositionComponent positionComponent = entityManager.getComponent(entity,
 					PositionComponent.class);
+
 			ViewconeComponent viewconeComponent = entityManager.getComponent(entity,
 					ViewconeComponent.class);
 			Vector2 position = positionComponent.position;
 			Vector2 lookAt = positionComponent.lookAt;
 			float length = viewconeComponent.length;
+			if (!isPositionOnScreen(position, length * 2)) {
+				continue;
+			}
 
 			float x = position.x;
 			float y = position.y;
@@ -331,12 +335,17 @@ public class WorldRenderSystem extends GameSystem {
 
 		// Render muzzle flashes as smaller cones
 		lightScale = 0.1f;
-		entities = getEntityManager().getEntitiesWithComponents(PositionComponent.class, WeaponComponent.class);
+		entities = getEntityManager().getEntitiesWithComponent(WeaponComponent.class);
 		for (int entity : entities) {
 			WeaponComponent weaponComponent = entityManager.getComponent(entity, WeaponComponent.class);
 			if (weaponComponent.justFired) {
 				weaponComponent.justFired = false;
 				Vector2 position = weaponComponent.fireLocation;
+
+				if (!isPositionOnScreen(position, 200)) {
+					continue;
+				}
+
 				Vector2 direction = weaponComponent.fireDirection;
 
 				float x = position.x;
@@ -356,9 +365,13 @@ public class WorldRenderSystem extends GameSystem {
 			float radius = getEntityManager().getComponent(entity, PointLightComponent.class).radius;
 			float x = centre.x - (radius / 2);
 			float y = centre.y - (radius / 2);
-			;
+
 			float w = radius;
 			float h = radius;
+
+			if (!isPositionOnScreen(new Vector2(x, y), radius * 2)) {
+				continue;
+			}
 
 			batch.draw(pointTexture, x, y, w, h);
 		}
@@ -502,6 +515,11 @@ public class WorldRenderSystem extends GameSystem {
 			HealthComponent healthComponent = entityManager.getComponent(entity, HealthComponent.class);
 
 			Sprite sprite = spriteComponent.sprite;
+
+			if (!isSpriteOnScreen(sprite)) {
+				continue;
+			}
+
 			int health = healthComponent.health;
 			int maxHealth = healthComponent.maxHealth;
 
@@ -531,6 +549,9 @@ public class WorldRenderSystem extends GameSystem {
 			}
 			SpriteComponent spriteComponent = entityManager.getComponent(entity, SpriteComponent.class);
 			Sprite sprite = spriteComponent.sprite;
+			if (!isSpriteOnScreen(sprite)) {
+				continue;
+			}
 
 			float spriteX = sprite.getX();
 			float spriteY = sprite.getY();
@@ -559,6 +580,11 @@ public class WorldRenderSystem extends GameSystem {
 			CollisionComponent collisionComponent = entityManager.getComponent(entity,
 					CollisionComponent.class);
 			CollisionShape shape = collisionComponent.collisionShape;
+
+			if (!isPositionOnScreen(shape.getPosition(),
+					Math.max(shape.getAABB().getWidth(), shape.getAABB().getHeight()))) {
+				continue;
+			}
 
 			shapeRenderer.setColor(0, 1, 0, 0.5f);
 			AABB aabb = shape.getAABB();
@@ -603,6 +629,45 @@ public class WorldRenderSystem extends GameSystem {
 	 * @return
 	 */
 	private boolean isSpriteOnScreen(Sprite sprite) {
-		return true;
+		return isSpriteOnScreen(sprite, Math.max(sprite.getWidth(), sprite.getHeight()));
+	}
+
+
+	/**
+	 * @param sprite
+	 * @param radius
+	 * @return
+	 */
+	private boolean isSpriteOnScreen(Sprite sprite, float radius) {
+		return isPositionOnScreen(
+				new Vector2(sprite.getX() + sprite.getOriginX(), sprite.getY() + sprite.getOriginY()),
+				radius);
+	}
+
+
+	/**
+	 * @param sprite
+	 * @return
+	 */
+	private boolean isPositionOnScreen(Vector2 position, float radius) {
+		// System.out.println("Camera: " + camera.position.x + "; Sprite: " + sprite.getOriginX() * 64);
+		float xDistance = camera.position.x - (position.x);
+		float yDistance = camera.position.y - (position.y);
+
+		xDistance = Math.abs(xDistance);
+		yDistance = Math.abs(yDistance);
+
+		float cameraWidth = camera.viewportWidth;
+		float cameraHeight = camera.viewportHeight;
+		//
+		// System.out.println("Position: " + position.toString() + "; " //
+		// + "Camera loc: " + camera.position.toString() + "; "//
+		// + "Distance: (" + xDistance + ", " + yDistance + "); " //
+		// + "Camera size: (" + cameraWidth + ", " + cameraHeight + "); " //
+		// + "Radius: " + radius + ";");
+
+		return (xDistance < ((cameraWidth / 2) + (radius * 2)))
+				&& (yDistance < ((cameraHeight / 2) + (radius * 2)));
+
 	}
 }

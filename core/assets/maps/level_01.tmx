@@ -24,17 +24,17 @@
  </tileset>
  <layer name="Floor" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt2jtuwzAMBmBdwR16uA6ZHMTI/Q/QDhFAsKL4Uw9LtjgQfcBg9ZGUYTc6QgjHX+yLxuF+90+wDve73/3ud7/73e9+97vf/ef5rxYvIN5AjHa4f4yb+0fvQySiD7n2nfh5Zb9Ug7v6c3VZwb8t7v/6hFaDu/tTNVjdT2uwgj83A+5f0x9rMJsfefYt8UszMJu/df+3xf0r9j9lXskv9Z/X4Ez/g8SZ/rj/n58Y4X+Evv5U3hn6z901dskv5ebuEf1H7Mh9mq73BeYf2f9U3y1+ac28/xb/mf23zD1qL+3/puS7u3/m/ltmv9afyjm7n18f31ln77+2NkuPav0j9j8yA1b71fuvrU/LR/9nWeI/c/9b1mdx5/za3or9v4Jf+qxOyp/KMUP/cz2ia9E+oy35u/z+N6L/yPq0Ga/Nrz1PzODv4ZzZb7nvt7RfxZ/7vTXQ55/WNShZa038CIH2/25+6pVm7W5+ab+j/l73gW+Do6R2fI+n8qXWJZ1/a2WmgbridRv7WjNbkj13/q+lfw/2OiCGWrt2/nGkn/c/ZbG6uX1X/DV14PNP/fRs1hb+n9VCe4p4c3bU32ImqJ/m4t/XzLXVXuJvUQskZ6nTYq/1l9SiZ12t9pZ+xKC9b/SogfY+/QuHTqdM
+   eJzt2kFuxCAMBdBcIbPo4bqYVatGuf8B2sUgIYrxt7GBTLywNKNGhGebNpQc27Ydf/F10zjCH/4F5hH+8Ic//OEPf/jDH/7wh3+c/2rxA8QJxGxH+Oe4S//sdYhE8iHXnpXvd/ZTOXhXfysvd/DvN/c/XsHl4N39tRx4+R9ArODPc+Dh38FcSPOi9bd6QOOX2pCcXN2vqbk0B5b+lINR9Uf9yLOvdo6j/JKxJKHx5315R793/ct172Vf1T/KbuEv5zjS/8xipD/15/crev2adf/cfP21cb3qT619xN1jp/zU2KXbu/7aukv66Cz8rfFH1J8at1Z3iZ8au6y/xD+y/pK+lzxLaOrf+vvstf5X8q9cf0nvX33999Y+zfds3GeV+nNzQ/y16zX+Gesf6QGp/er15+bH3Tf/n+WK61+6BjTulp+bp0f9ub2v1k+d1VHja/t0xP4P8XNntJK5leNb7/+ka4Abg+txbXjWX9oDnN/DOcuPmDT5srB7+DXnGsjPrbzo8491D4yOTyLQ+vecASJ9MNqP9KKlf3ZQZon/qjlAeq82Z+r9Nwv/RxF79lli8jpX5d7/681B6c9jZG+07Nz7jzP9vfWn5lg+YyLvXGp6ger99D1dt2//39Wy9LbsqN/i92Puz8cqP0v8kvtTewup3yIXyJgao9Te69fkwjOvUrulHzFw+w2PHHD76V/CJEfk
   </data>
  </layer>
  <layer name="Walls" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJztWgFuwyAMzLa009pt7Rv2hv7/bQtSLFmWAQM2EMUnoaaBGA5sY5Msi8PhcDgcDofD4XA4HA6Hw+FwHAc/W3nfyu/ogQzCuv8+lnPOAfB/beVrOd8cUP63gWMZgRVdB/7fy7w6YOGnVuZ65RpOAm0/dTT+AZpzwPE/wl6gtUZYztVAfg4Qf5SWp1L/MZ49+AfuWjxqgXleIvd79D0KdP8D/bLeB2dY+4CY/dM6y35HghvH317Oxv+SqNNEre5ze0WrjXL7v8b6p56tkRubsxCrtMwFxz/2vwTYl4aC86oauZJnWuWC/7NY/9bYqgd/DXkWcqX+opU/+D+L9W+JraTtW/nPav+S9rV7yuz2L+HVEkvObv+pthAPtMTRI+y/5HyBG4MGb06+pf3Tsdb4NE3enPxe8Z+knmtnEY9b5X9Ux9/If6kN9OQP0Mr/cvZUGtNp8cd5FLYl7fwvrPF94WMAqM/pgAZ/mjfG/EcqZqlFyr5on9xc1PCX8qWwOP/JycB94lyWGztXP+JsuARYx6l9zQar8x/wA59b+Yj0NRJgLzdyTzPOeBD5oMs1ZzavvdBvN0q+5eD2AOu9lvP31OdKxg78YYxX8huLmUH3QizCre2K2lqdzedigNx+kHoWywjPYj2R8IG+Ld9LUB1IzUdOB2G8eF3h3U2wNaonKfR8HyPNuVpyiFAn4W+RU+WA93EaY3H8ae5A/TWsO80vwr0700cs/h0BGtPEzsmuzLUkn4BveiziIwvg+ciNk/oSupfMzlUDJfPlaMM/nT8Pwg==
+   eJztWgtOwzAMzdgoGgy2MwyOsPufjVmahXly0nzstgg/KVrbtI5fYjtxspQCgUAgEAgEAoFAIBAIBAKBQODv4P1enu7lY21FVsLh8XtO/7MPmP/tXo5p+T5g+6PyJq6Xsknk/7pAmwTmfVF0YZyTf1/INon/ybEt5kzjfFHqkb/E8fGdtW4H5bqkRyukfTPnKVNPfb9/PN+l375wEsWyD7z5l2QRR80Ocrg9imWs1vh7ySfQeO+1FwflWsiZMs97QVzJXmV8x/GW9t9SWuymhBxPC/4oY4J74m7FoxdSx+fMcwvZPfVLAOc/GW9HYwDyk/27hbEn5Pwf61ox5/tbGHuCpsf1Xj4zdb1yLfvWEjn/x7oRuYhe29fmCksf5Wsa+69ky380tub6bDRH0Pjn7lsgYykVmVf1yK35ZlQu+yiN/bVTXk6X0bXVEvwt5HnIrY0Xo/zZRz3i/4j/174/yn+r/l/zfu+ckvN/6/jf6/81vEbWklv3/7l1xGguqPk/+b51/Jf+37K/oOlgwVuT7+n/qGtPTLPkrcnn62uyH//Weu09j5zBK/9DG9/Bfa0PLMmfYTH/a7J7/MuDv7YnTbDM/wg0xvJMB89WamzAgj/mjbn4UVqz9KLkX9im1hc9/Gv5Ijz2KOZkyDZlLqvprtWvsTfcAmnj6F9bg7X/MzgOvKSfs48t9QX7yys8s1xnnEE+23LPng2fg+F/N1r+y6HNAd5zrRbvMebW6M78WccJfnNrZnm2Wjp/9tybn1sDzM0HpW+lDPpW2kkNH27b81wCbaDUH3M2yPrimTmdO5CvoZ2UsOR5TG3ONZJDUF0Nf4+cag5yHsc1lsYfcweM1zzumF/wuRO2kVv/rgFc0+T2ySbluiaf4P/0eKyPPCD7Y05PjCU4l2ydqwVa+iswhm9NlxIR
   </data>
  </layer>
  <layer name="Collision" width="64" height="64" visible="0">
   <data encoding="base64" compression="zlib">
-   eJztlmGuhDAIhL2W97/Yiz828TVAoR0s1fkSs9WtwEArPQ5CCCGEEEIIIYQQQgjZh/N2fZHz9vvFHJzN+Gs5oP7/48o5yIit1d8+qwY6B7vpv0DmQNO/Qw7QdrRxJufEhfIfeY6kwjpbWf/V2i+0/pddmwq1v7Bqnq2/AlIcT9W/Aln1t94dzW1GH7D6f6b+EXu9tTpqV4trVr8W22ycM3OsdzLrv4N+hL0Mu95avLX+3vlv3f/e2r+x/p44ZmKtvv895whUnE/Wf2ZPI8+nK/Z/xLaUN+TZecX5z/O/NA+p22MfUX/vvWUHEY/H/v0ZYp318rlKv7cvI/T3vgGRfTLT46w4ovOivqWx5jP6vuZzRAe6/h4b2vddW5/eCwFK/72vVCaj/j87bW0q5cJaa2gfls+oLSmnkb5q1SSr12o9YDT2w/jVfPe+tejaSz5699He2D5H5DWDyJnDo19b/6PanwCp3/rPo/+Jmls+e7EdwjzPd8/ykXFWGMVaq72xp1+P7odVROLs1by6VolovDtrlZjRkK3/DwCgYfk=
+   eJztVlsOwzAI67V6/4tN+5hURUAgGJqutlT1kRQwDiHHQRAEQRAEQRAEQRAEQRAE8Rycl+uNOC/3N+bgHJ67c3BOrg7/YywdkDiOvjtyIfGv9GX5sPxWxSblH+lD4qzlfJzTURcd/K2xiK+KHGj8K+wjbVfyR9n3rN3ZOq+uAc1OhUZVayGDav0z4x3w7MUI25qvuzE7f2TsWvncgfsX2jkkq4+n9ndApf7W2Irtij5g9f8q/TPcte+ZnGpxoes/Y9fzD4r/rvoj5kT+qaz/qK036++d/6/179X+H/X3xJGJdff695wjUHF26p+padTZZ7TfVf8R21LekGfnLv2j49I8JG+PfYT+3nfLDiIej/3rN8Q6m+XzLv7evozgP9sDInWS6XFWHNF5Ud/Ss+Yz+r/mc4UHWn+PDW1/19an90IAxf/aV3ZGhf4/O6M2O+XCWmtoH5bPqC0pp5G+amlS1Wu1HrAa+2HcNd+zvRatveRj9h7tjeN3RF4rEDlzePhr63+VeweQ/K0xD/8OzS2fs9gOYZ5n37N8VJwVVmGt1dmzp1+v1sNdiMQ503x3rhKi8T6Zq4QMh2r+H/sMcKs=
   </data>
  </layer>
  <objectgroup name="Entities" width="64" height="64">
@@ -81,6 +81,50 @@
   <object name="Light" type="Light" gid="78" x="2880" y="1216"/>
   <object name="Light" type="Light" gid="78" x="3136" y="1216"/>
   <object name="Goal" type="Goal" gid="75" x="2176" y="1856"/>
+  <object name="Light" type="Light" gid="78" x="1408" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="1216" y="4032"/>
+  <object name="Light" type="Light" gid="78" x="960" y="3968"/>
+  <object name="Light" type="Light" gid="78" x="768" y="3904"/>
+  <object name="Light" type="Light" gid="78" x="576" y="3840"/>
+  <object name="Light" type="Light" gid="78" x="384" y="3712"/>
+  <object name="Light" type="Light" gid="78" x="192" y="3520"/>
+  <object name="Light" type="Light" gid="78" x="128" y="3264"/>
+  <object name="Light" type="Light" gid="78" x="128" y="3008"/>
+  <object name="Light" type="Light" gid="78" x="128" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="2432" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="2176" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="1920" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="1664" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="1408" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="1152" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="896" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="640" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="384" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="128" y="1472"/>
+  <object name="Light" type="Light" gid="78" x="128" y="1728"/>
+  <object name="Light" type="Light" gid="78" x="128" y="1984"/>
+  <object name="Light" type="Light" gid="78" x="128" y="2240"/>
+  <object name="Light" type="Light" gid="78" x="128" y="2496"/>
+  <object name="Light" type="Light" gid="78" x="128" y="2752"/>
+  <object name="Light" type="Light" gid="78" x="1664" y="3136"/>
+  <object name="Light" type="Light" gid="78" x="1664" y="2752"/>
+  <object name="Light" type="Light" gid="78" x="1344" y="2752"/>
+  <object name="Light" type="Light" gid="78" x="1280" y="2496"/>
+  <object name="Light" type="Light" gid="78" x="1472" y="2240"/>
+  <object name="Light" type="Light" gid="78" x="1728" y="2368"/>
+  <object name="Light" type="Light" gid="78" x="1856" y="2176"/>
+  <object name="Light" type="Light" gid="78" x="2304" y="1920"/>
+  <object name="Light" type="Light" gid="78" x="2496" y="1920"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="1920"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="2432"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="2176"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="2688"/>
+  <object name="Light" type="Light" gid="78" x="2304" y="3008"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="1664"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="1408"/>
+  <object name="Light" type="Light" gid="78" x="2432" y="2176"/>
+  <object name="Light" type="Light" gid="78" x="2176" y="2176"/>
  </objectgroup>
  <objectgroup name="Lines" width="64" height="64"/>
 </map>
