@@ -5,6 +5,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.tealduck.game.DuckGame;
 
+// Quackers by Team Teal - executable is available online at:
+// https://github.com/teal-duck/teal-duck/blob/Assessment-2/teal-duck-game.jar?raw=true
 
 public class DesktopLauncher {
 	public static void main(String[] arg) {

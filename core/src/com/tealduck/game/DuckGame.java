@@ -24,13 +24,14 @@ import com.tealduck.game.screen.DuckScreenBase;
 import com.tealduck.game.screen.MainMenuScreen;
 
 
-// Regex for lines of code: \n[\s]*
+// Quackers by Team Teal - executable is available online at:
+// https://github.com/teal-duck/teal-duck/blob/Assessment-2/teal-duck-game.jar?raw=true
 
 /**
  *
  */
 public class DuckGame extends Game {
-	public static final String GAME_TITLE = "Teal Duck Awesome Game!"; // "Game Name Goes Here!";
+	public static final String GAME_TITLE = "Quackers - by Teal"; 
 	private SpriteBatch batch;
 	private AssetManager assetManager;
 	private SystemManager systemManager;
