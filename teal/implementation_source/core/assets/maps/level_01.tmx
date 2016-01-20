@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="64" tileheight="64" backgroundcolor="#000000">
+ <tileset firstgid="1" name="map_tiles" tilewidth="64" tileheight="64">
+  <image source="../textures/world/inside_map_tiles.png" trans="ff00ff" width="512" height="448"/>
+ </tileset>
+ <tileset firstgid="57" name="collision_tiles" tilewidth="64" tileheight="64">
+  <image source="../textures/world/collision_tiles.png" width="256" height="256"/>
+  <tile id="0">
+   <properties>
+    <property name="collidable" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="73" name="entity_tiles" tilewidth="64" tileheight="64">
+  <image source="../textures/world/entity_tiles.png" width="256" height="256"/>
+  <tile id="3">
+   <properties>
+    <property name="" value=""/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="89" name="outside_map_tiles" tilewidth="64" tileheight="64">
+  <image source="../textures/world/outside_map_tiles.png" width="384" height="576"/>
+ </tileset>
+ <layer name="Floor" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztmkGOwzAIRXOFTqU53Cxm1Uq9/wlmFrVkMcZ84DuJJixQ1SQmfnzATtrXtm2vX3tc1F7FX/wnmEfxF3/xF3/xF3/xF3/xF3/x78dfVnZlO7oO2b1KXnd1fisGR7Ox+S0f/53/dnH+j7ehMTiajc1/n8RgFf8HYHvrj+YAk/++jdm142hcovxIDrB1lnYzzq/M/z34Z9pq11lzzOo/6wEyBlF+ixuNS5sja686mscKfnaPY+ov647J/3zbSOsz8aM9wMvfWGVfW8V+Nv498z7Cr/VZtv4o/3dne+rf8rPVa5a/+RnFF2FfwT/yi2gU4df2NAh3hl3j13xLbpb+La7I3gVh96wfcq4z/0iPyuqv+R3pjvBbvjP87Pr38lvx9PRrD/9sfWbVv9xbRvg9+Xqk/iONovqPeO/iM8qvPXccVf+eWGo99Qz6I/Vvzc3SSFsDzlL/o72/xY+uT6vWP/b6L2s2y2/ddzRXj/9ZP2HUv7cGItwzfqu22P3fqq0MP/reJ7KvyvJrNaCxzPhb3TDed2n87Oe/x6avAUg+j/RnMe+lP+p/Zqx3ZbN+tOL5F7mvZyybfbankOsUgz/yu8Zs3XwA4zyG7n9YOeB534+Mnf1e0h//UkyOY/L3cdDywGJi2YjbykUmf0Rb5hiN2cOfjYGXkZUHVg8asWv82f1Gs09hz22+b9CYEDYrjh52Vgwkfx8HhuZoLCLsjPUgy+/RH9VcsqOxiORCz3wbfG/X3ba//9Vi5bjF7smFbH/s+XtfPX87hvZFz/01Bi8/IxaIzwijlz3LH4nFyrh62Zn8CEP2fIZfO/8DO5lLWA==
+  </data>
+ </layer>
+ <layer name="Walls" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztmg1uwjAMhcNgTDA2OEPZEbj/2YalWvOenH+n7TR/UkTbFDcviZ2kaQiO4ziO4ziO4ziO4ziO4zh/h49nenmmz7ULshKH+fca/mcdsP7HM53C8nXA/Y/Suzheqk+i/vMCzyRY900pC3MN4+tCPpP0XwY+izVTO9+UfNQvOc3/sy7bQTlOlaMW2b9Z8zGST3W/n6/vwm9fuIhkWQej9adskUatH8R4zMkyVmv6R9knqL332o2ddi3sHCPXWyGt1F9lfMf2lv2/JtX0mxQxnRb6pY0p/K5fgrRb6WhFlvE1ct3Cdkv+EuD4J+NtbwxAfbJ+t9D2RMz/Ma+WnO9voe0JrRzkq/dIXo3dSZxb1q0lMf/HvB67SGvf18YKSx/lY2r7r2Crvze2xuqsd42g6Y+d1yBjKSW5rmqxW/KfXrvso9T2U6M9aTfm/1vVb2FvhN3SeNGrn33UKv5Levy/9P5e/Vv1/5L7W8eUmP9bxH8L/y/R1TOX3Lr/5+YRvWtBzf/J9y3iv0T6f837Ba0MFro1+yP9H8vaEtMsdWv2+XgK9u1fm6/dN2LNMGr9h318B+elPrCkfsZi/GfbE5znnq3ZqLm/BO2dNGG5/iOojeWeDu6tlPQBC/24bozFj9ScpZWUf+Eztbpo0V+qFxnxjiJnQz5TrmW1smv5a7wbrkH2cfSvrWHt/wzHgbfws/expbpgfznDNct5xhXsc1+ufWfzEAm/3aj5lkMbA0aPtVq8x5ibK7vUz2U8wm9sziz3VlP7zyPfzefmABZrI/6OQ/aTEj3cFiP3JbAPpPTfM7a4vLhnTvsO5GvYT1IsuR9TuuaaQprcGrtE/4g1VQ45juMcS1uP49oB4zW3O64veN8JnxGb/64Bzmli78mOynFJ7OBvekbMj0Yg6yNXTowlOJZsXasFNfXl9PENm84TSg==
+  </data>
+ </layer>
+ <layer name="Collision" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztVm2uwzAI67V6/4tN+zGpijCBYEiqYal63UtqMB8h19VoNBqNRqPRaDQajUaj0Wg0Gu/B/Xj+Effj7z/G4B7eq2NwT54K+6MvFZA0jrYrYiHpz7Sl2dDsZvkmxZ9pQ9KMYj7uqeiLCv3amsdWRgyQ/gx+Jnemfha/pXZndZ7dA4iHmaOZ9p3Izn9kvQKWs5jBjWztxuz+EeHV4nmC9i/QPSSaH23mI7s7kJl/bW2FO2MOaPOfqT9a+8ifaCwq+z/Ca/mGpT+7/0/Vz+DL4LXm4rT8z+ysckX3oW9O7X9r7k/LP6P/LX5EfD29/y33CJaflf0f6WnW3Wfkr+p/D7cUN+bduSr/3nVpH1O3hZ+Rf+tvjYfhj4X/+T9GnWkzANmWODz7LbDOZaZ+dAZ4+iQy4zQ/vPu8tqV3ZNP7PbK5ooOdfwsHOt9RfVofBlj6Uf+fhoz8/3hmZ+FOaLXGtqHZ9PCgmHrmqpaTrFmLZoDVd81vrbakOEl7tHUGZj3m8cEzx7w1kQWpD8Z1tIa4pPpf1V4Bpn5tzaK/IueazZlvl7DPcu5pNjLuCqvQanX2bpnXq/2wCyuzAH17ulYJXn/frFVCREO2/g+KK3NX
+  </data>
+ </layer>
+ <objectgroup name="Entities" width="64" height="64">
+  <object name="Player" type="Player" gid="73" x="1984" y="4032"/>
+  <object name="Goal" type="Goal" gid="75" x="3456" y="1408"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="1408" y="3840"/>
+  <object name="HealthPickup" type="Pickup" gid="77" x="1472" y="3840"/>
+  <object name="Light" type="Light" gid="78" x="1920" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="2176" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="1664" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="2432" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="2944" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="3200" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="3456" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="3712" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="3840"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="3328"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="3584"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="3072"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="2816"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="2560"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="2304"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="2048"/>
+  <object name="Light" type="Light" gid="78" x="3712" y="3840"/>
+  <object name="Light" type="Light" gid="78" x="2432" y="3136"/>
+  <object name="Light" type="Light" gid="78" x="2624" y="2880"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="2688"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="2432"/>
+  <object name="Light" type="Light" gid="78" x="3968" y="1792"/>
+  <object name="Light" type="Light" gid="78" x="3840" y="1536"/>
+  <object name="Light" type="Light" gid="78" x="3712" y="1280"/>
+  <object name="Light" type="Light" gid="78" x="3392" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="3264" y="2432"/>
+  <object name="Light" type="Light" gid="78" x="3264" y="2688"/>
+  <object name="Light" type="Light" gid="78" x="3264" y="2944"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="2944"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="3072"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="2176"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="1920"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="1664"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="1408"/>
+  <object name="Light" type="Light" gid="78" x="2880" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="3136" y="1216"/>
+  <object name="Goal" type="Goal" gid="75" x="2176" y="1856"/>
+  <object name="Light" type="Light" gid="78" x="1408" y="4096"/>
+  <object name="Light" type="Light" gid="78" x="1216" y="4032"/>
+  <object name="Light" type="Light" gid="78" x="960" y="3968"/>
+  <object name="Light" type="Light" gid="78" x="768" y="3904"/>
+  <object name="Light" type="Light" gid="78" x="576" y="3840"/>
+  <object name="Light" type="Light" gid="78" x="384" y="3712"/>
+  <object name="Light" type="Light" gid="78" x="192" y="3520"/>
+  <object name="Light" type="Light" gid="78" x="128" y="3264"/>
+  <object name="Light" type="Light" gid="78" x="128" y="3008"/>
+  <object name="Light" type="Light" gid="78" x="128" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="2432" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="2176" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="1920" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="1664" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="1408" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="1152" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="896" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="640" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="384" y="1216"/>
+  <object name="Light" type="Light" gid="78" x="128" y="1472"/>
+  <object name="Light" type="Light" gid="78" x="128" y="1728"/>
+  <object name="Light" type="Light" gid="78" x="128" y="1984"/>
+  <object name="Light" type="Light" gid="78" x="128" y="2240"/>
+  <object name="Light" type="Light" gid="78" x="128" y="2496"/>
+  <object name="Light" type="Light" gid="78" x="128" y="2752"/>
+  <object name="Light" type="Light" gid="78" x="1664" y="3136"/>
+  <object name="Light" type="Light" gid="78" x="1664" y="2752"/>
+  <object name="Light" type="Light" gid="78" x="1344" y="2752"/>
+  <object name="Light" type="Light" gid="78" x="1280" y="2496"/>
+  <object name="Light" type="Light" gid="78" x="1472" y="2240"/>
+  <object name="Light" type="Light" gid="78" x="1728" y="2368"/>
+  <object name="Light" type="Light" gid="78" x="1856" y="2176"/>
+  <object name="Light" type="Light" gid="78" x="2304" y="1920"/>
+  <object name="Light" type="Light" gid="78" x="2496" y="1920"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="1920"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="2432"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="2176"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="2688"/>
+  <object name="Light" type="Light" gid="78" x="2304" y="3008"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="1664"/>
+  <object name="Light" type="Light" gid="78" x="2688" y="1408"/>
+  <object name="Light" type="Light" gid="78" x="2432" y="2176"/>
+  <object name="Light" type="Light" gid="78" x="2176" y="2176"/>
+  <object name="Light" type="Light" gid="78" x="3264" y="2176"/>
+  <object name="Light" type="Light" gid="78" x="3264" y="1920"/>
+  <object name="Light" type="Light" gid="78" x="3264" y="1664"/>
+  <object name="Light" type="Light" gid="78" x="3264" y="1408"/>
+  <object name="Light" type="Light" gid="78" x="576" y="3584"/>
+  <object name="Light" type="Light" gid="78" x="576" y="3328"/>
+  <object name="Light" type="Light" gid="78" x="576" y="3072"/>
+  <object name="Light" type="Light" gid="78" x="576" y="2816"/>
+  <object name="Light" type="Light" gid="78" x="576" y="2560"/>
+  <object name="Light" type="Light" gid="78" x="576" y="2304"/>
+  <object name="Light" type="Light" gid="78" x="576" y="2048"/>
+  <object name="Light" type="Light" gid="78" x="640" y="1792"/>
+  <object name="Light" type="Light" gid="78" x="768" y="1536"/>
+  <object name="Light" type="Light" gid="78" x="1024" y="1472"/>
+  <object name="Light" type="Light" gid="78" x="1280" y="1408"/>
+  <object name="Light" type="Light" gid="78" x="1536" y="1408"/>
+  <object name="Light" type="Light" gid="78" x="1792" y="1408"/>
+  <object name="Light" type="Light" gid="78" x="2048" y="1472"/>
+  <object name="Light" type="Light" gid="78" x="2240" y="1600"/>
+  <object name="Light" type="Light" gid="78" x="2304" y="1792"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="768" y="3008"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="832" y="1984"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="1472" y="1600"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="3648" y="1664"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="3776" y="2112"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="3776" y="3136"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="3712" y="3520"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="3008" y="3840"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="2496" y="3968"/>
+  <object name="AmmoPickup" type="Pickup" gid="76" x="2496" y="2432"/>
+  <object name="HealthPickup" type="Pickup" gid="77" x="2112" y="2368"/>
+  <object name="HealthPickup" type="Pickup" gid="77" x="1920" y="1664"/>
+  <object name="HealthPickup" type="Pickup" gid="77" x="896" y="1856"/>
+  <object name="HealthPickup" type="Pickup" gid="77" x="768" y="2624"/>
+  <object name="HealthPickup" type="Pickup" gid="77" x="1152" y="3648"/>
+  <object name="HealthPickup" type="Pickup" gid="77" x="2816" y="3904"/>
+  <object name="HealthPickup" type="Pickup" gid="77" x="3776" y="2624"/>
+  <object name="HealthPickup" type="Pickup" gid="77" x="3712" y="1984"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3456" y="3072">
+   <properties>
+    <property name="patrolRoute" value="Route0"/>
+   </properties>
+  </object>
+  <object name="Enemy" type="Enemy" gid="74" x="2368" y="3392">
+   <properties>
+    <property name="patrolRoute" value="Route4"/>
+   </properties>
+  </object>
+  <object name="Enemy" type="Enemy" gid="74" x="1920" y="3264">
+   <properties>
+    <property name="patrolRoute" value="Route1"/>
+   </properties>
+  </object>
+  <object name="Enemy" type="Enemy" gid="74" x="1024" y="3008">
+   <properties>
+    <property name="patrolRoute" value="Route2"/>
+   </properties>
+  </object>
+  <object name="Enemy" type="Enemy" gid="74" x="1216" y="1856">
+   <properties>
+    <property name="patrolRoute" value="Route3"/>
+   </properties>
+  </object>
+  <object name="Enemy" type="Enemy" gid="74" x="1792" y="3584"/>
+  <object name="Enemy" type="Enemy" gid="74" x="2240" y="3648"/>
+  <object name="Enemy" type="Enemy" gid="74" x="2496" y="3776"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3008" y="3776"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3520" y="3648"/>
+  <object name="Enemy" type="Enemy" gid="74" x="2816" y="3328"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3264" y="3200"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3648" y="3520"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3648" y="3008"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3648" y="2560"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3648" y="2304"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3520" y="1664"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3648" y="1856"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1984" y="2944"/>
+  <object name="Enemy" type="Enemy" gid="74" x="2048" y="2496"/>
+  <object name="Enemy" type="Enemy" gid="74" x="2496" y="2496"/>
+  <object name="Enemy" type="Enemy" gid="74" x="2176" y="2624"/>
+  <object name="Enemy" type="Enemy" gid="74" x="2176" y="2816"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1280" y="3456"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1280" y="3712"/>
+  <object name="Enemy" type="Enemy" gid="74" x="896" y="3264"/>
+  <object name="Enemy" type="Enemy" gid="74" x="832" y="3008"/>
+  <object name="Enemy" type="Enemy" gid="74" x="768" y="2816"/>
+  <object name="Enemy" type="Enemy" gid="74" x="768" y="2560"/>
+  <object name="Enemy" type="Enemy" gid="74" x="768" y="2304"/>
+  <object name="Enemy" type="Enemy" gid="74" x="832" y="2048"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1088" y="2368"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1152" y="2112"/>
+  <object name="Enemy" type="Enemy" gid="74" x="960" y="1792"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1408" y="1664"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1792" y="1664"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1920" y="1856"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1728" y="1792"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1408" y="1792"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3456" y="1600"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3520" y="1984"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1216" y="3200"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1472" y="3328"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1728" y="3392"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3520" y="2432"/>
+  <object name="Enemy" type="Enemy" gid="74" x="3520" y="2688"/>
+  <object name="Enemy" type="Enemy" gid="74" x="1088" y="2688">
+   <properties>
+    <property name="patrolRoute" value="Route2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Lines" width="64" height="64">
+  <object name="Route0" type="PatrolRoute" x="3456" y="3072">
+   <polyline points="0,0 0,-1472 64,-1472 64,0 0,0"/>
+  </object>
+  <object name="Route1" type="PatrolRoute" x="1920" y="3200">
+   <polyline points="0,0 0,-384 64,-384 192,-704 448,-704 448,-576 64,-384 64,64 0,64 0,0"/>
+  </object>
+  <object name="Route2" type="PatrolRoute" x="1024" y="3008">
+   <polyline points="0,0 0,-768 64,-768 64,0 0,0"/>
+  </object>
+  <object name="Route3" type="PatrolRoute" x="1216" y="1856">
+   <polyline points="0,0 896,0"/>
+  </object>
+  <object name="Route4" type="PatrolRoute" x="2368" y="3392">
+   <polyline points="0,0 448,0 1024,-192 1088,-64 512,64 0,0"/>
+  </object>
+ </objectgroup>
+</map>

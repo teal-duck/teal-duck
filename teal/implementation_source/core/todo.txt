@@ -1,0 +1,89 @@
+From assessment doc:
+"In Assessment 2, you must design and implement:
+• the game map
+• at least one type of objective,
+• the randomly-allocated obstacles,
+• a scoring mechanism."
+
+
+Required to do for assessment 2:
+- Menu
+	- Settings would be nice
+		- Shouldn't be too hard to make
+		- Input system already set up to allow rebinding
+		- Low priority for assessment 2
+		
+- Random enemies
+	- Turret
+		- Stationary, uses the same viewcone logic to target player as other enemies
+		- Just needs rotating animation which can be done in coded
+		- And shooting animation, reuse player's
+		- Possibly place against a wall to limit rotation to -180 to +180 degrees
+	- Patrolling enemies
+		- Choose random location on map to spawn
+		- Keep going to left and to right as far as possible to get maximum horizontal movement
+		- Repeat for up and down
+		- One of those is randomly chosen as the patrol path
+		- Simple to do
+		- Perhaps only place if route length is long enough?
+		- Maybe even check if there's a route to the player so the enemy doesn't spawn in a hole
+	- Random pickups?
+		
+- Make the game look like it's set at the uni
+	- Perhaps write code for moving from level 1 to 2, then to 3 etc
+	- Make level 1 be an overworld map with random planes etc
+		- Might need flying animation?
+		- Already have plane texture
+		- Enemy logic for this is really easy
+		- World can still be a tiled map (so appears same to the rest of code)
+			- But no actual tiles to load
+			- Just entities and a background texture
+		- For background, could we screenshot google maps?
+	- For indoor levels, try to model floor plans of a building in uni
+	- Would it be too much to add stairs?
+		- Use layers?
+			- Would mean multiple floor, wall, collision, entity and path layers
+		- Or seperate *.tmx files?
+			- Possibly doable but inefficient
+		
+- Possibly 2 objective types
+	- Get to goal
+	- Kill all geese
+	- Shouldn't be too hard
+		- Goal logic already set up
+		- Tiled maps have properties so we can set objectiveType = "goal" or "kill"
+		- Getting to goal logic already separate from rest of code
+		- Could instead be:
+			if (((objectiveType == ObjectiveType.GOAL) && playerCollidesWithGoal())
+				|| ((objectiveType == ObjectiveType.KILL) && allEnemiesDead())) {
+				winGame();
+			}
+			
+			
+- Show the target on the map
+	- Raycast to nearest tile and to nearest enemy
+	- With controller, if an enemy is a small jump away (like 1-2 degrees)
+		- Perhaps lock on
+
+Required assets:
+- Turret texture
+- Gui + menu design
+- 2-3 level designs
+	- Could be 1 overworld
+		- Maybe use google maps, is that allowed?
+	- 1 indoors
+- Sounds as semi-low priority
+	- Sfxr (might run under wine)
+
+
+Would be nice if there's time:
+- Shadows
+	- Raycast to corners of tiles, generate triangle strip
+	- Map vertices to colours of:
+		- (1, 1, 1, 1) for vertex over torch
+		- (1, 1, 1, (rayLength - vertexDistanceFromCentre) / rayLength) for other verticies
+			- Means ones at end of the torch distance have alpha 0
+- Settings menu
+- Pathfinding with A*?
+- Particles?
+- Local multiplayer
