@@ -40,7 +40,7 @@ public class WeaponComponentTest {
 
 		weaponComponent.fireWeapon(entityEngine, shooter, position, direction, team);
 
-		Assert.assertEquals(weaponComponent.cooldownTime, 0.15f, WeaponComponentTest.DELTA);
+		Assert.assertEquals(weaponComponent.cooldownTime, 0.2f, WeaponComponentTest.DELTA);
 		Assert.assertEquals(weaponComponent.ammoInClip, 9);
 		// System.out.println(weaponComponent.fireLocation);
 		Assert.assertEquals(weaponComponent.fireLocation, new Vector2(-32, -32));
@@ -48,7 +48,7 @@ public class WeaponComponentTest {
 
 		// check no fire when cooldown
 		weaponComponent.fireWeapon(entityEngine, shooter, position, direction, team);
-		Assert.assertEquals(weaponComponent.cooldownTime, 0.15f, WeaponComponentTest.DELTA);
+		Assert.assertEquals(weaponComponent.cooldownTime, 0.2f, WeaponComponentTest.DELTA);
 		Assert.assertEquals(weaponComponent.ammoInClip, 9);
 		Assert.assertEquals(weaponComponent.fireLocation, new Vector2(-32, -32));
 		Assert.assertEquals(weaponComponent.fireDirection, new Vector2(0, 9).nor());
@@ -58,7 +58,7 @@ public class WeaponComponentTest {
 		weaponComponent.ammoInClip = 0;
 		weaponComponent.reloadTime = 0;
 		weaponComponent.fireWeapon(entityEngine, shooter, position, direction, team);
-		Assert.assertEquals(weaponComponent.reloadTime, 4f, WeaponComponentTest.DELTA);
+		Assert.assertEquals(weaponComponent.reloadTime, 4.2f, WeaponComponentTest.DELTA);
 
 		// test stops reloading to shoot
 		weaponComponent.cooldownTime = 0;
@@ -91,8 +91,8 @@ public class WeaponComponentTest {
 		weaponComponent.reloadTime = 0f;
 		weaponComponent.bulletReloadTime = 5f;
 		weaponComponent.startReloading();
-		Assert.assertEquals(weaponComponent.reloadTime, 4f, WeaponComponentTest.DELTA);
-		Assert.assertEquals(weaponComponent.bulletReloadTime, 0f, WeaponComponentTest.DELTA);
+		Assert.assertEquals(weaponComponent.reloadTime, 0f, WeaponComponentTest.DELTA);
+		Assert.assertEquals(weaponComponent.bulletReloadTime, 5f, WeaponComponentTest.DELTA);
 		weaponComponent.extraAmmo = 0;
 		weaponComponent.bulletReloadTime = 5f;
 		weaponComponent.reloadTime = 3f;
@@ -134,7 +134,7 @@ public class WeaponComponentTest {
 		weaponComponent.ammoInClip = 0;
 		weaponComponent.extraAmmo = 0;
 		weaponComponent.addAmmo(10);
-		Assert.assertEquals(weaponComponent.reloadTime, 4f, WeaponComponentTest.DELTA);
+		Assert.assertEquals(weaponComponent.reloadTime, 4.2f, WeaponComponentTest.DELTA);
 		Assert.assertEquals(weaponComponent.bulletReloadTime, 0f, WeaponComponentTest.DELTA);
 
 	}
@@ -149,8 +149,8 @@ public class WeaponComponentTest {
 		weaponComponent.doReload(5f);
 		// System.out.println(weaponComponent.timePerReloadBullet);
 		// System.out.println(weaponComponent.ammoInClip);
-		Assert.assertEquals(weaponComponent.ammoInClip, 10);
-		Assert.assertEquals(weaponComponent.extraAmmo, 0);
+		Assert.assertEquals(weaponComponent.ammoInClip, 8);
+		Assert.assertEquals(weaponComponent.extraAmmo, 2);
 		weaponComponent.reloadTime = 0;
 		weaponComponent.ammoInClip = 0;
 		weaponComponent.extraAmmo = 10;
