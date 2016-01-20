@@ -13,13 +13,13 @@ public class EntityConstants {
 
 	public static final float PLAYER_SPEED = 2400.0f;
 	public static final float PLAYER_SPRINT = 1.8f;
-	public static final float PLAYER_SPRINT_TIME = 3f;
+	public static final float PLAYER_SPRINT_TIME = 3.5f;
 	public static final float PLAYER_RADIUS = 20;
 
-	public static final float ENEMY_SPEED = 1800.0f;
+	public static final float ENEMY_SPEED = 1900.0f; // 1800f
 	public static final float ENEMY_RADIUS = 20;
 
-	public static final float ENEMY_KNOCKBACK_FORCE = 60000;
+	public static final float ENEMY_KNOCKBACK_FORCE = 70000; // 60000;
 	public static final float PLAYER_KNOCKBACK_FORCE = EntityConstants.ENEMY_KNOCKBACK_FORCE * 0.6f;
 
 	public static final int PLAYER_MAX_HEALTH = 5;
@@ -28,14 +28,14 @@ public class EntityConstants {
 
 	public static final int SCORE_FOR_KILL = 100;
 
-	public static final int MACHINE_GUN_CLIP_SIZE = 10;
+	public static final int MACHINE_GUN_CLIP_SIZE = 8; // 10;
 	public static final int START_AMMO_IN_CLIP = EntityConstants.MACHINE_GUN_CLIP_SIZE;
 	public static final int START_CLIPS = 1;
 	public static final int START_EXTRA_AMMO = EntityConstants.START_AMMO_IN_CLIP * EntityConstants.START_CLIPS;
-	public static final float COOLDOWN_TIME = 0.15f;
-	public static final float RELOAD_TIME = 4f;
+	public static final float COOLDOWN_TIME = 0.2f; // 0.15f;
+	public static final float RELOAD_TIME = 4.2f; // 4f;
 
-	public static final float BULLET_SPEED = 900f;
+	public static final float BULLET_SPEED = 850f; // 900f;
 	public static final int BULLET_RADIUS = 12;
 	public static final float BULLET_KNOCKBACK_FORCE = 20000;
 
@@ -53,11 +53,11 @@ public class EntityConstants {
 	public static final float ENEMY_VIEW_LENGTH = 64 * 4f;
 
 	public static final float ENEMY_TIME_TO_FORGET = 5f;
-	public static final float PAUSE_TIME = 0.5f;
+	public static final float PAUSE_TIME = 0.4f; // 0.5f;
 
 	public static final float LIGHT_RADIUS = 256f;
 
-	public static final float AMBIENT_INTENSITY = 0.2f;
+	public static final float AMBIENT_INTENSITY = 0.3f; // 0.2f;
 	private static final float COLOUR = 0.8f;
 	public static final Vector3 AMBIENT_COLOUR = new Vector3(EntityConstants.COLOUR, EntityConstants.COLOUR,
 			EntityConstants.COLOUR);

@@ -133,7 +133,6 @@ public class EntityLoader {
 	public static void loadEntities(World world, TextureMap textureMap, ControlMap controlMap,
 			Controller controller) {
 		int playerId = -1;
-		// boolean loadedGoal = false;
 
 		TiledMap tiledMap = world.getTiledMap();
 		EntityEngine entityEngine = world.getEntityEngine();
@@ -177,12 +176,6 @@ public class EntityLoader {
 
 				} else if (name.equals("Goal")) {
 					goalLocations.add(new Vector2(x, y));
-					// if (loadedGoal) {
-					// throw new IllegalArgumentException("More than 1 goal");
-					// }
-					// EntityLoader.createGoal(entityEngine,
-					// textureMap.getTexture(AssetLocations.GOAL), new Vector2(x, y));
-					// loadedGoal = true;
 				} else if (name.equals("AmmoPickup") || name.equals("HealthPickup")) {
 					int defaultAmount = 0;
 					if (name.equals("AmmoPickup")) {
