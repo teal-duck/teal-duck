@@ -27,6 +27,7 @@ public class EntityConstants {
 	public static final int ENEMY_HEALTH = 3;
 
 	public static final int SCORE_FOR_KILL = 100;
+	public static final int SCORE_FOR_LEVEL_WIN = 2000;
 
 	public static final int MACHINE_GUN_CLIP_SIZE = 8; // 10;
 	public static final int START_AMMO_IN_CLIP = EntityConstants.MACHINE_GUN_CLIP_SIZE;

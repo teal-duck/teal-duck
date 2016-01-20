@@ -39,6 +39,7 @@ import com.tealduck.game.system.MovementSystem;
 import com.tealduck.game.system.PatrolLogicSystem;
 import com.tealduck.game.system.WorldCollisionSystem;
 import com.tealduck.game.system.WorldRenderSystem;
+import com.tealduck.game.world.EntityConstants;
 import com.tealduck.game.world.EntityLoader;
 import com.tealduck.game.world.MapNames;
 import com.tealduck.game.world.World;
@@ -400,6 +401,8 @@ public class GameScreen extends DuckScreenBase {
 	 *
 	 */
 	private void winGame() {
+		int player = getEntityTagManager().getEntity(Tag.PLAYER);
+		getEntityManager().getComponent(player, ScoreComponent.class).increaseScore(EntityConstants.SCORE_FOR_LEVEL_WIN);
 		this.loadScreen(WinScreen.class, createGameProgressData());
 	}
 

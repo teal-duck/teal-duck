@@ -25,7 +25,16 @@ public class ScoreComponent extends Component {
 		comboTime = 0;
 	}
 
-
+	
+	/**
+	 * Increase the player's score directly.
+	 * @param points
+	 */
+	public void increaseScore(int points) {
+		score += points;
+	}
+	
+	
 	/**
 	 * Add points to the workingScore, increment the combo and calculate the new comboTime.
 	 *
