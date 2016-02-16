@@ -1,0 +1,8 @@
+.classpath
+.gradle/*
+.metadata/*
+.project
+.settings/*
+core/*
+desktop/*
+teal/*
