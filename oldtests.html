@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <style type="text/css">
+  table.tableizer-table {
+    border: 1px solid #CCC; font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+  }
+  .tableizer-table td {
+    padding: 4px;
+    margin: 3px;
+    border: 1px solid #ccc;
+  }
+  .tableizer-table th {
+    background-color: #11AF71;
+    color: #FFF;
+    font-weight: bold;
+  }
+  </style>
+  <head>
+    <meta charset="UTF-8">
+    <title>Teal-duck by teal-duck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=3">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">QUACKERS - Testing Report</h1>
+      <a href="/teal-duck/index.html" class="btn">Home</a>
+      <a href="/teal-duck/old.html" class="btn">Previous Assessments</a>
+    </section>
+
+    <section class="main-content">
+      <h2>Unit tests</h2>
+      <p><a href="https://github.com/teal-duck/teal-duck/blob/Assessment-2/teal-duck-all-tests.jar?raw=true">Get our executable testing file here.</a> (.jar, ~2.3MB)</p>
+      <p>Run it by opening your terminal, navigating to the folder where you downloaded the .jar, and entering <code>java -jar teal-duck-all-tests.jar</code>.</p>
+      <p>Currently, our test suite runs with 2 errors. These are both due to a single bug that we identified late in development, and did not have time to correct. This bug is identified clearly in our code, and our playtests show that it has no noticable impact during normal gameplay.</p>
+
+      <h2>Acceptance tests</h2>
+      <p>Much of the functionality of the game is very difficult to display in a unit test, so is most easily tested by playing the game with visual inspection of correct functionality.</p>
+      <p>The following table provides a list of expected functionality, and how to observe this functionality expressed in the execution of the game.</p>
+
+      <table class="tableizer-table">
+        <tr class="tableizer-firstrow"><th>Unit under test</th><th>Procedure</th><th>Pass/Fail</th></tr>
+        <tr><td>Quit button exits game</td><td>Press 'quit' button, observe if game has exited</td><td>Pass</td></tr>
+        <tr><td>Settings button enters settings screen</td><td>Press 'settings' button, observe if settings screen exited</td><td>Pass</td></tr>
+        <tr><td>Load game button enters load game menu</td><td>Press 'load game' button, observe if load game menu has been entered</td><td>Pass</td></tr>
+        <tr><td>Back button on settings and load game menus returns to main menu</td><td>Enter each menu, press 'back' button, observe if main menu has been re-entered</td><td>Pass</td></tr>
+        <tr><td>New game button starts a game</td><td>Press 'new game' button, observe game has started</td><td>Pass</td></tr>
+        <tr><td>Buttons can be controlled using keyboard</td><td>Use the 'up' and 'down' keys to select different buttons, then press 'enter' key. Observe if correct function has occurred</td><td>Pass</td></tr>
+        <tr><td>The duck is visible on the screen</td><td>Observe if the duck is visible on the screen.</td><td>Pass</td></tr>
+        <tr><td>The duck looks towards the mouse pointer.</td><td>Move the mouse pointer. Observe the duck rotating to face the mouse pointer</td><td>Pass</td></tr>
+        <tr><td>The player can see their current score.</td><td>Observe the score display in the top right corner</td><td>Pass</td></tr>
+        <tr><td>The player can see his current health</td><td>Observe the health display in the top left corner</td><td>Pass</td></tr>
+        <tr><td>The player can see their sprint meter.</td><td>Observe the sprint display in the bottom left corner</td><td>Pass</td></tr>
+        <tr><td>The player can see their current ammo counter</td><td>Observe the ammo display in the bottom right corner</td><td>Pass</td></tr>
+        <tr><td>The duck's movement is controlled by the player</td><td>Press one of the 'wasd' keys. Observe the duck moving in the expected direction</td><td>Pass</td></tr>
+        <tr><td>The duck's speed can be increased</td><td>Hold one of the 'wasd' keys. Intermittently hold the 'left shift' key. Observe the duck's speed increase.</td><td>Pass</td></tr>
+        <tr><td>The duck can only sprint for a limited time</td><td>Sprint with the duck for roughly 7 seconds. Observe sprint forcibly ended.</td><td>Pass</td></tr>
+        <tr><td>The sprint display shows how long the player may sprint</td><td>Sprint with the duck. Observe sprint meter fall. Stop sprinting, observe sprint meter rise.</td><td>Pass</td></tr>
+        <tr><td>The duck plays an animation during movement</td><td>Move the duck. Observe the animation during movement.</td><td>Pass</td></tr>
+        <tr><td>The duck collides with impassable terrain.</td><td>Attempt to move the duck into the walls. Witness stymied attempts.</td><td>Pass</td></tr>
+        <tr><td>The duck may fire its weapon.</td><td>Click somewhere on the screen. Observe the bullet fire, the ammo counter fall.</td><td>Pass</td></tr>
+        <tr><td>The duck may reload.</td><td>Fire the weapon. Press the 'r' key. Observe ammo counter rise again to a maximum of 10. Observe red '!' and ammo display turning red to signify reloading.</td><td>Pass</td></tr>
+        <tr><td>The duck may obtain more ammunition.</td><td>Walk over one of the ammo pickups on the ground. Observe spare ammo counter rise.</td><td>Pass</td></tr>
+        <tr><td>The duck may damage enemies</td><td>Fire the weapon at an enemy. Observe enemy health display decrease.</td><td>Pass</td></tr>
+        <tr><td>The duck may kill enemies</td><td>Fire the weapon at an enemy three times. Observe the enemy's health display turn fully red, and the enemy cease to exist in the game.</td><td>Pass</td></tr>
+        <tr><td>Upon death, an enemy drops a pickup.</td><td>Slaughter multiple enemies. Observe pickups appear in the place of their corpses.</td><td>Pass</td></tr>
+        <tr><td>The duck loses health on touching an enemy.</td><td>Move the duck such that contact occurs with the enemy. Observe health counter decrease, and the duck recoil</td><td>Pass</td></tr>
+        <tr><td>The duck may regain health.</td><td>Take damage from an enemy. Walk over one of the health pickups on the ground. Observe health increase.</td><td>Pass</td></tr>
+        <tr><td>The player receives score for killing an enemy.</td><td>Kill an enemy. Observe score increase.</td><td>Pass</td></tr>
+        <tr><td>The player receives bonus points for killing multiple enemies within a time span.</td><td>Destroy multiple enemies within a few seconds. Observe a 'x2' or higher combo notice, and a greater increase in score.</td><td>Pass</td></tr>
+        <tr><td>The enemies will move randomly.</td><td>Observe an enemy walk in a straight direction until colliding with a wall, then rotating a random angle, and moving again.</td><td>Pass</td></tr>
+        <tr><td>The enemies will chase a duck it is spotted.</td><td>Observe an enemy's 'vision cone'. Walk into it. Observe the enemy stop random movement and chase the duck.</td><td>Pass</td></tr>
+        <tr><td>The player may escape an enemy.</td><td>Move the duck around the corner from an enemy. Observe the enemy's short attention span as it returns to random movement.</td><td>Pass</td></tr>
+        <tr><td>The player may die.</td><td>Take damage from an enemy until health counter reaches zero. Observe game over screen.</td><td>Pass</td></tr>
+        <tr><td>The player may choose to return to the main menu upon death.</td><td>Die. Press the 'return to menu' button. Observe main menu.</td><td>Pass</td></tr>
+        <tr><td>The player may win the level.</td><td>Find a goal tile. Walk onto goal tile. Observe level win screen.</td><td>Pass</td></tr>
+        <tr><td>The player may continue to move onto the next level.</td><td>Win a level. Press the 'continue' button. Observe next level.</td><td>Pass</td></tr>
+        <tr><td>The player may choose to return to the main menu upon level win.</td><td>Win a level. Press the 'save and quit' button. Observe main menu.</td><td>Pass</td></tr>
+        <tr><td>The player may see their score after winning a level.</td><td>Win a level. Observe the 'score' counter on the level win screen.</td><td>Pass</td></tr>
+        <tr><td>The player may pause the game.</td><td>Start the game. Press the 'esc' key. Observe game pause menu.</td><td>Pass</td></tr>
+        <tr><td>The player may choose to quit to menu during gameplay.</td><td>Pause the game. Choose the 'quit to menu' option. Observe main menu.</td><td>Pass</td></tr>
+        <tr><td>The player may choose to resume the game.</td><td>Pause the game. Choose the 'resume' option. Observe resumption of gameplay.</td><td>Pass</td></tr>
+        <tr><td>The player is notified while assets are being loaded.</td><td>Start the game. Observe the asset loading screen</td><td>Pass</td></tr>
+        <tr><td>Upon completing every level, the player may finish the game.</td><td>Win every level. Observe the game win screen. Click the 'finish' button. Observe return to main menu in triumph.</td><td>Pass</td></tr>
+        <tr><td>Upon colliding with impassable terrain or an enemy, a bullet is removed from the game.</td><td>Fire a bullet towards a wall. Observe the bullet not pass through the wall.</td><td>Pass</td></tr>
+        <tr><td>Game is playable on Windows</td><td>Launch game on Windows. Observe game plays correctly.</td><td>Pass</td></tr>
+        <tr><td>Game is playable on Linux</td><td>Launch game on Linux. Observe game plays correctly.</td><td>Pass</td></tr>
+        <tr><td></td><td></td><td></td></tr>
+      </table>
+    </section>
+    <center><marquee behavior="scroll" direction="right" width="850" scrollamount="15">
+      <img src="http://i.imgur.com/oEfVM5Y.gif" alt="duck"><img src="http://i.imgur.com/oEfVM5Y.gif" alt="duck"><img src="http://i.imgur.com/oEfVM5Y.gif" alt="duck"><img src="http://i.imgur.com/Yjdljx0.png"></img><img src="http://i.imgur.com/WbdZIAT.gif" alt="duck">
+    </marquee></center>
+
+  </body>
+</html>
